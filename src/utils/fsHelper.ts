@@ -1,7 +1,13 @@
 'use strict'
-import { join } from 'path'
-
-import { outputFile } from 'fs-extra'
+import { readFile as fsReadFile } from 'fs-extra'
+import { isAbsolute, join, relative } from 'path'
+import { outputFile, stat } from 'fs-extra'
+import {
+  GIT_FOLDER,
+  GIT_PATH_SEP,
+  UTF8_ENCODING,
+} from './gitConstants'
+import { EOLRegex, getSpawnContent } from './childProcessUtils'
 
 import GitAdapter from '../adapter/GitAdapter'
 import type { Config } from '../types/config'
@@ -10,8 +16,12 @@ import type { FileGitRef } from '../types/git'
 import { treatPathSep } from './fsUtils'
 import { buildIgnoreHelper } from './ignoreHelper'
 
+
 const copiedFiles = new Set()
 const writtenFiles = new Set()
+
+export const gitPathSeparatorNormalizer = (path: string) =>
+  path.replace(/\\+/g, GIT_PATH_SEP)
 
 export const copyFiles = async (config: Config, src: string) => {
   if (copiedFiles.has(src) || writtenFiles.has(src)) {
@@ -36,6 +46,20 @@ export const copyFiles = async (config: Config, src: string) => {
   } catch {
     /* empty */
   }
+}
+
+const readPathFromGitAsBuffer = async (path: string, { repo, to }: { repo: string; to: string }) => {
+  to = to
+  const normalizedPath = gitPathSeparatorNormalizer(path)
+  const bufferData: Buffer = await getSpawnContent(
+    "cat",
+    [`${normalizedPath}`],
+    {
+      cwd: repo,
+    }
+  )
+
+  return bufferData
 }
 
 export const readPathFromGit = async (forRef: FileGitRef, config: Config) => {
