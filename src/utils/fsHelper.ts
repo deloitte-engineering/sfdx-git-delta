@@ -16,6 +16,9 @@ import type { FileGitRef } from '../types/git'
 import { treatPathSep } from './fsUtils'
 import { buildIgnoreHelper } from './ignoreHelper'
 
+import { lstatSync } from 'fs'
+
+const FOLDER = 'tree'
 
 const copiedFiles = new Set()
 const writtenFiles = new Set()
@@ -48,6 +51,15 @@ export const copyFiles = async (config: Config, src: string) => {
   }
 }
 
+const isDirectory = async (path: string) => {
+  try {
+    return lstatSync(path).isDirectory()
+  } catch {
+    // Path does not exist. Defaulting to false
+    return false;
+  }
+}
+
 const readPathFromGitAsBuffer = async (path: string, { repo, to }: { repo: string; to: string }) => {
   // Custom: "git show HEAD:<FILE>" command was replaced by "cat <FILE>" for better performance.
   to = to
@@ -55,11 +67,11 @@ const readPathFromGitAsBuffer = async (path: string, { repo, to }: { repo: strin
 
   let command = 'git'
   let args = ['--no-pager', 'show', `${to}:${normalizedPath}`]
-  let options = {
+  const options = {
     cwd: repo,
   }
 
-  if (to == 'HEAD') {
+  if (to == 'HEAD' && !isDirectory(path)) {
     command = 'cat'
     args = [`${normalizedPath}`]
   }
@@ -69,12 +81,12 @@ const readPathFromGitAsBuffer = async (path: string, { repo, to }: { repo: strin
   return bufferData
 }
 
-export const readPathFromGit = async (forRef: FileGitRef, config: Config) => {
+export const readPathFromGit = async (path: string, config: Config) => {
   let utf8Data = ''
   try {
-    const gitAdapter = GitAdapter.getInstance(config)
-    utf8Data = await gitAdapter.getStringContent(forRef)
-  } catch {
+    const bufferData = await readPathFromGitAsBuffer(path, config)
+    utf8Data = bufferData.toString(UTF8_ENCODING)
+  } catch (e) {
     /* empty */
   }
   return utf8Data
