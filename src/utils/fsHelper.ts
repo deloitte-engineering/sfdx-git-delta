@@ -1,7 +1,7 @@
 'use strict'
 import { readFile as fsReadFile } from 'fs-extra'
 import { isAbsolute, join, relative } from 'path'
-import { outputFile, stat } from 'fs-extra'
+import { outputFile, stat, copySync } from 'fs-extra'
 import {
   GIT_FOLDER,
   GIT_PATH_SEP,
@@ -46,7 +46,8 @@ export const copyFiles = async (config: Config, src: string) => {
       await outputFile(treatPathSep(dst), file.content)
       copiedFiles.add(dst)
     }
-  } catch {
+  } catch (e) {
+    // console.log(`Exception thrown: ${e}`)
     /* empty */
   }
 }
