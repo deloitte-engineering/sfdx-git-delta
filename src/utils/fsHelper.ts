@@ -1,7 +1,7 @@
 'use strict'
 import { readFile as fsReadFile } from 'fs-extra'
 import { isAbsolute, join, relative } from 'path'
-import { outputFile, stat } from 'fs-extra'
+import { outputFile, stat, copySync } from 'fs-extra'
 import {
   GIT_FOLDER,
   GIT_PATH_SEP,
@@ -39,9 +39,17 @@ export const copyFiles = async (config: Config, src: string) => {
       const dst = join(config.output, treatPathSep(src))
       // Use Buffer to output the file content
       // Let fs implementation detect the encoding ("utf8" or "binary")
-      await outputFile(dst, bufferData)
+      if (await isDirectory(dst)) {
+        // Copy all files from directory to dst
+        const sourceDir = dst.replace(config.output + '/', '')
+        copySync(sourceDir, dst, { overwrite: false })
+      } else {
+        // Write bufferData in dst
+        await outputFile(dst, bufferData)
+      }
     }
-  } catch {
+  } catch (e) {
+    // console.log(`Exception thrown: ${e}`)
     /* empty */
   }
 }
