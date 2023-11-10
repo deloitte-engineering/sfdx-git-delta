@@ -120,16 +120,25 @@ export default class StandardHandler {
   protected async _copyWithMetaFile(src: string) {
     if (this._delegateFileCopy()) {
       await this._copy(src)
-      if (this._shouldCopyMetaFile(src)) {
-        await this._copy(this._getMetaTypeFilePath(src))
+      if (
+        this.metadataDef.metaFile === true &&
+        !`${src}`.endsWith(METAFILE_SUFFIX)
+      ) {
+        const copied = await this._copy(this._getMetaTypeFilePath(src))
+
+        if (!copied) {
+          await this._copy(this._getMetaTypeFilePathWithOriginalExtension(src))
+        }
       }
     }
   }
 
   protected async _copy(elementPath: string) {
     if (this._delegateFileCopy()) {
-      await copyFiles(this.config, elementPath)
+      return await copyFiles(this.config, elementPath)
     }
+
+    return false
   }
 
   protected _getMetaTypeFilePath(path: string) {
@@ -143,6 +152,14 @@ export default class StandardHandler {
   protected _shouldCopyMetaFile(path: string): boolean {
     return (
       this.metadataDef.metaFile === true && !`${path}`.endsWith(METAFILE_SUFFIX)
+    )
+  }
+  
+  protected _getMetaTypeFilePathWithOriginalExtension(path: string) {
+    const parsedPath = parse(path)
+    return join(
+      parsedPath.dir,
+      `${parsedPath.name}${parsedPath.ext}${METAFILE_SUFFIX}`
     )
   }
 

@@ -46,9 +46,12 @@ export const copyFiles = async (config: Config, src: string) => {
       await outputFile(treatPathSep(dst), file.content)
       copiedFiles.add(dst)
     }
+
+    return true
   } catch (e) {
     // console.log(`Exception thrown: ${e}`)
     /* empty */
+    return false
   }
 }
 
