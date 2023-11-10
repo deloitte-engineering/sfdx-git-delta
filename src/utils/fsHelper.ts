@@ -48,9 +48,12 @@ export const copyFiles = async (config: Config, src: string) => {
         await outputFile(dst, bufferData)
       }
     }
+
+    return true
   } catch (e) {
     // console.log(`Exception thrown: ${e}`)
     /* empty */
+    return false
   }
 }
 
