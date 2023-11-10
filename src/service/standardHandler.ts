@@ -133,11 +133,7 @@ export default class StandardHandler {
         this.metadataDef.metaFile === true &&
         !`${src}`.endsWith(METAFILE_SUFFIX)
       ) {
-        const copied = await this._copy(this._getMetaTypeFilePath(src))
-
-        if (!copied) {
-          await this._copy(this._getMetaTypeFilePathWithOriginalExtension(src))
-        }
+        await this._copy(this._getMetaTypeFilePath(src))
       }
     }
   }
@@ -155,14 +151,6 @@ export default class StandardHandler {
     return join(
       parsedPath.dir,
       `${parsedPath.name}.${this.metadataDef.suffix}${METAFILE_SUFFIX}`
-    )
-  }
-
-  protected _getMetaTypeFilePathWithOriginalExtension(path: string) {
-    const parsedPath = parse(path)
-    return join(
-      parsedPath.dir,
-      `${parsedPath.name}${parsedPath.ext}${METAFILE_SUFFIX}`
     )
   }
 

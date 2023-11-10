@@ -21,7 +21,7 @@ const copiedFiles = new Set()
 const writtenFiles = new Set()
 
 export const copyFiles = async (config: Config, src: string) => {
-  if (copiedFiles.has(src) || writtenFiles.has(src)) return
+  if (copiedFiles.has(src) || writtenFiles.has(src)) return true
   copiedFiles.add(src)
 
   try {
@@ -52,7 +52,7 @@ export const copyFiles = async (config: Config, src: string) => {
 
     return true
   } catch (e) {
-    // console.log(`Exception thrown: ${e}`)
+    // console.log(`[copyFiles] Exception thrown: ${e}`)
     /* empty */
     return false
   }
@@ -103,6 +103,7 @@ export const readPathFromGit = async (path: string, config: Config) => {
     const bufferData = await readPathFromGitAsBuffer(path, config)
     utf8Data = bufferData.toString(UTF8_ENCODING)
   } catch (e) {
+    // console.log(`[readPathFromGit] Exception thrown: ${e}`)
     /* empty */
   }
   return utf8Data
