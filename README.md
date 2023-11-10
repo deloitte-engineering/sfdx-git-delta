@@ -35,6 +35,7 @@
 - [`sfdx sgd:source:delta -f <string> [-t <string>] [-r <filepath>] [-i <filepath>] [-D <filepath>] [-s <filepath>] [-W] [-o <filepath>] [-a <number>] [-d] [-n <filepath>] [-N <filepath>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-sgdsourcedelta--f-string--t-string--r-filepath--i-filepath--d-filepath--s-filepath--w--o-filepath--a-number--d--n-filepath--n-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
   - [Windows users](#windows-users)
   - [CI/CD specificity](#cicd-specificity)
+  - [Git LFS support](#git-lfs-support)
   - [Use cases](#use-cases)
 - [Walkthrough](#walkthrough)
   - [Execute sgd](#execute-sgd)
@@ -232,9 +233,20 @@ Example with [github action](https://docs.github.com/en/actions/learn-github-act
   run: echo y | sfdx plugins:install "sfdx-git-delta@${{ vars.SGD_VERSION }}"
 ```
 
+### Git LFS support
+
+The plugin is compatible with git LFS.
+It will be able to read content from LFS locally.
+It is the user responsibility to ensure LFS content is present when the plugin is executed.
+/!\ The plugin **will not fetch** content from the LFS server /!\
+
 ### Use cases
 
 Any git sha pointer is supported: commit sha, branch, tag, git expression (HEAD, etc.).
+
+`--from` parameter is the base commit (the first, the oldest, the closest)
+`--to` parameter is the target commit (the last, the youngest, the farthest)
+If you want to deploy incrementally the content of a PR, `--from` parameter will be the base branch the PR branch wants to merge to, and `--to` parameter will be the PR branch.
 
 Here are examples of how to compare the content of different branches:
 
