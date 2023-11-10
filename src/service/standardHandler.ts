@@ -130,7 +130,6 @@ export default class StandardHandler {
   }
 
   protected async _copy(elementPath: string) {
-    console.log(`Copy   ${elementPath}`)
     if (this._delegateFileCopy()) {
       return await copyFiles(this.config, elementPath)
     }
