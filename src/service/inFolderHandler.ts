@@ -23,11 +23,16 @@ export default class InFolderHandler extends StandardHandler {
   protected async _copyFolderMetaFile() {
     const [, folderPath, folderName] = this._parseLine()!
 
-    const suffix = folderName.endsWith(INFOLDER_SUFFIX)
-      ? ''
-      : `.${this.metadataDef.suffix!.toLowerCase()}`
+    let folderFileName = `${folderName}.${
+      this.metadataDef.suffix!.toLowerCase() + METAFILE_SUFFIX
+    }`
 
-    const folderFileName = `${folderName}${suffix}${METAFILE_SUFFIX}`
+    await this._copyWithMetaFile(join(folderPath, folderFileName))
+
+    // Some metadata (e.g., "email", "dashboard", "report") have meta file with ${metadata}Folder-meta.xml instead of ${metadata}-meta.xml
+    folderFileName = `${folderName}.${
+      this.metadataDef.suffix!.toLowerCase() + 'Folder' + METAFILE_SUFFIX
+    }`
 
     await this._copyWithMetaFile(join(folderPath, folderFileName))
   }

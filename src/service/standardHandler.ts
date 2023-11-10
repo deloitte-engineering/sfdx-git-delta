@@ -124,16 +124,13 @@ export default class StandardHandler {
         this.metadataDef.metaFile === true &&
         !`${src}`.endsWith(METAFILE_SUFFIX)
       ) {
-        const copied = await this._copy(this._getMetaTypeFilePath(src))
-
-        if (!copied) {
-          await this._copy(this._getMetaTypeFilePathWithOriginalExtension(src))
-        }
+        await this._copy(this._getMetaTypeFilePath(src))
       }
     }
   }
 
   protected async _copy(elementPath: string) {
+    console.log(`Copy   ${elementPath}`)
     if (this._delegateFileCopy()) {
       return await copyFiles(this.config, elementPath)
     }
