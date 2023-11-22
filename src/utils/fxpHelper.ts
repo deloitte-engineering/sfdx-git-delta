@@ -11,7 +11,7 @@ const XML_PARSER_OPTION = {
   parseTagValue: false,
   parseNodeValue: false,
   parseAttributeValue: false,
-  trimValues: true,
+  trimValues: false,
   processEntities: false,
 }
 const JSON_PARSER_OPTION = {
@@ -40,6 +40,11 @@ export const convertJsonToXml = (jsonContent: any) => {
   return xmlBuilder
     .build(jsonContent)
     .replace(XML_HEADER_TAG_END, `${XML_HEADER_TAG_END}`)
+    .split('\n')
+    .filter(function (line: string) {
+      return line.trim().length > 0
+    })
+    .join('\n')
 }
 
 export const ATTRIBUTE_PREFIX = '@_'
