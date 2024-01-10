@@ -371,6 +371,13 @@
     "xmlName": "LightningMessageChannel"
   },
   {
+    "directoryName": "messagingChannels",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "messagingChannel",
+    "xmlName": "MessagingChannel"
+  },
+  {
     "directoryName": "aura",
     "inFolder": false,
     "metaFile": false,
