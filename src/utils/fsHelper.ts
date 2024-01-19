@@ -1,12 +1,7 @@
 'use strict'
-import { isAbsolute, join, relative } from 'path'
-import {
-  GIT_FOLDER,
-  GIT_PATH_SEP,
-  GIT_COMMAND,
-  UTF8_ENCODING,
-} from './gitConstants'
-import { readFile as fsReadFile, outputFile, stat, copySync } from 'fs-extra'
+import { join } from 'path'
+import { GIT_FOLDER, GIT_PATH_SEP } from '../constant/gitConstants'
+import { readFile as fsReadFile, outputFile, copySync } from 'fs-extra'
 import { UTF8_ENCODING } from '../constant/fsConstants'
 import { EOLRegex, getSpawnContent, treatPathSep } from './childProcessUtils'
 import { isLFS, getLFSObjectContentPath } from './gitLfsHelper'
