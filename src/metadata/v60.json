@@ -42,6 +42,20 @@
     "xmlName": "MLPredictionDefinition"
   },
   {
+    "directoryName": "eventRelays",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "eventRelay",
+    "xmlName": "EventRelayConfig"
+  },
+  {
+    "directoryName": "omniSupervisorConfigs",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "omniSupervisorConfig",
+    "xmlName": "OmniSupervisorConfig"
+  },
+  {
     "directoryName": "uiObjectRelationConfigs",
     "inFolder": false,
     "metaFile": false,
@@ -49,11 +63,11 @@
     "xmlName": "UIObjectRelationConfig"
   },
   {
-    "directoryName": "timelineObjectDefinitions",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "timelineObjectDefinition",
-    "xmlName": "TimelineObjectDefinition"
+  "directoryName": "timelineObjectDefinitions",
+  "inFolder": false,
+  "metaFile": false,
+  "suffix": "timelineObjectDefinition",
+  "xmlName": "TimelineObjectDefinition"
   },
   {
     "directoryName": "slackapps",
@@ -70,11 +84,32 @@
     "xmlName": "ViewDefinition"
   },
   {
+    "directoryName": "ActionLauncherItemDef",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "actionLauncherItemDef",
+    "xmlName": "ActionLauncherItemDef"
+  },
+  {
     "directoryName": "loyaltyProgramSetups",
     "inFolder": false,
     "metaFile": false,
     "suffix": "loyaltyProgramSetup",
     "xmlName": "LoyaltyProgramSetup"
+  },
+  {
+    "directoryName": "documentCategory",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "documentCategory",
+    "xmlName": "DocumentCategory"
+  },
+  {
+    "directoryName": "documentCategoryDocumentTypes",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "documentCategoryDocumentType",
+    "xmlName": "DocumentCategoryDocumentType"
   },
   {
     "directoryName": "AssessmentQuestions",
@@ -152,6 +187,34 @@
     "metaFile": false,
     "suffix": "expressionSetDefinition",
     "xmlName": "ExpressionSetDefinition"
+  },
+  {
+    "directoryName": "explainabilityActionDefinition",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "explainabilityActionDefinition",
+    "xmlName": "ExplainabilityActionDefinition"
+  },
+  {
+    "directoryName": "explainabilityActionVersion",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "explainabilityActionVersion",
+    "xmlName": "ExplainabilityActionVersion"
+  },
+  {
+    "directoryName": "applicationSubtypeDefinition",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "applicationSubtypeDefinition",
+    "xmlName": "ApplicationSubtypeDefinition"
+  },
+  {
+    "directoryName": "businessProcessTypeDefinition",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "businessProcessTypeDefinition",
+    "xmlName": "BusinessProcessTypeDefinition"
   },
   {
     "directoryName": "actionPlanTemplates",
@@ -280,13 +343,6 @@
     "xmlName": "LightningMessageChannel"
   },
   {
-    "directoryName": "messagingChannels",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "messagingChannel",
-    "xmlName": "MessagingChannel"
-  },
-  {
     "directoryName": "aura",
     "inFolder": false,
     "metaFile": false,
@@ -339,6 +395,13 @@
     "metaFile": false,
     "suffix": "namedCredential",
     "xmlName": "NamedCredential"
+  },
+  {
+    "directoryName": "externalCredentials",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "externalCredential",
+    "xmlName": "ExternalCredential"
   },
   {
     "directoryName": "externalServiceRegistrations",
@@ -1000,6 +1063,20 @@
     "metaFile": true,
     "suffix": "site",
     "xmlName": "ExperienceBundle"
+  },
+  {
+    "directoryName": "digitalExperienceConfigs",
+    "inFolder": false,
+    "metaFile": true,
+    "suffix": "digitalExperienceConfig",
+    "xmlName": "DigitalExperienceConfig"
+  },
+  {
+    "directoryName": "digitalExperiences",
+    "inFolder": false,
+    "metaFile": true,
+    "suffix": "digitalExperience",
+    "xmlName": "DigitalExperienceBundle"
   },
   {
     "directoryName": "networks",
@@ -2060,5 +2137,61 @@
     "xmlTag": "workflowTasks",
     "key": "name",
     "excluded": true
+  },
+  {
+    "directoryName": "clauseCatgConfigurations",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "clauseCatgConfiguration",
+    "xmlName": "ClauseCatgConfiguration"
+  },
+  {
+    "directoryName": "disclosureDefinitions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "disclosureDefinition",
+    "xmlName": "DisclosureDefinition"
+  },
+  {
+    "directoryName": "disclosureDefinitionVersions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "disclosureDefinitionVersion",
+    "xmlName": "DisclosureDefinitionVersion"
+  },
+  {
+    "directoryName": "disclosureTypes",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "disclosureType ",
+    "xmlName": "DisclosureType"
+  },
+  {
+    "directoryName": "fuelTypes",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "fuelType",
+    "xmlName": "FuelType"
+  },
+  {
+    "directoryName": "fuelTypeSustnUoms",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "fuelTypeSustnUom",
+    "xmlName": "FuelTypeSustnUom"
+  },
+  {
+    "directoryName": "sustnUomConversions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "sustnUomConversion",
+    "xmlName": "SustnUomConversion"
+  },
+  {
+    "directoryName": "sustainabilityUoms",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "sustainabilityUom",
+    "xmlName": "SustainabilityUom"
   }
 ]

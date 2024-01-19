@@ -7,8 +7,9 @@ import {
   METAFILE_SUFFIX,
   TRANSLATION_EXTENSION,
   TRANSLATION_TYPE,
-} from '../utils/metadataConstants'
-import { writeFile, scanExtension, isSubDir, readFile } from '../utils/fsHelper'
+} from '../constant/metadataConstants'
+import { writeFile, scanExtension } from '../utils/fsHelper'
+import { isSubDir, readFile } from '../utils/fsUtils'
 import { pathExists } from 'fs-extra'
 import { parse, join } from 'path'
 import { buildIgnoreHelper } from '../utils/ignoreHelper'
@@ -21,7 +22,7 @@ import {
 import { fillPackageWithParameter } from '../utils/packageHelper'
 import { treatPathSep } from '../utils/childProcessUtils'
 import { Work } from '../types/work'
-import { MetadataRepository } from '../types/metadata'
+import { MetadataRepository } from '../metadata/MetadataRepository'
 
 const EXTENSION = `${TRANSLATION_EXTENSION}${METAFILE_SUFFIX}`
 
@@ -64,7 +65,7 @@ export default class FlowTranslationProcessor extends BaseProcessor {
 
     for (const translationPath of translationsIterator) {
       if (
-        !ignoreHelper?.globalIgnore?.ignores(translationPath) &&
+        !ignoreHelper.globalIgnore.ignores(translationPath) &&
         !isSubDir(this.config.output, translationPath)
       ) {
         await this._parseTranslationFile(translationPath)

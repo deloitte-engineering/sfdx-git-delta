@@ -9,18 +9,15 @@ import {
   METAFILE_SUFFIX,
   TRANSLATION_EXTENSION,
   TRANSLATION_TYPE,
-} from '../../../../src/utils/metadataConstants'
-import {
-  writeFile,
-  scanExtension,
-  isSubDir,
-  readFile,
-} from '../../../../src/utils/fsHelper'
-import { MetadataRepository } from '../../../../src/types/metadata'
+} from '../../../../src/constant/metadataConstants'
+import { writeFile, scanExtension } from '../../../../src/utils/fsHelper'
+import { isSubDir, readFile } from '../../../../src/utils/fsUtils'
 import { Work } from '../../../../src/types/work'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 jest.mock('fs-extra')
 jest.mock('../../../../src/utils/fsHelper')
+jest.mock('../../../../src/utils/fsUtils')
 
 const mockedScanExtension = jest.mocked(scanExtension)
 const mockedParseXmlFileToJson = jest.mocked(parseXmlFileToJson)

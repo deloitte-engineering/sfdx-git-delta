@@ -3,19 +3,19 @@ import { expect, jest, describe, it } from '@jest/globals'
 import { getWork } from '../../../__utils__/globalTestHelper'
 import {
   copyFiles,
-  dirExists,
-  fileExists,
   gitPathSeparatorNormalizer,
   isGit,
-  isSubDir,
   pathExists,
   readDir,
-  readFile,
   readPathFromGit,
   scan,
   scanExtension,
   writeFile,
 } from '../../../../src/utils/fsHelper'
+import {
+  IgnoreHelper,
+  buildIgnoreHelper,
+} from '../../../../src/utils/ignoreHelper'
 import {
   getSpawnContent,
   treatPathSep,
@@ -28,6 +28,7 @@ import {
 import { EOL } from 'os'
 import { Work } from '../../../../src/types/work'
 import { Config } from '../../../../src/types/config'
+import { Ignore } from 'ignore'
 
 jest.mock('fs-extra')
 jest.mock('../../../../src/utils/gitLfsHelper')
@@ -42,7 +43,9 @@ jest.mock('../../../../src/utils/childProcessUtils', () => {
     treatPathSep: jest.fn(),
   }
 })
+jest.mock('../../../../src/utils/ignoreHelper')
 
+const mockBuildIgnoreHelper = jest.mocked(buildIgnoreHelper)
 const mockedGetStreamContent = jest.mocked(getSpawnContent)
 const mockedTreatPathSep = jest.mocked(treatPathSep)
 const mockedStat = jest.mocked(stat)
@@ -54,7 +57,7 @@ beforeEach(() => {
   jest.resetAllMocks()
   work = getWork()
   work.config.from = 'pastsha'
-  work.config.from = 'recentsha'
+  work.config.to = 'recentsha'
 })
 
 describe('gitPathSeparatorNormalizer', () => {
@@ -135,6 +138,13 @@ describe('readPathFromGit', () => {
 })
 
 describe('copyFile', () => {
+  beforeEach(() => {
+    mockBuildIgnoreHelper.mockResolvedValue({
+      globalIgnore: {
+        ignores: () => false,
+      } as unknown as Ignore,
+    } as unknown as IgnoreHelper)
+  })
   describe('when file is already copied', () => {
     it('should not copy file', async () => {
       await copyFiles(work.config, 'source/file')
@@ -165,25 +175,61 @@ describe('copyFile', () => {
     })
   })
 
-  describe('when source location is empty', () => {
-    it('should copy file', async () => {
+  describe('when content is not a git location', () => {
+    it('should ignore this path', async () => {
       // Arrange
-      mockedTreatPathSep.mockReturnValueOnce('source/copyFile')
-      mockedGetStreamContent.mockResolvedValue(Buffer.from(''))
+      const sourcePath = 'source/warning'
+      mockedGetStreamContent.mockRejectedValue(
+        `fatal: path '${sourcePath}' does not exist in 'HEAD'`
+      )
 
       // Act
-      await copyFiles(work.config, 'source/doNotCopy')
+      await copyFiles(work.config, sourcePath)
 
       // Assert
       expect(getSpawnContent).toBeCalled()
-      expect(outputFile).toBeCalledWith(
-        'output/source/copyFile',
-        Buffer.from('')
-      )
+      expect(outputFile).not.toBeCalled()
     })
   })
 
-  describe('when source location is not empty', () => {
+  describe('when path is ignored', () => {
+    it('should not copy this path', async () => {
+      // Arrange
+      mockBuildIgnoreHelper.mockResolvedValue({
+        globalIgnore: {
+          ignores: () => true,
+        } as unknown as Ignore,
+      } as unknown as IgnoreHelper)
+
+      // Act
+      await copyFiles(work.config, 'source/ignored')
+
+      // Assert
+      expect(getSpawnContent).not.toBeCalled()
+      expect(outputFile).not.toBeCalled()
+    })
+  })
+
+  describe('when content should be copied', () => {
+    describe('when source location is empty', () => {
+      it('should copy file', async () => {
+        // Arrange
+
+        mockedTreatPathSep.mockReturnValueOnce('source/copyFile')
+        mockedGetStreamContent.mockResolvedValue(Buffer.from(''))
+
+        // Act
+        await copyFiles(work.config, 'source/doNotCopy')
+
+        // Assert
+        expect(getSpawnContent).toBeCalled()
+        expect(outputFile).toBeCalledWith(
+          'output/source/copyFile',
+          Buffer.from('')
+        )
+      })
+    })
+
     describe('when content is a folder', () => {
       it('should copy the folder', async () => {
         // Arrange
@@ -206,22 +252,7 @@ describe('copyFile', () => {
         expect(treatPathSep).toBeCalledTimes(1)
       })
     })
-    describe('when content is not a git location', () => {
-      it('should ignore this path', async () => {
-        // Arrange
-        const sourcePath = 'source/warning'
-        mockedGetStreamContent.mockRejectedValue(
-          `fatal: path '${sourcePath}' does not exist in 'HEAD'`
-        )
 
-        // Act
-        await copyFiles(work.config, sourcePath)
-
-        // Assert
-        expect(getSpawnContent).toBeCalled()
-        expect(outputFile).not.toBeCalled()
-      })
-    })
     describe('when content is a file', () => {
       beforeEach(async () => {
         // Arrange
@@ -274,7 +305,7 @@ describe('readDir', () => {
     it('should throw', async () => {
       // Act
       try {
-        await readFile('path')
+        await readDir('path', work.config)
       } catch (err) {
         // Assert
         expect(err).toBeTruthy()
@@ -283,41 +314,7 @@ describe('readDir', () => {
     })
   })
 })
-/*
-describe('readFile', () => {
-  describe('when readfile succeed', () => {
-    beforeEach(() => {
-      // Arrange
-      fs.promises.readFile.mockImplementationOnce(() => Promise.resolve({}))
-    })
-    it('should return the file', async () => {
-      // Act
-      const file = await readFile('path')
 
-      // Assert
-      expect(file).toBeTruthy()
-      expect(fs.promises.readFile).toHaveBeenCalled()
-    })
-  })
-
-  describe('when readfile throw', () => {
-    beforeEach(() => {
-      // Arrange
-      fs.promises.readFile.mockImplementationOnce(() => Promise.reject('Error'))
-    })
-    it('should throw', async () => {
-      // Act
-      try {
-        await readFile('path')
-      } catch (err) {
-        // Assert
-        expect(err).toBeTruthy()
-        expect(fs.promises.readFile).toHaveBeenCalled()
-      }
-    })
-  })
-})
-*/
 describe('scan', () => {
   describe('when getSpawnContent throw', () => {
     beforeEach(() => {
@@ -450,56 +447,6 @@ describe('scanExtension', () => {
   })
 })
 
-describe('isSubDir', () => {
-  describe('when parent contains dir', () => {
-    it('returns true', async () => {
-      // Arrange
-
-      // Act
-      const result = isSubDir('parent', 'parent/dir')
-
-      // Assert
-      expect(result).toBe(true)
-    })
-  })
-
-  describe('when parent does not contains dir', () => {
-    it('returns false', async () => {
-      // Arrange
-
-      // Act
-      const result = isSubDir('parent', 'dir/child')
-
-      // Assert
-      expect(result).toBe(false)
-    })
-  })
-  it.each([
-    ['/foo', '/foo', false],
-    ['/foo', '/bar', false],
-    ['/foo', '/foobar', false],
-    ['/foo', '/foo/bar', true],
-    ['/foo', '/foo/../bar', false],
-    ['/foo', '/foo/./bar', true],
-    ['/bar/../foo', '/foo/bar', true],
-    ['/foo', './bar', false],
-    ['C:\\Foo', 'C:\\Foo\\Bar', false],
-    ['C:\\Foo', 'C:\\Bar', false],
-    ['C:\\Foo', 'D:\\Foo\\Bar', false],
-  ])(
-    `should verify %s expect %s to be a subDir: %s`,
-    (parent, child, expected) => {
-      // Arrange
-
-      // Act
-      const actual = isSubDir(parent, child)
-
-      // Assert
-      expect(actual).toBe(expected)
-    }
-  )
-})
-
 describe('pathExists', () => {
   it('returns true when path is folder', async () => {
     // Arrange
@@ -549,6 +496,11 @@ describe('pathExists', () => {
 describe('writeFile', () => {
   beforeEach(() => {
     mockedTreatPathSep.mockReturnValue('folder/file')
+    mockBuildIgnoreHelper.mockResolvedValue({
+      globalIgnore: {
+        ignores: () => false,
+      } as unknown as Ignore,
+    } as unknown as IgnoreHelper)
   })
 
   it.each(['folder/file', 'folder\\file'])(
@@ -581,89 +533,20 @@ describe('writeFile', () => {
     // Assert
     expect(outputFile).toBeCalledTimes(1)
   })
-})
 
-describe('dirExists', () => {
-  it('returns true when dir exist', async () => {
+  it('should not copy ignored path', async () => {
     // Arrange
-    mockedStat.mockImplementation((() =>
-      Promise.resolve({
-        isDirectory: () => true,
-      } as unknown as Stats)) as unknown as typeof stat)
+    mockBuildIgnoreHelper.mockResolvedValue({
+      globalIgnore: {
+        ignores: () => true,
+      } as unknown as Ignore,
+    } as unknown as IgnoreHelper)
 
     // Act
-    const exist = await dirExists('test')
+    await writeFile('', '', {} as Config)
 
     // Assert
-    expect(exist).toBe(true)
-  })
-
-  it('returns false when dir does not exist', async () => {
-    // Arrange
-    mockedStat.mockImplementation((() =>
-      Promise.resolve({
-        isDirectory: () => false,
-      } as unknown as Stats)) as unknown as typeof stat)
-
-    // Act
-    const exist = await dirExists('test')
-
-    // Assert
-    expect(exist).toBe(false)
-  })
-
-  it('returns false when an exception occurs', async () => {
-    // Arrange
-    mockedStat.mockImplementation((() =>
-      Promise.reject(new Error('test'))) as unknown as typeof stat)
-
-    // Act
-    const exist = await dirExists('test')
-
-    // Assert
-    expect(exist).toBe(false)
-  })
-})
-
-describe('fileExists', () => {
-  it('returns true when file exist', async () => {
-    // Arrange
-    mockedStat.mockImplementation((() =>
-      Promise.resolve({
-        isFile: () => true,
-      } as unknown as Stats)) as unknown as typeof stat)
-
-    // Act
-    const exist = await fileExists('test')
-
-    // Assert
-    expect(exist).toBe(true)
-  })
-
-  it('returns false when file does not exist', async () => {
-    // Arrange
-    mockedStat.mockImplementation((() =>
-      Promise.resolve({
-        isFile: () => false,
-      } as unknown as Stats)) as unknown as typeof stat)
-
-    // Act
-    const exist = await fileExists('test')
-
-    // Assert
-    expect(exist).toBe(false)
-  })
-
-  it('returns false when an exception occurs', async () => {
-    // Arrange
-    mockedStat.mockImplementation((() =>
-      Promise.reject(new Error('test'))) as unknown as typeof stat)
-
-    // Act
-    const exist = await fileExists('test')
-
-    // Assert
-    expect(exist).toBe(false)
+    expect(outputFile).not.toBeCalled()
   })
 })
 
