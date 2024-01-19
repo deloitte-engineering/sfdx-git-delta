@@ -1,14 +1,12 @@
 'use strict'
-import { readFile as fsReadFile } from 'fs-extra'
-import { isAbsolute, join, relative } from 'path'
-import { outputFile, stat, copySync } from 'fs-extra'
-import {
-  GIT_FOLDER,
-  GIT_PATH_SEP,
-  UTF8_ENCODING,
-} from './gitConstants'
+import { join } from 'path'
+import { GIT_FOLDER, GIT_PATH_SEP } from '../constant/gitConstants'
+import { readFile as fsReadFile, outputFile, copySync } from 'fs-extra'
+import { UTF8_ENCODING } from '../constant/fsConstants'
 import { EOLRegex, getSpawnContent, treatPathSep } from './childProcessUtils'
 import { isLFS, getLFSObjectContentPath } from './gitLfsHelper'
+import { buildIgnoreHelper } from './ignoreHelper'
+import { dirExists, fileExists } from './fsUtils'
 import { Config } from '../types/config'
 
 import { lstatSync } from 'fs'
@@ -24,6 +22,10 @@ export const copyFiles = async (config: Config, src: string) => {
   if (copiedFiles.has(src) || writtenFiles.has(src)) return true
   copiedFiles.add(src)
 
+  const ignoreHelper = await buildIgnoreHelper(config)
+  if (ignoreHelper.globalIgnore.ignores(src)) {
+    return
+  }
   try {
     const bufferData: Buffer = await readPathFromGitAsBuffer(src, config)
     const utf8Data = bufferData?.toString(UTF8_ENCODING) ?? ''
@@ -124,13 +126,6 @@ export const readDir = async (dir: string, config: Config) => {
   return dirContent
 }
 
-export const readFile = async (path: string) => {
-  const file = await fsReadFile(path, {
-    encoding: UTF8_ENCODING,
-  })
-  return file
-}
-
 export async function* scan(
   dir: string,
   config: Config
@@ -150,16 +145,18 @@ export async function* scan(
 export const writeFile = async (
   path: string,
   content: string,
-  { output }: Config
+  config: Config
 ) => {
-  if (writtenFiles.has(path)) return
+  if (writtenFiles.has(path)) {
+    return
+  }
   writtenFiles.add(path)
-  await outputFile(join(output, treatPathSep(path)), content)
-}
 
-export const isSubDir = (parent: string, dir: string) => {
-  const rel = relative(parent, dir)
-  return !!rel && !rel.startsWith('..') && !isAbsolute(rel)
+  const ignoreHelper = await buildIgnoreHelper(config)
+  if (ignoreHelper.globalIgnore.ignores(path)) {
+    return
+  }
+  await outputFile(join(config.output, treatPathSep(path)), content)
 }
 
 export const scanExtension = async (
@@ -174,24 +171,6 @@ export const scanExtension = async (
     }
   }
   return result
-}
-
-export const dirExists = async (dir: string) => {
-  try {
-    const st = await stat(dir)
-    return st.isDirectory()
-  } catch {
-    return false
-  }
-}
-
-export const fileExists = async (file: string) => {
-  try {
-    const st = await stat(file)
-    return st.isFile()
-  } catch {
-    return false
-  }
 }
 
 export const isGit = async (dir: string) => {

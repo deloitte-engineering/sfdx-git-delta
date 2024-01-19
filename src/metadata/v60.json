@@ -1,5 +1,12 @@
 [
   {
+    "directoryName": "messagingChannels",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "messagingChannel",
+    "xmlName": "MessagingChannel"
+  },
+  {
     "directoryName": "recordAlertCategories",
     "inFolder": false,
     "metaFile": false,
@@ -35,11 +42,32 @@
     "xmlName": "MLPredictionDefinition"
   },
   {
+    "directoryName": "eventRelays",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "eventRelay",
+    "xmlName": "EventRelayConfig"
+  },
+  {
+    "directoryName": "omniSupervisorConfigs",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "omniSupervisorConfig",
+    "xmlName": "OmniSupervisorConfig"
+  },
+  {
     "directoryName": "uiObjectRelationConfigs",
     "inFolder": false,
     "metaFile": false,
     "suffix": "uiObjectRelationConfig",
     "xmlName": "UIObjectRelationConfig"
+  },
+  {
+  "directoryName": "timelineObjectDefinitions",
+  "inFolder": false,
+  "metaFile": false,
+  "suffix": "timelineObjectDefinition",
+  "xmlName": "TimelineObjectDefinition"
   },
   {
     "directoryName": "slackapps",
@@ -56,11 +84,46 @@
     "xmlName": "ViewDefinition"
   },
   {
+    "directoryName": "ActionLauncherItemDef",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "actionLauncherItemDef",
+    "xmlName": "ActionLauncherItemDef"
+  },
+  {
     "directoryName": "loyaltyProgramSetups",
     "inFolder": false,
     "metaFile": false,
     "suffix": "loyaltyProgramSetup",
     "xmlName": "LoyaltyProgramSetup"
+  },
+  {
+    "directoryName": "documentCategory",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "documentCategory",
+    "xmlName": "DocumentCategory"
+  },
+  {
+    "directoryName": "documentCategoryDocumentTypes",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "documentCategoryDocumentType",
+    "xmlName": "DocumentCategoryDocumentType"
+  },
+  {
+    "directoryName": "AssessmentQuestions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "aq",
+    "xmlName": "AssessmentQuestion"
+  },
+  {
+    "directoryName": "AssessmentQuestionSets",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "aqs",
+    "xmlName": "AssessmentQuestionSet"
   },
   {
     "directoryName": "decisionTables",
@@ -75,6 +138,83 @@
     "metaFile": false,
     "suffix": "decisionTableDatasetLink",
     "xmlName": "DecisionTableDatasetLink"
+  },
+  {
+    "directoryName": "forecastingFilters",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "forecastingFilter",
+    "xmlName": "ForecastingFilter"
+  },
+  {
+    "directoryName": "forecastingFilterConditions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "forecastingFilterCondition",
+    "xmlName": "ForecastingFilterCondition"
+  },
+  {
+    "directoryName": "forecastingSourceDefinitions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "forecastingSourceDefinition",
+    "xmlName": "ForecastingSourceDefinition"
+  },
+  {
+    "directoryName": "forecastingTypes",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "forecastingType",
+    "xmlName": "ForecastingType"
+  },
+  {
+    "directoryName": "forecastingTypeSources",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "forecastingTypeSource",
+    "xmlName": "ForecastingTypeSource"
+  },
+  {
+    "directoryName": "decisionMatrixDefinition",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "decisionMatrixDefinition",
+    "xmlName": "DecisionMatrixDefinition"
+  },
+  {
+    "directoryName": "expressionSetDefinition",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "expressionSetDefinition",
+    "xmlName": "ExpressionSetDefinition"
+  },
+  {
+    "directoryName": "explainabilityActionDefinition",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "explainabilityActionDefinition",
+    "xmlName": "ExplainabilityActionDefinition"
+  },
+  {
+    "directoryName": "explainabilityActionVersion",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "explainabilityActionVersion",
+    "xmlName": "ExplainabilityActionVersion"
+  },
+  {
+    "directoryName": "applicationSubtypeDefinition",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "applicationSubtypeDefinition",
+    "xmlName": "ApplicationSubtypeDefinition"
+  },
+  {
+    "directoryName": "businessProcessTypeDefinition",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "businessProcessTypeDefinition",
+    "xmlName": "BusinessProcessTypeDefinition"
   },
   {
     "directoryName": "actionPlanTemplates",
@@ -105,6 +245,20 @@
     "xmlName": "RecordActionDeployment"
   },
   {
+    "directoryName": "relationshipGraphDefinitions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "relationshipGraphDefinition",
+    "xmlName": "RelationshipGraphDefinition"
+  },
+  {
+    "directoryName": "omniDataTransforms",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "rpt",
+    "xmlName": "OmniDataTransform"
+  },
+  {
     "directoryName": "OmniInteractionConfig",
     "inFolder": false,
     "metaFile": false,
@@ -133,11 +287,11 @@
     "xmlName": "OmniUiCard"
   },
   {
-    "directoryName": "omniDataTransforms",
+    "directoryName": "customindex",
     "inFolder": false,
     "metaFile": false,
-    "suffix": "rpt",
-    "xmlName": "OmniDataTransform"
+    "suffix": "indx",
+    "xmlName": "CustomIndex "
   },
   {
     "directoryName": "batchCalcJobDefinitions",
@@ -241,6 +395,13 @@
     "metaFile": false,
     "suffix": "namedCredential",
     "xmlName": "NamedCredential"
+  },
+  {
+    "directoryName": "externalCredentials",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "externalCredential",
+    "xmlName": "ExternalCredential"
   },
   {
     "directoryName": "externalServiceRegistrations",
@@ -498,6 +659,13 @@
     "metaFile": false,
     "suffix": "flow",
     "xmlName": "Flow"
+  },
+  {
+    "directoryName": "flowtests",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "flowtest",
+    "xmlName": "FlowTest"
   },
   {
     "directoryName": "flowDefinitions",
@@ -895,6 +1063,20 @@
     "metaFile": true,
     "suffix": "site",
     "xmlName": "ExperienceBundle"
+  },
+  {
+    "directoryName": "digitalExperienceConfigs",
+    "inFolder": false,
+    "metaFile": true,
+    "suffix": "digitalExperienceConfig",
+    "xmlName": "DigitalExperienceConfig"
+  },
+  {
+    "directoryName": "digitalExperiences",
+    "inFolder": false,
+    "metaFile": true,
+    "suffix": "digitalExperience",
+    "xmlName": "DigitalExperienceBundle"
   },
   {
     "directoryName": "networks",
@@ -1955,5 +2137,61 @@
     "xmlTag": "workflowTasks",
     "key": "name",
     "excluded": true
+  },
+  {
+    "directoryName": "clauseCatgConfigurations",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "clauseCatgConfiguration",
+    "xmlName": "ClauseCatgConfiguration"
+  },
+  {
+    "directoryName": "disclosureDefinitions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "disclosureDefinition",
+    "xmlName": "DisclosureDefinition"
+  },
+  {
+    "directoryName": "disclosureDefinitionVersions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "disclosureDefinitionVersion",
+    "xmlName": "DisclosureDefinitionVersion"
+  },
+  {
+    "directoryName": "disclosureTypes",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "disclosureType ",
+    "xmlName": "DisclosureType"
+  },
+  {
+    "directoryName": "fuelTypes",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "fuelType",
+    "xmlName": "FuelType"
+  },
+  {
+    "directoryName": "fuelTypeSustnUoms",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "fuelTypeSustnUom",
+    "xmlName": "FuelTypeSustnUom"
+  },
+  {
+    "directoryName": "sustnUomConversions",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "sustnUomConversion",
+    "xmlName": "SustnUomConversion"
+  },
+  {
+    "directoryName": "sustainabilityUoms",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "sustainabilityUom",
+    "xmlName": "SustainabilityUom"
   }
 ]

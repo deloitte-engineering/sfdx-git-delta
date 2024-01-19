@@ -14,9 +14,12 @@ Happy linting! 💖
 module.exports = {
   extends: [
     'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
     'prettier',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
   ],
   ignorePatterns: [
     'lib/**/*',
@@ -86,6 +89,8 @@ module.exports = {
     'generator-star-spacing': 'off',
     'getter-return': 'error',
     'implicit-arrow-linebreak': 'off',
+    'import/no-cycle': 'error',
+    'import/no-unresolved': 'off',
     indent: 'off',
     'indent-legacy': 'off',
     'jsx-quotes': 'off',
@@ -158,7 +163,7 @@ module.exports = {
     'no-unsafe-finally': 'error',
     'no-unsafe-negation': 'error',
     'no-unused-labels': 'error',
-    'no-unused-vars': 'error',
+    'no-unused-vars': 'off',
     'no-useless-catch': 'error',
     'no-useless-escape': 'error',
     'no-whitespace-before-property': 'off',

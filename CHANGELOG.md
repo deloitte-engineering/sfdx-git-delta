@@ -4,6 +4,64 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.34.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.33.0...v5.34.0) (2024-01-16)
+
+
+### Features
+
+* add `Spring'24` release preview support ([#758](https://github.com/scolladon/sfdx-git-delta/issues/758)) ([f4d7c67](https://github.com/scolladon/sfdx-git-delta/commit/f4d7c67be9d0fdc8d992cd11696be9f529eb2b6a))
+* add remaining discovery framework metadata type support ([#757](https://github.com/scolladon/sfdx-git-delta/issues/757)) ([2c7e848](https://github.com/scolladon/sfdx-git-delta/commit/2c7e84839f7ab922840b5552e92f5b74beba66db))
+
+## [5.33.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.32.0...v5.33.0) (2024-01-12)
+
+
+### Features
+
+* add `MessagingChannel` metadata support ([#754](https://github.com/scolladon/sfdx-git-delta/issues/754)) ([22aa87f](https://github.com/scolladon/sfdx-git-delta/commit/22aa87fa1fdafabdf841900aab27855fcd31947b))
+
+## [5.32.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.31.1...v5.32.0) (2024-01-09)
+
+
+### Features
+
+* add `RecordAlertCategory` metadata support ([#752](https://github.com/scolladon/sfdx-git-delta/issues/752)) ([3ba47cc](https://github.com/scolladon/sfdx-git-delta/commit/3ba47ccb2c631875a19d48bd78adcf5d501429f2))
+
+
+### Bug Fixes
+
+* add fetch depth tips for git sha pointer error ([#748](https://github.com/scolladon/sfdx-git-delta/issues/748)) ([1753f97](https://github.com/scolladon/sfdx-git-delta/commit/1753f97fda048000690ca658d133cc58494fefcb))
+* apply ignore settings when copying file ([#745](https://github.com/scolladon/sfdx-git-delta/issues/745)) ([d6f99d3](https://github.com/scolladon/sfdx-git-delta/commit/d6f99d3c8c15de8a8844d9dcab964cffab929312))
+* circular dependency issues ([#749](https://github.com/scolladon/sfdx-git-delta/issues/749)) ([30ed6d2](https://github.com/scolladon/sfdx-git-delta/commit/30ed6d28e96c1f67ce5ec868391a581534dc5cb6))
+
+## [5.31.1](https://github.com/scolladon/sfdx-git-delta/compare/v5.31.0...v5.31.1) (2023-12-12)
+
+
+### Bug Fixes
+
+* boolean attribute and comment xml parsing ([#738](https://github.com/scolladon/sfdx-git-delta/issues/738)) ([81e65e5](https://github.com/scolladon/sfdx-git-delta/commit/81e65e51ea93b9f8bbf7a55a6a947bfe7a93c245))
+
+## [5.31.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.30.0...v5.31.0) (2023-12-07)
+
+
+### Features
+
+* adding prediction builder ai metadata types ([#731](https://github.com/scolladon/sfdx-git-delta/issues/731)) ([b830a8f](https://github.com/scolladon/sfdx-git-delta/commit/b830a8ff4af4f2f74e772934359508f20c57b0ab))
+* support `MarketingAppExtension` metadata type ([#735](https://github.com/scolladon/sfdx-git-delta/issues/735)) ([e3f9f1a](https://github.com/scolladon/sfdx-git-delta/commit/e3f9f1a67ec5b7a693d697f8f5c2797e1cfb4f69))
+
+## [5.30.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.29.0...v5.30.0) (2023-11-21)
+
+
+### Features
+
+* add `EventRelayConfig` metadata support ([#726](https://github.com/scolladon/sfdx-git-delta/issues/726)) ([7ea47a8](https://github.com/scolladon/sfdx-git-delta/commit/7ea47a881abdfa0c44c4f0c7eae8465f7b7519da))
+
+## [5.29.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.28.0...v5.29.0) (2023-11-17)
+
+
+### Features
+
+* add `OmniSupervisorConfig` metadata support ([#723](https://github.com/scolladon/sfdx-git-delta/issues/723)) ([9209972](https://github.com/scolladon/sfdx-git-delta/commit/92099726ecc676be3cc79bf43a286aae90e42a4a))
+
 ## [5.28.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.27.0...v5.28.0) (2023-11-07)
 
 

@@ -4,17 +4,13 @@ import { getWork } from '../../../__utils__/globalTestHelper'
 import {
   COMMIT_REF_TYPE,
   TAG_REF_TYPE,
-} from '../../../../src/utils/gitConstants'
+} from '../../../../src/constant/gitConstants'
 import CLIHelper from '../../../../src/utils/cliHelper'
 import { getLatestSupportedVersion } from '../../../../src/metadata/metadataManager'
 import messages from '../../../../src/locales/en'
 import { Work } from '../../../../src/types/work'
-import {
-  readFile,
-  dirExists,
-  fileExists,
-  isGit,
-} from '../../../../src/utils/fsHelper'
+import { isGit } from '../../../../src/utils/fsHelper'
+import { readFile, dirExists, fileExists } from '../../../../src/utils/fsUtils'
 import { format } from 'util'
 
 jest.mock('../../../../src/utils/childProcessUtils', () => {
@@ -39,6 +35,7 @@ jest.mock('../../../../src/utils/repoSetup', () => {
 })
 
 jest.mock('../../../../src/utils/fsHelper')
+jest.mock('../../../../src/utils/fsUtils')
 
 const mockedReadFile = jest.mocked(readFile)
 const mockedDirExists = jest.mocked(dirExists)
