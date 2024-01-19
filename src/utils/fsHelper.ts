@@ -14,6 +14,12 @@ import type { Config } from '../types/config'
 import type { FileGitRef } from '../types/git'
 
 import { treatPathSep } from './fsUtils'
+import { join } from 'path'
+import { GIT_FOLDER, GIT_PATH_SEP } from '../constant/gitConstants'
+import { readFile as fsReadFile, outputFile, copySync } from 'fs-extra'
+import { UTF8_ENCODING } from '../constant/fsConstants'
+import { EOLRegex, getSpawnContent, treatPathSep } from './childProcessUtils'
+import { isLFS, getLFSObjectContentPath } from './gitLfsHelper'
 import { buildIgnoreHelper } from './ignoreHelper'
 
 import { lstatSync } from 'fs'
