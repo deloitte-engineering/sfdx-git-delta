@@ -9,7 +9,7 @@ import { buildIgnoreHelper } from './ignoreHelper'
 import { dirExists, fileExists } from './fsUtils'
 import { Config } from '../types/config'
 
-import { lstatSync } from 'fs'
+import { existsSync, lstatSync, mkdirSync } from 'fs'
 
 const FOLDER = 'tree'
 
@@ -42,7 +42,7 @@ export const copyFiles = async (config: Config, src: string) => {
       const dst = join(config.output, treatPathSep(src))
       // Use Buffer to output the file content
       // Let fs implementation detect the encoding ("utf8" or "binary")
-      if (await isDirectory(dst)) {
+      if (await isDirectory(treatPathSep(src))) {
         // Copy all files from directory to dst
         const sourceDir = dst.replace(config.output + '/', '')
         copySync(sourceDir, dst, { overwrite: false })
