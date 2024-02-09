@@ -22,7 +22,7 @@ import { EOLRegex, getSpawnContent, treatPathSep } from './childProcessUtils'
 import { isLFS, getLFSObjectContentPath } from './gitLfsHelper'
 import { buildIgnoreHelper } from './ignoreHelper'
 
-import { lstatSync } from 'fs'
+import { existsSync, lstatSync, mkdirSync } from 'fs'
 
 const FOLDER = 'tree'
 
