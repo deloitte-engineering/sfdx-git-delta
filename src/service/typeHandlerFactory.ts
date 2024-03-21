@@ -71,8 +71,6 @@ export default class TypeHandlerFactory {
     const type = this.metadata.get(line)
       ?.directoryName as keyof typeof handlerMap
 
-    console.log(`Line is ${type} ; type is ${type}`)
-
     return type in handlerMap
       ? new handlerMap[type](line, type, this.work, this.metadata)
       : new Standard(line, type, this.work, this.metadata)
