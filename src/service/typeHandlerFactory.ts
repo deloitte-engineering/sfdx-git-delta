@@ -44,6 +44,7 @@ const handlerMap = {
   recordTypes: SubCustomObject,
   reports: InFolder,
   rules: SubCustomObject,
+  sites: InFile,
   sharingReasons: SubCustomObject,
   sharingRules: InFile,
   standardValueSetTranslations: InFile,
@@ -69,6 +70,8 @@ export default class TypeHandlerFactory {
   public getTypeHandler(line: string) {
     const type = this.metadata.get(line)
       ?.directoryName as keyof typeof handlerMap
+
+    console.log(`Line is ${type} ; type is ${type}`)
 
     return type in handlerMap
       ? new handlerMap[type](line, type, this.work, this.metadata)
