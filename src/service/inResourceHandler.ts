@@ -15,7 +15,21 @@ export default class ResourceHandler extends StandardHandler {
     await super.handleAddition()
     if (!this.config.generateDelta) return
 
-    await this._copyResourceFiles()
+    if (this.line !== this.metadataName && this._parentFolderIsNotTheType()) {
+      let dirToBeCopied = this.metadataName;
+
+      if (dirToBeCopied.endsWith('digitalExperiences/site')) {
+        /*
+        In digitalExpierences/site, multiple sites can be stored and deployed individually.
+
+        In this case, `this.metadataName` is equal to `${sourcePath}/digitalExperiences/site`, forcing a copy of 
+        all sites in the directory even though some of them don't have changes.
+        */
+        dirToBeCopied = this._getRootElementAfterMetadataName();
+      }
+
+      await this._copy(dirToBeCopied)
+    }
   }
 
   public override async handleDeletion() {
@@ -81,6 +95,16 @@ export default class ResourceHandler extends StandardHandler {
 
     resourcePath[resourcePath.length - 1] = lastPathElement.join(DOT)
     return `${resourcePath.join(PATH_SEP)}`
+  }
+
+  protected _getRootElementAfterMetadataName() {
+    let rootElement = this.splittedLine.join('/').replace(`${this.metadataName}/`, '').trim();
+
+    if (rootElement.includes('/')) {
+      rootElement = rootElement.split('/')[0].trim();
+    }
+
+    return rootElement;
   }
 
   protected override _getMetaTypeFilePath() {
