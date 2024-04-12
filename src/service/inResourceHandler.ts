@@ -25,7 +25,7 @@ export default class ResourceHandler extends StandardHandler {
         In this case, `this.metadataName` is equal to `${sourcePath}/digitalExperiences/site`, forcing a copy of 
         all sites in the directory even though some of them don't have changes.
         */
-        dirToBeCopied = this._getRootElementAfterMetadataName();
+        dirToBeCopied = `${this.metadataName}/${this._getRootElementAfterMetadataName()}`;
       }
 
       await this._copy(dirToBeCopied)
