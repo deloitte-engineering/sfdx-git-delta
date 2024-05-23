@@ -1,12 +1,15 @@
 'use strict'
 import { resolve } from 'path'
+
 import { readFile, readdir } from 'fs-extra'
-import {
+
+import type {
   BaseMetadata,
   Metadata,
   SharedFileMetadata,
   SharedFolderMetadata,
 } from '../types/metadata'
+
 import { MetadataRepository } from './MetadataRepository'
 import { MetadataRepositoryImpl } from './MetadataRepositoryImpl'
 
@@ -95,6 +98,6 @@ export const getSharedFolderMetadata = (metadata: MetadataRepository) =>
         .flatMap((elem: SharedFolderMetadata): BaseMetadata[] => elem.content!)
         .reduce(
           (acc: Map<string, string>, val: BaseMetadata) =>
-            acc.set(val!.suffix!, val!.xmlName),
+            acc.set(val!.suffix!, val!.xmlName!),
           sharedFolderMetadata
         )

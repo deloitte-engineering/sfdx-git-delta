@@ -18,15 +18,16 @@ jobs:
       - name: Setup dependencies, cache and install
         uses: ./.github/actions/install
 
-      - name: Build plugin
+      - uses: google/wireit@setup-github-actions-caching/v1
 
+      - name: Build plugin
         run: yarn pack
 
       - name: Unit test
-        run: yarn test:unit:coverage --runInBand
+        run: yarn test:unit -- --runInBand
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
@@ -41,7 +42,7 @@ jobs:
       - name: Functional test
         run: yarn test:nut
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: coverage-test-report
           path: reports/coverage
