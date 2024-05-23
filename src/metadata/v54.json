@@ -1934,5 +1934,12 @@
     "xmlTag": "workflowTasks",
     "key": "name",
     "excluded": true
+  },
+  {
+    "directoryName": "documentGenerationSettings",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "documentGenerationSetting",
+    "xmlName": "DocumentGenerationSetting"
   }
 ]
