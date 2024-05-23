@@ -1,22 +1,25 @@
 'use strict'
-import StandardHandler from './standardHandler'
-import { fillPackageWithParameter } from '../utils/packageHelper'
-import { getSharedFolderMetadata } from '../metadata/metadataManager'
-import { METAFILE_SUFFIX } from '../constant/metadataConstants'
 import { parse, join } from 'path'
-import { Manifest, Work } from '../types/work'
+
+import { METAFILE_SUFFIX } from '../constant/metadataConstants'
 import { MetadataRepository } from '../metadata/MetadataRepository'
+import { getSharedFolderMetadata } from '../metadata/metadataManager'
+import { Metadata } from '../types/metadata'
+import type { Manifest, Work } from '../types/work'
+import { fillPackageWithParameter } from '../utils/packageHelper'
+
+import StandardHandler from './standardHandler'
 
 export default class SharedFolderHandler extends StandardHandler {
   protected readonly sharedFolderMetadata: Map<string, string>
 
   constructor(
     line: string,
-    type: string,
+    metadataDef: Metadata,
     work: Work,
     metadata: MetadataRepository
   ) {
-    super(line, type, work, metadata)
+    super(line, metadataDef, work, metadata)
     this.suffixRegex = new RegExp(`\\.${this.ext}$`)
     this.sharedFolderMetadata = getSharedFolderMetadata(this.metadata)
   }

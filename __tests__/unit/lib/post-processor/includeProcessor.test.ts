@@ -1,13 +1,14 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 import IncludeProcessor from '../../../../src/post-processor/includeProcessor'
+import type { Work } from '../../../../src/types/work'
 import {
   IgnoreHelper,
   buildIncludeHelper,
 } from '../../../../src/utils/ignoreHelper'
-import { Work } from '../../../../src/types/work'
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
 
 const mockProcess = jest.fn()
 jest.mock('../../../../src/service/diffLineInterpreter', () => {
@@ -18,15 +19,13 @@ jest.mock('../../../../src/service/diffLineInterpreter', () => {
   })
 })
 
-const mockGetAllFilesAsLineStream = jest.fn()
-jest.mock('../../../../src/utils/repoSetup', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      getAllFilesAsLineStream: mockGetAllFilesAsLineStream,
-      getFirstCommitRef: jest.fn(),
-    }
-  })
-})
+const mockGetFilesPath = jest.fn()
+jest.mock('../../../../src/adapter/GitAdapter', () => ({
+  getInstance: jest.fn(() => ({
+    getFilesPath: mockGetFilesPath,
+    getFirstCommitRef: jest.fn(),
+  })),
+}))
 
 jest.mock('../../../../src/utils/ignoreHelper')
 const mockedBuildIncludeHelper = jest.mocked(buildIncludeHelper)
@@ -41,7 +40,6 @@ describe('IncludeProcessor', () => {
   let metadata: MetadataRepository
 
   beforeAll(async () => {
-    // eslint-disable-next-line no-undef
     metadata = await getGlobalMetadata()
   })
 
@@ -65,7 +63,7 @@ describe('IncludeProcessor', () => {
 
   describe('when include is configured', () => {
     beforeAll(() => {
-      mockGetAllFilesAsLineStream.mockImplementation(() => ['test'])
+      mockGetFilesPath.mockImplementation(() => Promise.resolve(['test']))
     })
 
     describe('when no file matches the patterns', () => {
@@ -107,7 +105,7 @@ describe('IncludeProcessor', () => {
 
   describe('when includeDestructive is configured', () => {
     beforeAll(() => {
-      mockGetAllFilesAsLineStream.mockImplementation(() => ['test'])
+      mockGetFilesPath.mockImplementation(() => Promise.resolve(['test']))
     })
     describe('when no file matches the patterns', () => {
       beforeEach(() => {

@@ -1,5 +1,7 @@
 'use strict'
 import { expect, describe, it } from '@jest/globals'
+
+import { MetadataRepositoryImpl } from '../../../../src/metadata/MetadataRepositoryImpl'
 import {
   getDefinition,
   getInFileAttributes,
@@ -7,8 +9,7 @@ import {
   getSharedFolderMetadata,
   isVersionSupported,
 } from '../../../../src/metadata/metadataManager'
-import { Metadata } from '../../../../src/types/metadata'
-import { MetadataRepositoryImpl } from '../../../../src/metadata/MetadataRepositoryImpl'
+import type { Metadata } from '../../../../src/types/metadata'
 
 describe(`test if metadata`, () => {
   it('provide latest when apiVersion does not exist', async () => {

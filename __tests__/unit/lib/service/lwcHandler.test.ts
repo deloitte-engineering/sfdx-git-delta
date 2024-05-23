@@ -1,21 +1,27 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
-import LwcHandler from '../../../../src/service/lwcHandler'
-import { copyFiles } from '../../../../src/utils/fsHelper'
-import { Work } from '../../../../src/types/work'
+
 import {
   ADDITION,
   DELETION,
   MODIFICATION,
 } from '../../../../src/constant/gitConstants'
 import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
+import LwcHandler from '../../../../src/service/lwcHandler'
+import type { Work } from '../../../../src/types/work'
+import { copyFiles } from '../../../../src/utils/fsHelper'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
 
 jest.mock('../../../../src/utils/fsHelper')
 
-const objectType = 'lwc'
+const objectType = {
+  directoryName: 'lwc',
+  inFolder: false,
+  metaFile: false,
+  xmlName: 'LightningComponentBundle',
+}
 const element = 'component'
-const basePath = `force-app/main/default/${objectType}`
+const basePath = `force-app/main/default/${objectType.directoryName}`
 const entityPath = `${basePath}/${element}/${element}.js`
 const xmlName = 'LightningComponentBundle'
 let work: Work
@@ -27,7 +33,6 @@ beforeEach(() => {
 describe('lwcHandler', () => {
   let globalMetadata: MetadataRepository
   beforeAll(async () => {
-    // eslint-disable-next-line no-undef
     globalMetadata = await getGlobalMetadata()
   })
   describe('when the line should not be processed', () => {
