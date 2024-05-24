@@ -1,0 +1,12 @@
+ignores: [
+  '@commitlint/*',
+  '@salesforce/*',
+  '@stryker-mutator/*',
+  '@types/jest',
+  'chai',
+  'depcheck',
+  'lint-staged',
+  'mocha',
+  'nyc',
+  'sinon',
+]
