@@ -1,10 +1,10 @@
 [
   {
-    "directoryName": "webstoretemplate",
+    "directoryName": "messagingChannels",
     "inFolder": false,
     "metaFile": false,
-    "suffix": "webstoretemplate",
-    "xmlName": "WebStoreTemplate"
+    "suffix": "messagingChannel",
+    "xmlName": "MessagingChannel"
   },
   {
     "directoryName": "recordAlertCategories",

@@ -1,12 +1,5 @@
 [
   {
-    "directoryName": "webstoretemplate",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "webstoretemplate",
-    "xmlName": "WebStoreTemplate"
-  },
-  {
     "directoryName": "aiApplicationConfigs",
     "inFolder": false,
     "metaFile": false,
