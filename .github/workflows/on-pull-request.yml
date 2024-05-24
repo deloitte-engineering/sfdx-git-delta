@@ -33,7 +33,7 @@ jobs:
         uses: ./.github/actions/install
 
       - name: Lint commits
-        uses: wagoid/commitlint-github-action@v6
+        uses: wagoid/commitlint-github-action@v5
         env:
           NODE_PATH: ${{ github.workspace }}/node_modules
         continue-on-error: true
