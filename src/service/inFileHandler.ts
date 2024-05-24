@@ -30,13 +30,16 @@ export default class InFileHandler extends StandardHandler {
 
   public override async handleAddition() {
     await this._compareRevisionAndStoreComparison()
+
+    if (!this.config.generateDelta) return
+    await this._writeScopedContent()
   }
 
   public override async handleDeletion() {
     if (this._shouldTreatDeletionAsDeletion()) {
       await super.handleDeletion()
     } else {
-      await this.handleAddition()
+      await this._compareRevisionAndStoreComparison()
     }
   }
 
@@ -48,13 +51,17 @@ export default class InFileHandler extends StandardHandler {
     const { added, deleted } = await this.metadataDiff.compare(this.line)
     this._storeComparison(this.diffs.destructiveChanges, deleted)
     this._storeComparison(this.diffs.package, added)
-    const { xmlContent, isEmpty } = this.metadataDiff.prune()
-    if (this._shouldTreatContainerType(isEmpty)) {
+    if (this._shouldTreatContainerType(added.size)) {
       // Call from super.handleAddition to add the Root Type
       // QUESTION: Why InFile element are not deployable when root component is not listed in package.xml ?
       await super.handleAddition()
     }
-    if (this.config.generateDelta && !isEmpty) {
+  }
+
+  protected async _writeScopedContent() {
+    const { xmlContent, isEmpty } = this.metadataDiff.prune()
+
+    if (!isEmpty) {
       await writeFile(this.line, xmlContent, this.config)
     }
   }
@@ -95,7 +102,7 @@ export default class InFileHandler extends StandardHandler {
     return this.metadataDef.pruneOnly
   }
 
-  protected _shouldTreatContainerType(fileIsEmpty: boolean) {
-    return !fileIsEmpty
+  protected _shouldTreatContainerType(modificationLength: number) {
+    return modificationLength > 0
   }
 }
