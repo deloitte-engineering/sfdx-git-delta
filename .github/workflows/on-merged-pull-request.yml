@@ -1,5 +1,5 @@
 ---
-name: Package dev version cleaner
+name: Dev version cleaner
 
 on:
   pull_request_target:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   clean-npm-dev-version:
-    if: ${{ github.event.pull_request.merged }}
+    if: ${{ github.event.pull_request.merged == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
