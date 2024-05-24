@@ -15,23 +15,22 @@ jobs:
     secrets: inherit
 
   prepare-release:
-    needs: [build]
+    needs: build
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
-      prs_created: ${{ steps.release.outputs.prs_created }}
       version: ${{ steps.release.outputs.version }}
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: google-github-actions/release-please-action@v4
         id: release
         with:
           token: ${{ secrets.RELEASE_PAT }}
           release-type: node
 
   release:
-    needs: [prepare-release]
+    needs: prepare-release
     runs-on: ubuntu-latest
-    if: ${{ needs.prepare-release.outputs.release_created == 'true' }}
+    if: needs.prepare-release.outputs.release_created == 'true'
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -51,16 +50,44 @@ jobs:
           YARN_NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
   test-release:
-    uses: ./.github/workflows/run-e2e-tests.yml
     needs: [prepare-release, release]
-    with:
-      channel: ${{ needs.prepare-release.outputs.version }}
-    secrets: inherit
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+        node: [18, 20]
+        cli: [sfdx-cli, '@salesforce/cli']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          ref: 'e2e/head'
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install cli
+        run: npm install -g ${{matrix.cli}}
+
+      - name: Install new plugin version
+        run: echo y | sfdx plugins:install sfdx-git-delta@${{ needs.prepare-release.outputs.version }}
+
+      - name: Test new plugin version
+        run: sfdx sgd:source:delta --help
+
+      - name: E2E Tests
+        run: |
+          yarn
+          yarn test:e2e
 
   perf:
-    needs: [prepare-release]
+    needs: prepare-release
     runs-on: ubuntu-latest
-    if: ${{ needs.prepare-release.outputs.release_created != 'true' && needs.prepare-release.outputs.prs_created == 'true' }}
+    if: needs.prepare-release.outputs.release_created != 'true'
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -70,16 +97,24 @@ jobs:
         with:
           node-version: 18
 
-      - name: Setup dependencies, cache and install
-        uses: ./.github/actions/install
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "yarn-cache=$(yarn config get cacheFolder)" >> "$GITHUB_OUTPUT"
+        shell: bash
 
-      - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.yarn-cache }}
+          key: ${{ runner.os }}-16-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        run: yarn install --immutable --check-cache
 
       - name: Build plugin
         run: yarn pack
 
-      - name: Install salesforce CLI
-        run: npm install -g @salesforce/cli
+      - name: Install sfdx-cli
+        run: npm install -g sfdx-cli
 
       - name: Install plugin
         run: |
@@ -96,8 +131,8 @@ jobs:
 
       - name: Run benchmark
         run: |
+          git checkout -f main
           yarn test:perf
-          git reset --hard
 
       - name: Store benchmark result
         uses: benchmark-action/github-action-benchmark@v1

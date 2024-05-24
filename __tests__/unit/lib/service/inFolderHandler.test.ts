@@ -1,27 +1,20 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-
-import { METAFILE_SUFFIX } from '../../../../src/constant/metadataConstants'
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import InFolder from '../../../../src/service/inFolderHandler'
-import type { Work } from '../../../../src/types/work'
-import { copyFiles, readDir } from '../../../../src/utils/fsHelper'
 import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import InFolder from '../../../../src/service/inFolderHandler'
+import { copyFiles, readDir } from '../../../../src/utils/fsHelper'
+import { METAFILE_SUFFIX } from '../../../../src/constant/metadataConstants'
+import { Work } from '../../../../src/types/work'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 jest.mock('../../../../src/utils/fsHelper')
 const mockedReadDir = jest.mocked(readDir)
 
 const entity = 'folder/test'
 const extension = 'document'
-const objectType = {
-  directoryName: 'documents',
-  inFolder: true,
-  metaFile: true,
-  suffix: 'document',
-  xmlName: 'Document',
-}
+const objectType = 'documents'
 const xmlName = 'Document'
-const line = `A       force-app/main/default/${objectType.directoryName}/${entity}.${extension}-meta.xml`
+const line = `A       force-app/main/default/${objectType}/${entity}.${extension}-meta.xml`
 
 let work: Work
 beforeEach(() => {
@@ -32,6 +25,7 @@ beforeEach(() => {
 describe('InFolderHandler', () => {
   let globalMetadata: MetadataRepository
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     globalMetadata = await getGlobalMetadata()
   })
 
@@ -95,23 +89,24 @@ describe('InFolderHandler', () => {
     })
   })
   describe('when the line should not be processed', () => {
-    it.each([
-      `force-app/main/default/${objectType.directoryName}/test.otherExtension`,
-    ])('does not handle the line', async entityPath => {
-      // Arrange
-      const sut = new InFolder(
-        `A       ${entityPath}`,
-        objectType,
-        work,
-        globalMetadata
-      )
+    it.each([`force-app/main/default/${objectType}/test.otherExtension`])(
+      'does not handle the line',
+      async entityPath => {
+        // Arrange
+        const sut = new InFolder(
+          `A       ${entityPath}`,
+          objectType,
+          work,
+          globalMetadata
+        )
 
-      // Act
-      await sut.handle()
+        // Act
+        await sut.handle()
 
-      // Assert
-      expect(work.diffs.package.size).toBe(0)
-      expect(copyFiles).not.toHaveBeenCalled()
-    })
+        // Assert
+        expect(work.diffs.package.size).toBe(0)
+        expect(copyFiles).not.toHaveBeenCalled()
+      }
+    )
   })
 })

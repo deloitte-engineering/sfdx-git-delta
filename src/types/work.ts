@@ -1,4 +1,4 @@
-import type { Config } from './config'
+import { Config } from './config'
 
 export type Manifest = Map<string, Set<string>>
 

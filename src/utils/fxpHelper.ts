@@ -1,12 +1,9 @@
 'use strict'
 
 import { XMLBuilder, XMLParser } from 'fast-xml-parser'
-
-import type { Config } from '../types/config'
-import type { FileGitRef } from '../types/git'
-import { XML_HEADER_TAG_END } from '../constant/metadataConstants'
-
 import { readPathFromGit } from './fsHelper'
+import { XML_HEADER_TAG_END } from '../constant/metadataConstants'
+import { Config } from '../types/config'
 
 const XML_PARSER_OPTION = {
   commentPropName: '#comment',
@@ -40,11 +37,8 @@ export const xml2Json = (xmlContent: string) => {
   return jsonContent
 }
 
-export const parseXmlFileToJson = async (
-  forRef: FileGitRef,
-  config: Config
-) => {
-  const xmlContent = await readPathFromGit(forRef.path, config)
+export const parseXmlFileToJson = async (line: string, config: Config) => {
+  const xmlContent = await readPathFromGit(line, config)
   return xml2Json(xmlContent)
 }
 
@@ -62,5 +56,3 @@ export const convertJsonToXml = (jsonContent: any) => {
 }
 
 export const ATTRIBUTE_PREFIX = '@_'
-
-export const XML_HEADER_ATTRIBUTE_KEY = '?xml'

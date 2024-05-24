@@ -1,30 +1,15 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-
-import { METAFILE_SUFFIX } from '../../../../src/constant/metadataConstants'
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import SharedFolderHandler from '../../../../src/service/sharedFolderHandler'
-import type { Work } from '../../../../src/types/work'
-import { copyFiles } from '../../../../src/utils/fsHelper'
 import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import SharedFolderHandler from '../../../../src/service/sharedFolderHandler'
+import { copyFiles } from '../../../../src/utils/fsHelper'
+import { METAFILE_SUFFIX } from '../../../../src/constant/metadataConstants'
+import { Work } from '../../../../src/types/work'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 jest.mock('../../../../src/utils/fsHelper')
 
-const objectType = {
-  directoryName: 'discovery',
-  inFolder: false,
-  metaFile: true,
-  content: [
-    {
-      suffix: 'model',
-      xmlName: 'DiscoveryAIModel',
-    },
-    {
-      suffix: 'goal',
-      xmlName: 'DiscoveryGoal',
-    },
-  ],
-}
+const objectType = 'discovery'
 const entityName = 'DiscoveryAIModelTest'
 const entityExtension = 'model'
 const basePath = `force-app/main/default/`
@@ -41,6 +26,7 @@ beforeEach(() => {
 describe('SharedFolderHandler', () => {
   let globalMetadata: MetadataRepository
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     globalMetadata = await getGlobalMetadata()
   })
 

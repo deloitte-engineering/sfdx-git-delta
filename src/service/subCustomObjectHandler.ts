@@ -1,34 +1,26 @@
 'use strict'
-import { join } from 'path'
-
-import { PATH_SEP } from '../constant/fsConstants'
+import StandardHandler from './standardHandler'
 import {
   MASTER_DETAIL_TAG,
   OBJECT_META_XML_SUFFIX,
 } from '../constant/metadataConstants'
 import { readPathFromGit } from '../utils/fsHelper'
+import { join, sep } from 'path'
 
-import DecomposedHandler from './decomposedHandler'
-
-export default class CustomFieldHandler extends DecomposedHandler {
+export default class SubCustomObjectHandler extends StandardHandler {
   public override async handleAddition() {
     await super.handleAddition()
     if (!this.config.generateDelta) return
 
     // QUESTION: Why we need to add parent object for Master Detail field ? https://help.salesforce.com/s/articleView?id=000386883&type=1
-    const data = await readPathFromGit(
-      this.line,
-      this.config
-    )
+    const data = await readPathFromGit(this.line, this.config)
     if (!data.includes(MASTER_DETAIL_TAG)) return
 
     const customObjectDirPath = this.splittedLine
-      .slice(0, this.splittedLine.indexOf(this.metadataDef.directoryName))
-      .join(PATH_SEP)
+      .slice(0, this.splittedLine.indexOf(this.type))
+      .join(sep)
     const customObjectName =
-      this.splittedLine[
-        this.splittedLine.indexOf(this.metadataDef.directoryName) - 1
-      ]
+      this.splittedLine[this.splittedLine.indexOf(this.type) - 1]
 
     const customObjectPath = join(
       customObjectDirPath,
@@ -36,5 +28,11 @@ export default class CustomFieldHandler extends DecomposedHandler {
     )
 
     await this._copyWithMetaFile(customObjectPath)
+  }
+
+  protected override _getElementName() {
+    const prefix = this.splittedLine[this.splittedLine.indexOf(this.type) - 1]
+    const elementName = super._getElementName()
+    return `${prefix}.${elementName}`
   }
 }

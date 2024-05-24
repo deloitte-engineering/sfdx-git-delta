@@ -1,14 +1,11 @@
 'use strict'
-import { parse } from 'path'
-
-import { PATH_SEP } from '../constant/fsConstants'
-
 import InResourceHandler from './inResourceHandler'
+import { parse, sep } from 'path'
 
 export default class LwcHandler extends InResourceHandler {
   protected override _isProcessable() {
-    const parentFolder = parse(this.line).dir.split(PATH_SEP).pop()
+    const parentFolder = parse(this.line).dir.split(sep).pop()
 
-    return parentFolder !== this.metadataDef.directoryName
+    return parentFolder !== this.type
   }
 }
