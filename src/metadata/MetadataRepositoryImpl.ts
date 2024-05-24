@@ -5,8 +5,7 @@ import { parse } from 'path'
 import { DOT, PATH_SEP } from '../constant/fsConstants'
 import {
   CUSTOM_APPLICATION_SUFFIX,
-  CUSTOM_METADATA_SUFFIX,
-  EMAIL_SERVICES_FUNCTION_SUFFIX,
+  EMAILSERVICESFUNCTION_SUFFIX,
   METAFILE_SUFFIX,
   OBJECT_TRANSLATION_TYPE,
   OBJECT_TYPE,
@@ -130,8 +129,7 @@ export class MetadataRepositoryImpl implements MetadataRepository {
 
   private static UNSAFE_EXTENSION = new Set([
     CUSTOM_APPLICATION_SUFFIX,
-    EMAIL_SERVICES_FUNCTION_SUFFIX,
-    CUSTOM_METADATA_SUFFIX,
+    EMAILSERVICESFUNCTION_SUFFIX,
   ])
 
   private static COMPOSED_TYPES = new Set([
