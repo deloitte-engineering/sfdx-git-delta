@@ -13,7 +13,6 @@ import {
   parseXmlFileToJson,
   convertJsonToXml,
   ATTRIBUTE_PREFIX,
-  XML_HEADER_ATTRIBUTE_KEY,
 } from './fxpHelper'
 import { fillPackageWithParameter } from './packageHelper'
 
@@ -47,11 +46,7 @@ const selectKey =
 
 // Metadata JSON structure functional area
 const getRootMetadata = (fileContent: any): any =>
-  fileContent[
-    Object.keys(fileContent).find(
-      attribute => attribute !== XML_HEADER_ATTRIBUTE_KEY
-    ) as string
-  ] ?? {}
+  Object.values(fileContent)?.[1] ?? {}
 
 const getSubTypeTags =
   (attributes: Map<string, SharedFileMetadata>) => (fileContent: any) =>
@@ -149,7 +144,7 @@ const generatePartialJSON =
         storeHasMemberForType(key(elem))
       )
       return acc
-    }, structuredClone(jsonContent))
+    }, jsonContent)
   }
 
 export default class MetadataDiff {
