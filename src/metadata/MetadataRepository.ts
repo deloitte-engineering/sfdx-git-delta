@@ -1,6 +1,6 @@
 'use strict'
 
-import type { Metadata } from '../types/metadata'
+import { Metadata } from '../types/metadata'
 
 export interface MetadataRepository {
   has(path: string): boolean

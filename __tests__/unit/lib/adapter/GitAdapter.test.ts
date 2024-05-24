@@ -9,7 +9,7 @@ import GitAdapter, {
   filePathWalker,
   iterate,
 } from '../../../../src/adapter/GitAdapter'
-import type { Config } from '../../../../src/types/config'
+import { Config } from '../../../../src/types/config'
 import {
   getLFSObjectContentPath,
   isLFS,

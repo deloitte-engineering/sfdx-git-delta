@@ -7,8 +7,8 @@ import { EOLRegex, getSpawnContent } from './childProcessUtils'
 import { isLFS, getLFSObjectContentPath } from './gitLfsHelper'
 
 import GitAdapter from '../adapter/GitAdapter'
-import type { Config } from '../types/config'
-import type { FileGitRef } from '../types/git'
+import { Config } from '../types/config'
+import { FileGitRef } from '../types/git'
 
 import { treatPathSep } from './fsUtils'
 import { buildIgnoreHelper } from './ignoreHelper'

@@ -3,8 +3,8 @@ import { expect, jest, describe, it } from '@jest/globals'
 import { outputFile } from 'fs-extra'
 import { Ignore } from 'ignore'
 
-import type { Config } from '../../../../src/types/config'
-import type { Work } from '../../../../src/types/work'
+import { Config } from '../../../../src/types/config'
+import { Work } from '../../../../src/types/work'
 import {
   copyFiles,
   pathExists,

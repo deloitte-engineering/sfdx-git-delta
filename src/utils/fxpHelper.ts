@@ -2,9 +2,8 @@
 
 import { XMLBuilder, XMLParser } from 'fast-xml-parser'
 
-import type { Config } from '../types/config'
-import type { FileGitRef } from '../types/git'
-import { XML_HEADER_TAG_END } from '../constant/metadataConstants'
+import { Config } from '../types/config'
+import { FileGitRef } from '../types/git'
 
 import { readPathFromGit } from './fsHelper'
 
