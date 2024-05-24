@@ -1,15 +1,14 @@
 'use strict'
 import { expect, describe, it } from '@jest/globals'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import InFolder from '../../../../src/service/inFolderHandler'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import { Work } from '../../../../src/types/work'
+import SubCustomObject from '../../../../src/service/subCustomObjectHandler'
 import InResource from '../../../../src/service/inResourceHandler'
+import InFolder from '../../../../src/service/inFolderHandler'
 import SharedFolder from '../../../../src/service/sharedFolderHandler'
 import Standard from '../../../../src/service/standardHandler'
-import SubCustomObject from '../../../../src/service/subCustomObjectHandler'
 import TypeHandlerFactory from '../../../../src/service/typeHandlerFactory'
-import { Work } from '../../../../src/types/work'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 describe('the type handler factory', () => {
   let typeHandlerFactory: TypeHandlerFactory

@@ -1,9 +1,7 @@
 'use strict'
-import { parse } from 'path'
-
 import { PATH_SEP } from '../constant/fsConstants'
-
 import InResourceHandler from './inResourceHandler'
+import { parse } from 'path'
 
 export default class LwcHandler extends InResourceHandler {
   protected override _isProcessable() {

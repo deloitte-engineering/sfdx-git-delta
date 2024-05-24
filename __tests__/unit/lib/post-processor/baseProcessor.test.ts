@@ -1,10 +1,9 @@
 'use strict'
 import { beforeAll, expect, describe, it } from '@jest/globals'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
 import BaseProcessor from '../../../../src/post-processor/baseProcessor'
 import { Work } from '../../../../src/types/work'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 describe('BaseProcessor', () => {
   let work: Work, metadata: MetadataRepository

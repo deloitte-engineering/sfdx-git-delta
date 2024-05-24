@@ -1,8 +1,6 @@
 'use strict'
-import { isAbsolute, normalize, relative } from 'path'
-
 import { stat, readFile as fsReadFile } from 'fs-extra'
-
+import { isAbsolute, normalize, relative } from 'path'
 import {
   PATH_SEPARATOR_REGEX,
   UTF8_ENCODING,

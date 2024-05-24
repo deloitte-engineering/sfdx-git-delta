@@ -264,17 +264,6 @@ module.exports = {
     'wrap-iife': 'off',
     'wrap-regex': 'off',
     'yield-star-spacing': 'off',
-    'import/order': [
-      'error',
-      {
-        alphabetize: {
-          order: 'asc',
-          caseInsensitive: false,
-        },
-        groups: ['builtin', 'external', 'parent', 'index', 'sibling'],
-        'newlines-between': 'always',
-      },
-    ],
   },
   env: {
     browser: false,

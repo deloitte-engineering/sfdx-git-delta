@@ -1,12 +1,12 @@
 'use strict'
-import { MetadataRepository } from './metadata/MetadataRepository'
-import { getDefinition } from './metadata/metadataManager'
-import { getPostProcessors } from './post-processor/postProcessorManager'
 import DiffLineInterpreter from './service/diffLineInterpreter'
-import { Config } from './types/config'
-import { Work } from './types/work'
+import { getDefinition } from './metadata/metadataManager'
 import CLIHelper from './utils/cliHelper'
 import RepoGitDiff from './utils/repoGitDiff'
+import { getPostProcessors } from './post-processor/postProcessorManager'
+import { Config } from './types/config'
+import { Work } from './types/work'
+import { MetadataRepository } from './metadata/MetadataRepository'
 
 const sgd = async (config: Config): Promise<Work> => {
   const work: Work = {

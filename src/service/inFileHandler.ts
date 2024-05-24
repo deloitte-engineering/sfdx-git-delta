@@ -1,16 +1,14 @@
 'use strict'
-import { basename } from 'path'
-
-import { DOT } from '../constant/fsConstants'
 import { LABEL_EXTENSION, LABEL_XML_NAME } from '../constant/metadataConstants'
-import { MetadataRepository } from '../metadata/MetadataRepository'
-import { getInFileAttributes, isPackable } from '../metadata/metadataManager'
-import { Manifest, Work } from '../types/work'
+import StandardHandler from './standardHandler'
+import { basename } from 'path'
 import { writeFile } from '../utils/fsHelper'
+import { DOT } from '../constant/fsConstants'
+import { getInFileAttributes, isPackable } from '../metadata/metadataManager'
 import MetadataDiff from '../utils/metadataDiff'
 import { fillPackageWithParameter } from '../utils/packageHelper'
-
-import StandardHandler from './standardHandler'
+import { Manifest, Work } from '../types/work'
+import { MetadataRepository } from '../metadata/MetadataRepository'
 
 const getRootType = (line: string) => basename(line).split(DOT)[0]
 const getNamePrefix = ({ subType, line }: { subType: string; line: string }) =>

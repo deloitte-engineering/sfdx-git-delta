@@ -1,7 +1,4 @@
 'use strict'
-import { MetadataRepository } from '../metadata/MetadataRepository'
-import { Work } from '../types/work'
-
 import Bot from './botHandler'
 import CustomObject from './customObjectHandler'
 import InBundleHandler from './inBundleHandler'
@@ -9,10 +6,13 @@ import InFile from './inFileHandler'
 import InFolder from './inFolderHandler'
 import InResource from './inResourceHandler'
 import LwcHandler from './lwcHandler'
-import ObjectTranslation from './objectTranslationHandler'
-import SharedFolder from './sharedFolderHandler'
 import Standard from './standardHandler'
 import SubCustomObject from './subCustomObjectHandler'
+import ObjectTranslation from './objectTranslationHandler'
+import SharedFolder from './sharedFolderHandler'
+
+import { Work } from '../types/work'
+import { MetadataRepository } from '../metadata/MetadataRepository'
 
 const handlerMap = {
   assignmentRules: InFile,

@@ -1,11 +1,8 @@
-import fs from 'fs'
-import { join } from 'path'
-
-import { readFile } from 'fs-extra'
 import git, { TREE, WalkerEntry, WalkerIterateCallback } from 'isomorphic-git'
 import { simpleGit, SimpleGit } from 'simple-git'
-
-import { DOT, PATH_SEP } from '../constant/fsConstants'
+import { readFile } from 'fs-extra'
+import fs from 'fs'
+import { Config } from '../types/config'
 import {
   UTF8_ENCODING,
   GIT_FOLDER,
@@ -13,11 +10,12 @@ import {
   DELETION,
   MODIFICATION,
 } from '../constant/gitConstants'
-import { Config } from '../types/config'
-import { FileGitRef } from '../types/git'
 import { SOURCE_DEFAULT_VALUE } from '../utils/cliConstants'
 import { dirExists, fileExists, treatPathSep } from '../utils/fsUtils'
+import { DOT, PATH_SEP } from '../constant/fsConstants'
+import { join } from 'path'
 import { getLFSObjectContentPath, isLFS } from '../utils/gitLfsHelper'
+import { FileGitRef } from '../types/git'
 
 const firstCommitParams = ['rev-list', '--max-parents=0', 'HEAD']
 const BLOB_TYPE = 'blob'

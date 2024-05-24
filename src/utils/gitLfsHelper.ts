@@ -1,8 +1,7 @@
 'use strict'
 import { sep } from 'path'
-
-import { UTF8_ENCODING } from '../constant/fsConstants'
 import { GIT_FOLDER } from '../constant/gitConstants'
+import { UTF8_ENCODING } from '../constant/fsConstants'
 
 const LFS_HEADER = Buffer.from('version https://git-lfs')
 

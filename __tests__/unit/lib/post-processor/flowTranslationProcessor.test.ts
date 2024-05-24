@@ -1,18 +1,17 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
 import { pathExists } from 'fs-extra'
-
+import FlowTranslationProcessor from '../../../../src/post-processor/flowTranslationProcessor'
+import { parseXmlFileToJson } from '../../../../src/utils/fxpHelper'
 import {
   FLOW_XML_NAME,
   TRANSLATION_TYPE,
 } from '../../../../src/constant/metadataConstants'
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import FlowTranslationProcessor from '../../../../src/post-processor/flowTranslationProcessor'
-import { Work } from '../../../../src/types/work'
-import { writeFile, readDir } from '../../../../src/utils/fsHelper'
 import { isSubDir, readFile, treatPathSep } from '../../../../src/utils/fsUtils'
-import { parseXmlFileToJson } from '../../../../src/utils/fxpHelper'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import { writeFile, readDir } from '../../../../src/utils/fsHelper'
+import { Work } from '../../../../src/types/work'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 jest.mock('fs-extra')
 jest.mock('../../../../src/utils/fsHelper')

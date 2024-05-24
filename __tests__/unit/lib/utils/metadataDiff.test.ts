@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import { Work } from '../../../../src/types/work'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import MetadataDiff from '../../../../src/utils/metadataDiff'
 import {
   parseXmlFileToJson,
   convertJsonToXml,
 } from '../../../../src/utils/fxpHelper'
-import MetadataDiff from '../../../../src/utils/metadataDiff'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import { Work } from '../../../../src/types/work'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 jest.mock('../../../../src/utils/fxpHelper', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

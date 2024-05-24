@@ -1,9 +1,5 @@
 'use strict'
-import { sep } from 'path'
-
 import { expect, jest, describe, it } from '@jest/globals'
-import { Stats, stat, readFile as fsReadFile } from 'fs-extra'
-
 import {
   dirExists,
   fileExists,
@@ -12,6 +8,8 @@ import {
   sanitizePath,
   treatPathSep,
 } from '../../../../src/utils/fsUtils'
+import { Stats, stat, readFile as fsReadFile } from 'fs-extra'
+import { sep } from 'path'
 
 jest.mock('fs-extra')
 

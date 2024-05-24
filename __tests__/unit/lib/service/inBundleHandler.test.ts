@@ -1,10 +1,9 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
 import InBundleHandler from '../../../../src/service/inBundleHandler'
 import { Work } from '../../../../src/types/work'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 const objectType = 'digitalExperiences'
 const entityPath =

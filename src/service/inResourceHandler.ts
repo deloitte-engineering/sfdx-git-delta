@@ -1,13 +1,11 @@
 'use strict'
-import { join, parse } from 'path'
-
-import { DOT, PATH_SEP } from '../constant/fsConstants'
-import { META_REGEX, METAFILE_SUFFIX } from '../constant/metadataConstants'
-import { MetadataRepository } from '../metadata/MetadataRepository'
-import { Work } from '../types/work'
-import { pathExists } from '../utils/fsHelper'
-
 import StandardHandler from './standardHandler'
+import { join, parse } from 'path'
+import { pathExists } from '../utils/fsHelper'
+import { META_REGEX, METAFILE_SUFFIX } from '../constant/metadataConstants'
+import { DOT, PATH_SEP } from '../constant/fsConstants'
+import { Work } from '../types/work'
+import { MetadataRepository } from '../metadata/MetadataRepository'
 
 export default class ResourceHandler extends StandardHandler {
   protected readonly metadataName: string

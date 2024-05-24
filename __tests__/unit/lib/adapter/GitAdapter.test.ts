@@ -1,20 +1,19 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-import { readFile } from 'fs-extra'
-import { WalkerEntry, WalkerIterateCallback } from 'isomorphic-git'
-
+import { getWork } from '../../../__utils__/globalTestHelper'
+import { Config } from '../../../../src/types/config'
 import GitAdapter, {
   contentWalker,
   diffLineWalker,
   filePathWalker,
   iterate,
 } from '../../../../src/adapter/GitAdapter'
-import { Config } from '../../../../src/types/config'
 import {
   getLFSObjectContentPath,
   isLFS,
 } from '../../../../src/utils/gitLfsHelper'
-import { getWork } from '../../../__utils__/globalTestHelper'
+import { readFile } from 'fs-extra'
+import { WalkerEntry, WalkerIterateCallback } from 'isomorphic-git'
 
 const mockedDirExists = jest.fn()
 const mockedFileExists = jest.fn()
