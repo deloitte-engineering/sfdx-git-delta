@@ -98,7 +98,7 @@ This repository provide [.prettierignore](.prettierignore) and [.prettierrc](.pr
 
 ### Code linting
 
-[ESLint](https://eslint.org/) is a popular JavaScript linting tool used to identify stylistic errors and erroneous constructs.
+[ESLint](https://eslint.org/) is a popular JavaScript linting tool used to identify stylistic errors and erroneous constructs. This repository provide [.eslintignore](.eslintignore) file to exclude specific files from the linting process.
 
 ### Commit linting
 

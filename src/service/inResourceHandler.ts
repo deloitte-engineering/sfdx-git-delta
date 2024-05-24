@@ -4,7 +4,6 @@ import { join, parse } from 'path'
 import { DOT, PATH_SEP } from '../constant/fsConstants'
 import { META_REGEX, METAFILE_SUFFIX } from '../constant/metadataConstants'
 import { MetadataRepository } from '../metadata/MetadataRepository'
-import { Metadata } from '../types/metadata'
 import type { Work } from '../types/work'
 import { pathExists } from '../utils/fsHelper'
 
@@ -15,11 +14,11 @@ export default class ResourceHandler extends StandardHandler {
 
   constructor(
     line: string,
-    metadataDef: Metadata,
+    type: string,
     work: Work,
     metadata: MetadataRepository
   ) {
-    super(line, metadataDef, work, metadata)
+    super(line, type, work, metadata)
     this.metadataName = this._getMetadataName()
   }
 
@@ -50,7 +49,7 @@ export default class ResourceHandler extends StandardHandler {
     if (exists) {
       await this.handleModification()
     } else {
-      await super.handleDeletion()
+      super.handleDeletion()
     }
   }
 
@@ -61,9 +60,7 @@ export default class ResourceHandler extends StandardHandler {
 
   protected override _getParsedPath() {
     return parse(
-      this.splittedLine[
-        this.splittedLine.indexOf(this.metadataDef.directoryName) + 1
-      ]
+      this.splittedLine[this.splittedLine.indexOf(this.type) + 1]
         .replace(META_REGEX, '')
         .replace(this.suffixRegex, '')
     )
@@ -76,7 +73,7 @@ export default class ResourceHandler extends StandardHandler {
   protected _getMetadataName() {
     const resourcePath = []
     for (const pathElement of this.splittedLine) {
-      if (resourcePath.slice(-2)[0] === this.metadataDef.directoryName) {
+      if (resourcePath.slice(-2)[0] === this.type) {
         break
       }
       resourcePath.push(pathElement)
@@ -104,9 +101,5 @@ export default class ResourceHandler extends StandardHandler {
 
   protected override _getMetaTypeFilePath() {
     return `${this.metadataName}.${this.metadataDef.suffix}${METAFILE_SUFFIX}`
-  }
-
-  protected override _shouldCopyMetaFile(): boolean {
-    return true
   }
 }

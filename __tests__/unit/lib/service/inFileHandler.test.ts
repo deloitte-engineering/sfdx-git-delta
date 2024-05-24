@@ -16,53 +16,27 @@ jest.mock('../../../../src/utils/metadataDiff', () => {
 })
 jest.mock('../../../../src/utils/fsHelper')
 
-const workflowType = {
-  childXmlNames: [
-    'WorkflowFieldUpdate',
-    'WorkflowKnowledgePublish',
-    'WorkflowTask',
-    'WorkflowAlert',
-    'WorkflowSend',
-    'WorkflowOutboundMessage',
-    'WorkflowRule',
-  ],
-  directoryName: 'workflows',
-  inFolder: false,
-  metaFile: false,
-  suffix: 'workflow',
-  xmlName: 'Workflow',
-}
-const globalValueSetTranslationsType = {
-  directoryName: 'globalValueSetTranslations',
-  inFolder: false,
-  metaFile: false,
-  suffix: 'globalValueSetTranslation',
-  xmlName: 'GlobalValueSetTranslation',
-  pruneOnly: true,
-}
-
-let globalMetadata: MetadataRepository
-beforeAll(async () => {
-  globalMetadata = await getGlobalMetadata()
-})
-let work: Work
-beforeEach(() => {
-  jest.clearAllMocks()
-  work = getWork()
-
-  mockPrune.mockReturnValue({ xmlContent: '<xmlContent>', isEmpty: false })
-})
 describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
-  beforeEach(() => {
-    work.config.generateDelta = generateDelta
+  let globalMetadata: MetadataRepository
+  beforeAll(async () => {
+    // eslint-disable-next-line no-undef
+    globalMetadata = await getGlobalMetadata()
   })
+  let work: Work
+  beforeEach(() => {
+    jest.clearAllMocks()
+    work = getWork()
+    work.config.generateDelta = generateDelta
+    mockPrune.mockReturnValue({ xmlContent: '<xmlContent>', isEmpty: false })
+  })
+
   describe('when file is added', () => {
     let sut: InFileHandler
     beforeEach(() => {
       // Arrange
       sut = new InFileHandler(
         'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-        workflowType,
+        'workflows',
         work,
         globalMetadata
       )
@@ -98,7 +72,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         // Arrange
         sut = new InFileHandler(
           'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
-          globalValueSetTranslationsType,
+          'globalValueSetTranslations',
           work,
           globalMetadata
         )
@@ -139,7 +113,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         // Arrange
         sut = new InFileHandler(
           'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-          workflowType,
+          'workflows',
           work,
           globalMetadata
         )
@@ -178,7 +152,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         // Arrange
         sut = new InFileHandler(
           'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-          workflowType,
+          'workflows',
           work,
           globalMetadata
         )
@@ -194,7 +168,8 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         await sut.handleModification()
 
         // Assert
-        expect(work.diffs.package.size).toBe(0)
+        expect(work.diffs.package.get('Workflow')).toEqual(new Set(['Account']))
+        expect(work.diffs.package.get('WorkflowAlert')).toBeUndefined()
         expect(work.diffs.destructiveChanges.get('WorkflowAlert')).toEqual(
           new Set(['Account.deleted'])
         )
@@ -212,8 +187,8 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         beforeEach(() => {
           // Arrange
           sut = new InFileHandler(
-            'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-            workflowType,
+            'force-app/main/default/labels/CustomLabel.label-meta.xml',
+            'labels',
             work,
             globalMetadata
           )
@@ -251,15 +226,15 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         beforeEach(() => {
           // Arrange
           sut = new InFileHandler(
-            'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-            workflowType,
+            'force-app/main/default/labels/CustomLabel.label-meta.xml',
+            'labels',
             work,
             globalMetadata
           )
           mockCompare.mockImplementation(() =>
             Promise.resolve({
               added: new Map(),
-              deleted: new Map([['Workflow', new Set(['Deleted'])]]),
+              deleted: new Map([['CustomLabel', new Set(['Deleted'])]]),
             })
           )
           mockPrune.mockReturnValue({
@@ -274,8 +249,8 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
           // Assert
           expect(work.diffs.package.size).toEqual(0)
           expect(work.diffs.destructiveChanges.size).toEqual(1)
-          expect(work.diffs.destructiveChanges.get('Workflow')).toEqual(
-            new Set(['Account.Deleted'])
+          expect(work.diffs.destructiveChanges.get('CustomLabel')).toEqual(
+            new Set(['Deleted'])
           )
           if (generateDelta) {
             expect(mockPrune).toHaveBeenCalled()
@@ -293,7 +268,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         // Arrange
         sut = new InFileHandler(
           'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
-          globalValueSetTranslationsType,
+          'globalValueSetTranslations',
           work,
           globalMetadata
         )
@@ -333,7 +308,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
       // Arrange
       sut = new InFileHandler(
         'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-        workflowType,
+        'workflows',
         work,
         globalMetadata
       )
@@ -363,7 +338,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         // Arrange
         sut = new InFileHandler(
           'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
-          globalValueSetTranslationsType,
+          'globalValueSetTranslations',
           work,
           globalMetadata
         )

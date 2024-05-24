@@ -21,34 +21,7 @@ const mockedReadPathFromGit = jest.mocked(readPathFromGit)
 
 mockedPathExist.mockResolvedValue(true)
 
-const territoryModelType = {
-  childXmlNames: ['Territory2Rule', 'Territory2'],
-  directoryName: 'territory2Models',
-  inFolder: false,
-  metaFile: false,
-  suffix: 'territory2Model',
-  xmlName: 'Territory2Model',
-}
-const objectType = {
-  childXmlNames: [
-    'CustomField',
-    'Index',
-    'BusinessProcess',
-    'RecordType',
-    'CompactLayout',
-    'WebLink',
-    'ValidationRule',
-    'SharingReason',
-    'ListView',
-    'FieldSet',
-  ],
-  directoryName: 'objects',
-  inFolder: false,
-  metaFile: false,
-  suffix: 'object',
-  xmlName: 'CustomObject',
-}
-
+const objectType = 'objects'
 const line =
   'A       force-app/main/default/objects/Account/Account.object-meta.xml'
 
@@ -61,6 +34,7 @@ beforeEach(() => {
 describe('CustomObjectHandler', () => {
   let globalMetadata: MetadataRepository
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     globalMetadata = await getGlobalMetadata()
   })
 
@@ -89,7 +63,7 @@ describe('CustomObjectHandler', () => {
         // Arrange
         const sut = new CustomObjectHandler(
           'A       force-app/main/default/territory2Models/EU/EU.territory2Model-meta.xml',
-          territoryModelType,
+          'territory2Models',
           work,
           globalMetadata
         )

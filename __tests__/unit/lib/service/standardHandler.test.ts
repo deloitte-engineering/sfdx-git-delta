@@ -16,23 +16,12 @@ import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
 jest.mock('../../../../src/utils/fsHelper')
 const mockedCopyFiles = jest.mocked(copyFiles)
 
-const testSuitesType = {
-  directoryName: 'testSuites',
-  inFolder: false,
-  metaFile: false,
-  suffix: 'testSuite',
-  xmlName: 'ApexTestSuite',
-}
-const classType = {
-  directoryName: 'classes',
-  inFolder: false,
-  metaFile: true,
-  suffix: 'cls',
-  xmlName: 'ApexClass',
-}
+const objectType = 'classes'
+const xmlName = 'ApexClass'
 const entity = 'MyClass'
+const extension = 'cls'
 const basePath = 'force-app/main/default/'
-const entityPath = `${basePath}${classType.directoryName}/${entity}.${classType.suffix}`
+const entityPath = `${basePath}${objectType}/${entity}.${extension}`
 
 let work: Work
 beforeEach(() => {
@@ -43,6 +32,7 @@ beforeEach(() => {
 describe(`StandardHandler`, () => {
   let globalMetadata: MetadataRepository
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     globalMetadata = await getGlobalMetadata()
   })
 
@@ -57,7 +47,7 @@ describe(`StandardHandler`, () => {
     )
     const sut = new StandardHandler(
       `${ADDITION}       ${entityPath}`,
-      classType,
+      objectType,
       work,
       globalMetadata
     )
@@ -67,7 +57,7 @@ describe(`StandardHandler`, () => {
 
     // Assert
     expect(work.warnings.length).toEqual(1)
-    expect(work.diffs.package.get(classType.xmlName)).toEqual(new Set([entity]))
+    expect(work.diffs.package.get(xmlName)).toEqual(new Set([entity]))
     expect(work.diffs.destructiveChanges.size).toEqual(0)
     expect(copyFiles).toBeCalled()
   })
@@ -76,7 +66,7 @@ describe(`StandardHandler`, () => {
     // Arrange
     const sut = new StandardHandler(
       `Z       ${entityPath}`,
-      classType,
+      objectType,
       work,
       globalMetadata
     )
@@ -103,7 +93,7 @@ describe(`StandardHandler`, () => {
       // Arrange
       const sut = new StandardHandler(
         `${changeType}       ${entityPath}`,
-        classType,
+        objectType,
         work,
         globalMetadata
       )
@@ -113,9 +103,7 @@ describe(`StandardHandler`, () => {
 
       // Assert
       expect(work.warnings).toEqual([])
-      expect(work.diffs.package.get(classType.xmlName)).toEqual(
-        new Set([entity])
-      )
+      expect(work.diffs.package.get(xmlName)).toEqual(new Set([entity]))
       expect(work.diffs.destructiveChanges.size).toEqual(0)
       expect(copyFiles).not.toBeCalled()
     })
@@ -123,7 +111,7 @@ describe(`StandardHandler`, () => {
       // Arrange
       const sut = new StandardHandler(
         `${DELETION}       ${entityPath}`,
-        classType,
+        objectType,
         work,
         globalMetadata
       )
@@ -134,7 +122,7 @@ describe(`StandardHandler`, () => {
       // Assert
       expect(work.warnings).toEqual([])
       expect(work.diffs.package.size).toEqual(0)
-      expect(work.diffs.destructiveChanges.get(classType.xmlName)).toEqual(
+      expect(work.diffs.destructiveChanges.get(xmlName)).toEqual(
         new Set([entity])
       )
       expect(copyFiles).not.toBeCalled()
@@ -150,7 +138,7 @@ describe(`StandardHandler`, () => {
         // Arrange
         const sut = new StandardHandler(
           `${MODIFICATION}       ${entityPath}${METAFILE_SUFFIX}`,
-          classType,
+          objectType,
           work,
           globalMetadata
         )
@@ -160,9 +148,7 @@ describe(`StandardHandler`, () => {
 
         // Assert
         expect(work.warnings).toEqual([])
-        expect(work.diffs.package.get(classType.xmlName)).toEqual(
-          new Set([entity])
-        )
+        expect(work.diffs.package.get(xmlName)).toEqual(new Set([entity]))
         expect(work.diffs.destructiveChanges.size).toEqual(0)
         expect(copyFiles).toBeCalledWith(work.config, entityPath)
         expect(copyFiles).toBeCalledWith(
@@ -175,7 +161,7 @@ describe(`StandardHandler`, () => {
         // Arrange
         const sut = new StandardHandler(
           `${MODIFICATION}       ${entityPath}`,
-          classType,
+          objectType,
           work,
           globalMetadata
         )
@@ -185,9 +171,7 @@ describe(`StandardHandler`, () => {
 
         // Assert
         expect(work.warnings).toEqual([])
-        expect(work.diffs.package.get(classType.xmlName)).toEqual(
-          new Set([entity])
-        )
+        expect(work.diffs.package.get(xmlName)).toEqual(new Set([entity]))
         expect(work.diffs.destructiveChanges.size).toEqual(0)
         expect(copyFiles).toBeCalledWith(work.config, entityPath)
         expect(copyFiles).toBeCalledWith(
@@ -203,7 +187,7 @@ describe(`StandardHandler`, () => {
         const entityPath = `${basePath}testSuites/suite.testSuite${METAFILE_SUFFIX}`
         const sut = new StandardHandler(
           `${MODIFICATION}       ${entityPath}`,
-          testSuitesType,
+          'testSuites',
           work,
           globalMetadata
         )
@@ -213,7 +197,7 @@ describe(`StandardHandler`, () => {
 
         // Assert
         expect(work.warnings).toEqual([])
-        expect(work.diffs.package.get(testSuitesType.xmlName)).toEqual(
+        expect(work.diffs.package.get('ApexTestSuite')).toEqual(
           new Set(['suite'])
         )
         expect(work.diffs.destructiveChanges.size).toEqual(0)
@@ -230,7 +214,7 @@ describe(`StandardHandler`, () => {
         const entityPath = `${basePath}testSuites/suite.testSuite`
         const sut = new StandardHandler(
           `${MODIFICATION}       ${entityPath}`,
-          testSuitesType,
+          'testSuites',
           work,
           globalMetadata
         )
@@ -262,7 +246,7 @@ describe(`StandardHandler`, () => {
         // Arrange
         const sut = new StandardHandler(
           `${changeType}       ${entityPath}`,
-          classType,
+          objectType,
           work,
           globalMetadata
         )
@@ -272,9 +256,7 @@ describe(`StandardHandler`, () => {
 
         // Assert
         expect(work.warnings).toEqual([])
-        expect(work.diffs.package.get(classType.xmlName)).toEqual(
-          new Set([entity])
-        )
+        expect(work.diffs.package.get(xmlName)).toEqual(new Set([entity]))
         expect(work.diffs.destructiveChanges.size).toEqual(0)
         expect(copyFiles).toBeCalledWith(work.config, entityPath)
       }
@@ -283,7 +265,7 @@ describe(`StandardHandler`, () => {
       // Arrange
       const sut = new StandardHandler(
         `${DELETION}       ${entityPath}`,
-        classType,
+        objectType,
         work,
         globalMetadata
       )
@@ -294,7 +276,7 @@ describe(`StandardHandler`, () => {
       // Assert
       expect(work.warnings).toEqual([])
       expect(work.diffs.package.size).toEqual(0)
-      expect(work.diffs.destructiveChanges.get(classType.xmlName)).toEqual(
+      expect(work.diffs.destructiveChanges.get(xmlName)).toEqual(
         new Set([entity])
       )
       expect(copyFiles).not.toBeCalled()
@@ -308,8 +290,8 @@ describe(`StandardHandler`, () => {
         // Arrange
         work.config.repo = repoPath
         const sut = new StandardHandler(
-          `${MODIFICATION}       ${basePath}${classType.directoryName}/${entity}.${classType.suffix}`,
-          classType,
+          `${MODIFICATION}       ${basePath}${objectType}/${entity}.${extension}`,
+          objectType,
           work,
           globalMetadata
         )
@@ -320,8 +302,8 @@ describe(`StandardHandler`, () => {
         // Assert
         expect(result.length).toBe(3)
         expect(result[0]).toBe(`${entityPath}`)
-        expect(result[1]).toBe(`${basePath}${classType.directoryName}`)
-        expect(result[2]).toBe(`${entity}.${classType.suffix}`)
+        expect(result[1]).toBe(`${basePath}${objectType}`)
+        expect(result[2]).toBe(`${entity}.${extension}`)
       }
     )
   })
@@ -333,7 +315,7 @@ describe(`StandardHandler`, () => {
         // Arrange
         const sut = new StandardHandler(
           `A       ${entityPath}`,
-          classType,
+          objectType,
           work,
           globalMetadata
         )

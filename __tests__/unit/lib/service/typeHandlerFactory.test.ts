@@ -2,12 +2,11 @@
 import { expect, describe, it } from '@jest/globals'
 
 import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import CustomField from '../../../../src/service/customFieldHandler'
-import Decomposed from '../../../../src/service/decomposedHandler'
 import InFolder from '../../../../src/service/inFolderHandler'
 import InResource from '../../../../src/service/inResourceHandler'
 import SharedFolder from '../../../../src/service/sharedFolderHandler'
 import Standard from '../../../../src/service/standardHandler'
+import SubCustomObject from '../../../../src/service/subCustomObjectHandler'
 import TypeHandlerFactory from '../../../../src/service/typeHandlerFactory'
 import type { Work } from '../../../../src/types/work'
 import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
@@ -15,15 +14,15 @@ import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
 describe('the type handler factory', () => {
   let typeHandlerFactory: TypeHandlerFactory
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     const globalMetadata: MetadataRepository = await getGlobalMetadata()
     const work: Work = getWork()
     work.config.apiVersion = 46
     typeHandlerFactory = new TypeHandlerFactory(work, globalMetadata)
   })
   describe.each([
-    [CustomField, ['fields']],
     [
-      Decomposed,
+      SubCustomObject,
       [
         'businessProcesses',
         'compactLayouts',
@@ -37,7 +36,7 @@ describe('the type handler factory', () => {
       ],
     ],
     [InFolder, ['dashboards', 'documents', 'reports']],
-    [InResource, ['staticresources', 'aura', 'lwc', 'permissionsets']],
+    [InResource, ['staticresources', 'aura', 'lwc']],
     [Standard, ['classes']],
     [SharedFolder, ['moderation', 'wave', 'discovery']],
   ])('give %p handler', (handler, types) => {
@@ -50,23 +49,23 @@ describe('the type handler factory', () => {
     })
   })
 
-  it('can handle Decomposed', () => {
+  it('can handle SubCustomObject', () => {
     expect(
       typeHandlerFactory.getTypeHandler(
         `Z       force-app/main/default/objects/Account/fields/Test__c`
       )
-    ).toBeInstanceOf(Decomposed)
+    ).toBeInstanceOf(SubCustomObject)
   })
 
-  it('can handle sub folder with Decomposed', () => {
+  it('can handle sub folder with SubCustomObject', () => {
     expect(
       typeHandlerFactory.getTypeHandler(
         `Z       force-app/main/default/objects/folder/Account/fields/Test__c.field-meta.xml`
       )
-    ).toBeInstanceOf(Decomposed)
+    ).toBeInstanceOf(SubCustomObject)
   })
 
-  it('can handle sub folder with non Decomposed', () => {
+  it('can handle sub folder with non SubCustomObject', () => {
     expect(
       typeHandlerFactory.getTypeHandler(
         `Z       force-app/main/default/documents/classes/TestDocument`
