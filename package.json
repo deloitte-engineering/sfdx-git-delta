@@ -86,7 +86,6 @@
       "command": "tsc -p . --incremental",
       "files": [
         "src/**/*.ts",
-        "src/**/*.json",
         "**/tsconfig.json",
         "messages/**"
       ],
