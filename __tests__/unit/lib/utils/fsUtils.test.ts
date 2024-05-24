@@ -1,8 +1,5 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-import { Stats, stat, readFile as fsReadFile } from 'fs-extra'
-
-import { PATH_SEP } from '../../../../src/constant/fsConstants'
 import {
   dirExists,
   fileExists,
@@ -11,6 +8,8 @@ import {
   sanitizePath,
   treatPathSep,
 } from '../../../../src/utils/fsUtils'
+import { Stats, stat, readFile as fsReadFile } from 'fs-extra'
+import { sep } from 'path'
 
 jest.mock('fs-extra')
 
@@ -191,43 +190,32 @@ describe('readFile', () => {
   })
 })
 
-describe.each(['/', '\\'])('treatPathSep', sep => {
-  it(`replace ${sep} by ${PATH_SEP}`, () => {
+describe('treatPathSep', () => {
+  it(`replace / by ${sep}`, () => {
     // Arrange
-    const input = `test${sep + sep + sep}test${sep + sep}test${sep}test`
+    const input = 'test///test//test/test'
 
     // Act
     const result = treatPathSep(input)
 
     // Assert
-    expect(result).toBe(`test${PATH_SEP}test${PATH_SEP}test${PATH_SEP}test`)
+    expect(result).toBe(`test${sep}test${sep}test${sep}test`)
   })
 
-  it(`keeps the leading ${sep}`, () => {
+  it(`replace \\ by ${sep}`, () => {
     // Arrange
-    const input = `${sep}test${sep}test`
+    const input = 'test\\\\\\test\\\\test\\test'
 
     // Act
     const result = treatPathSep(input)
 
     // Assert
-    expect(result).toBe(`${PATH_SEP}test${PATH_SEP}test`)
-  })
-
-  it(`keeps the trailing ${sep}`, () => {
-    // Arrange
-    const input = `test${sep}test${sep}`
-
-    // Act
-    const result = treatPathSep(input)
-
-    // Assert
-    expect(result).toBe(`test${PATH_SEP}test${PATH_SEP}`)
+    expect(result).toBe(`test${sep}test${sep}test${sep}test`)
   })
 })
 
 describe('sanitizePath', () => {
-  it(`returns path with '${PATH_SEP}' separator`, () => {
+  it(`returns path with '${sep}' separator`, () => {
     // Arrange
     const input = 'test\\test/test'
 
@@ -235,7 +223,7 @@ describe('sanitizePath', () => {
     const result = sanitizePath(input)
 
     // Assert
-    expect(result).toBe(`test${PATH_SEP}test${PATH_SEP}test`)
+    expect(result).toBe(`test${sep}test${sep}test`)
   })
 
   it(`normalize path`, () => {
@@ -246,7 +234,7 @@ describe('sanitizePath', () => {
     const result = sanitizePath(input)
 
     // Assert
-    expect(result).toBe(`test${PATH_SEP}test`)
+    expect(result).toBe(`test${sep}test`)
   })
 
   it('return empty string when data is empty string', () => {

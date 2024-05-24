@@ -1,8 +1,6 @@
 'use strict'
-import { isAbsolute, normalize, relative } from 'path'
-
 import { stat, readFile as fsReadFile } from 'fs-extra'
-
+import { isAbsolute, normalize, relative } from 'path'
 import {
   PATH_SEPARATOR_REGEX,
   UTF8_ENCODING,
@@ -10,8 +8,7 @@ import {
 } from '../constant/fsConstants'
 
 export const treatPathSep = (data: string) =>
-  data.replace(PATH_SEPARATOR_REGEX, PATH_SEP)
-
+  data.split(PATH_SEPARATOR_REGEX).filter(Boolean).join(PATH_SEP)
 export const sanitizePath = (data: string) =>
   data ? normalize(treatPathSep(data)) : data
 

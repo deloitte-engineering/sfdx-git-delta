@@ -1,11 +1,10 @@
 'use strict'
 import { expect, describe, it } from '@jest/globals'
-
-import type { Config } from '../../../../src/types/config'
-import type { Manifest } from '../../../../src/types/work'
 import PackageBuilder, {
   fillPackageWithParameter,
 } from '../../../../src/utils/packageHelper'
+import { Config } from '../../../../src/types/config'
+import { Manifest } from '../../../../src/types/work'
 
 const config: Config = {
   apiVersion: 46,

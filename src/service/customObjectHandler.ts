@@ -1,15 +1,13 @@
 'use strict'
-import { join, parse } from 'path'
-
+import StandardHandler from './standardHandler'
+import asyncFilter from '../utils/asyncFilter'
+import { pathExists, readDir, readPathFromGit } from '../utils/fsHelper'
 import {
   FIELD_DIRECTORY_NAME,
   MASTER_DETAIL_TAG,
   OBJECT_TYPE,
 } from '../constant/metadataConstants'
-import asyncFilter from '../utils/asyncFilter'
-import { pathExists, readDir, readPathFromGit } from '../utils/fsHelper'
-
-import StandardHandler from './standardHandler'
+import { join, parse } from 'path'
 
 export default class CustomObjectHandler extends StandardHandler {
   public override async handleAddition() {
@@ -19,7 +17,7 @@ export default class CustomObjectHandler extends StandardHandler {
   }
 
   protected async _handleMasterDetailException() {
-    if (this.metadataDef.xmlName !== OBJECT_TYPE) return
+    if (this.type !== OBJECT_TYPE) return
 
     const fieldsFolder = join(parse(this.line).dir, FIELD_DIRECTORY_NAME)
     const exists = await pathExists(fieldsFolder, this.config)
@@ -37,6 +35,7 @@ export default class CustomObjectHandler extends StandardHandler {
         return content.includes(MASTER_DETAIL_TAG)
       }
     )
+
     await Promise.all(
       masterDetailsFields.map((field: string) => this._copyWithMetaFile(field))
     )

@@ -1,18 +1,16 @@
 'use strict'
-import { join } from 'path'
-import { format } from 'util'
-
-import GitAdapter from '../adapter/GitAdapter'
+import asyncFilter from './asyncFilter'
 import messages from '../locales/en'
+import GitAdapter from '../adapter/GitAdapter'
 import {
   getLatestSupportedVersion,
   isVersionSupported,
 } from '../metadata/metadataManager'
-import type { Config } from '../types/config'
-import type { Work } from '../types/work'
-
-import asyncFilter from './asyncFilter'
+import { format } from 'util'
 import { readFile, dirExists, fileExists, sanitizePath } from './fsUtils'
+import { join } from 'path'
+import { Work } from '../types/work'
+import { Config } from '../types/config'
 
 const isBlank = (str: string) => !str || /^\s*$/.test(str)
 

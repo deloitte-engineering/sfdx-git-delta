@@ -1,23 +1,18 @@
 'use strict'
 
 import { parse } from 'path'
-
-import { DOT, PATH_SEP } from '../constant/fsConstants'
+import { Metadata } from '../types/metadata'
 import {
-  CUSTOM_APPLICATION_SUFFIX,
-  CUSTOM_METADATA_SUFFIX,
-  EMAIL_SERVICES_FUNCTION_SUFFIX,
+  CUSTOM_APPLICATION_TYPE,
   METAFILE_SUFFIX,
   OBJECT_TRANSLATION_TYPE,
   OBJECT_TYPE,
-  SHARING_RULE_TYPE,
+  RESTRICTION_RULE_TYPE,
   SUB_OBJECT_TYPES,
   TERRITORY_MODEL_TYPE,
-  WORKFLOW_TYPE,
 } from '../constant/metadataConstants'
-import type { Metadata } from '../types/metadata'
-
 import { MetadataRepository } from './MetadataRepository'
+import { DOT, PATH_SEP } from '../constant/fsConstants'
 
 export class MetadataRepositoryImpl implements MetadataRepository {
   protected readonly metadataPerExt: Map<string, Metadata>
@@ -30,41 +25,11 @@ export class MetadataRepositoryImpl implements MetadataRepository {
     this.metadataPerDir = new Map<string, Metadata>()
 
     this.metadatas.forEach(metadata => {
-      this.addSuffix(metadata)
-      this.addFolder(metadata)
-    })
-  }
-
-  protected addSuffix(metadata: Metadata) {
-    if (metadata.suffix) {
-      if (this.metadataPerExt.has(metadata.suffix)) {
-        MetadataRepositoryImpl.UNSAFE_EXTENSION.add(metadata.suffix)
-      } else {
+      if (metadata.suffix) {
         this.metadataPerExt.set(metadata.suffix, metadata)
       }
-    }
-    this.addSharedFolderSuffix(metadata)
-  }
-
-  protected addSharedFolderSuffix(metadata: Metadata) {
-    if (metadata.content) {
-      const metadataWithoutContent = {
-        ...metadata,
-        content: undefined,
-      }
-      for (const sharedFolderMetadataDef of metadata.content) {
-        this.addSuffix({
-          ...metadataWithoutContent,
-          suffix: sharedFolderMetadataDef.suffix,
-        } as unknown as Metadata)
-      }
-    }
-  }
-
-  protected addFolder(metadata: Metadata) {
-    if (metadata.directoryName) {
       this.metadataPerDir.set(metadata.directoryName, metadata)
-    }
+    })
   }
 
   public has(path: string): boolean {
@@ -78,40 +43,50 @@ export class MetadataRepositoryImpl implements MetadataRepository {
   }
 
   protected searchByExtension(parts: string[]): Metadata | undefined {
-    const extension = parse(
-      parts[parts.length - 1].replace(METAFILE_SUFFIX, '')
-    ).ext.replace(DOT, '')
-
-    if (MetadataRepositoryImpl.UNSAFE_EXTENSION.has(extension)) {
+    const metadata = this.metadataPerExt.get(
+      parse(parts[parts.length - 1].replace(METAFILE_SUFFIX, '')).ext.replace(
+        DOT,
+        ''
+      )
+    )
+    if (
+      !!metadata &&
+      MetadataRepositoryImpl.EXTENSION_MATCHING_EXCEPTION.includes(
+        metadata?.directoryName
+      )
+    ) {
       return
-    }
-    return this.metadataPerExt.get(extension)
-  }
-
-  protected searchByDirectory(parts: string[]): Metadata | undefined {
-    let metadata: Metadata | undefined
-    for (const part of parts) {
-      metadata = this.metadataPerDir.get(part) ?? metadata
-      if (
-        metadata &&
-        !MetadataRepositoryImpl.TYPES_WITH_SUB_TYPES.has(metadata.xmlName!)
-      ) {
-        break
-      }
     }
     return metadata
   }
 
+  protected searchByDirectory(parts: string[]): Metadata | undefined {
+    let metadata: Metadata | undefined
+    parts.find(part => {
+      metadata = this.metadataPerDir.get(part) ?? metadata
+      return (
+        !!metadata &&
+        !MetadataRepositoryImpl.TYPES_WITH_SUB_TYPES.includes(
+          metadata.directoryName
+        )
+      )
+    })
+    return metadata
+  }
+
   public getFullyQualifiedName(path: string): string {
-    let fullyQualifiedName = parse(path).base
     const type = this.get(path)
-    if (type && MetadataRepositoryImpl.COMPOSED_TYPES.has(type.xmlName!)) {
+    let fullyQualifiedName = parse(path).base
+    if (
+      type &&
+      MetadataRepositoryImpl.COMPOSED_TYPES.includes(type.directoryName)
+    ) {
       const parentType = path
         .split(PATH_SEP)
-        .find(part => this.metadataPerDir.has(part))!
+        .find(part => this.metadataPerDir.get(part))!
       fullyQualifiedName = path
         .slice(path.indexOf(parentType))
-        .replace(new RegExp(PATH_SEP, 'g'), '')
+        .replaceAll(PATH_SEP, '')
     }
     return fullyQualifiedName
   }
@@ -120,25 +95,15 @@ export class MetadataRepositoryImpl implements MetadataRepository {
     return this.metadatas
   }
 
-  private static TYPES_WITH_SUB_TYPES = new Set([
-    OBJECT_TYPE,
-    TERRITORY_MODEL_TYPE,
-    WORKFLOW_TYPE,
-    SHARING_RULE_TYPE,
-    '',
-  ])
+  private static TYPES_WITH_SUB_TYPES = [OBJECT_TYPE, TERRITORY_MODEL_TYPE, '']
+  private static EXTENSION_MATCHING_EXCEPTION = [
+    CUSTOM_APPLICATION_TYPE,
+    RESTRICTION_RULE_TYPE,
+  ]
 
-  private static UNSAFE_EXTENSION = new Set([
-    CUSTOM_APPLICATION_SUFFIX,
-    EMAIL_SERVICES_FUNCTION_SUFFIX,
-    CUSTOM_METADATA_SUFFIX,
-  ])
-
-  private static COMPOSED_TYPES = new Set([
+  private static COMPOSED_TYPES = [
     OBJECT_TYPE,
     OBJECT_TRANSLATION_TYPE,
-    WORKFLOW_TYPE,
-    SHARING_RULE_TYPE,
     ...SUB_OBJECT_TYPES,
-  ])
+  ]
 }

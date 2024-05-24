@@ -1,14 +1,13 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
 import IncludeProcessor from '../../../../src/post-processor/includeProcessor'
-import type { Work } from '../../../../src/types/work'
 import {
   IgnoreHelper,
   buildIncludeHelper,
 } from '../../../../src/utils/ignoreHelper'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import { Work } from '../../../../src/types/work'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 const mockProcess = jest.fn()
 jest.mock('../../../../src/service/diffLineInterpreter', () => {
@@ -40,6 +39,7 @@ describe('IncludeProcessor', () => {
   let metadata: MetadataRepository
 
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     metadata = await getGlobalMetadata()
   })
 

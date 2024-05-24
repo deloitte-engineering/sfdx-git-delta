@@ -1,17 +1,11 @@
 'use strict'
-import { join } from 'path'
-import { GIT_FOLDER, GIT_PATH_SEP } from '../constant/gitConstants'
-import { readFile as fsReadFile, outputFile, copySync } from 'fs-extra'
-import { UTF8_ENCODING } from '../constant/fsConstants'
-import { EOLRegex, getSpawnContent } from './childProcessUtils'
-import { isLFS, getLFSObjectContentPath } from './gitLfsHelper'
-
-import GitAdapter from '../adapter/GitAdapter'
-import type { Config } from '../types/config'
-import type { FileGitRef } from '../types/git'
-
-import { treatPathSep } from './fsUtils'
+import { outputFile } from 'fs-extra'
 import { buildIgnoreHelper } from './ignoreHelper'
+import { join } from 'path'
+import { Config } from '../types/config'
+import GitAdapter from '../adapter/GitAdapter'
+import { FileGitRef } from '../types/git'
+import { treatPathSep } from './fsUtils'
 
 import { existsSync, lstatSync, mkdirSync } from 'fs'
 

@@ -1,12 +1,9 @@
 'use strict'
 
 import { XMLBuilder, XMLParser } from 'fast-xml-parser'
-
-import type { Config } from '../types/config'
-import type { FileGitRef } from '../types/git'
-import { XML_HEADER_TAG_END } from '../constant/metadataConstants'
-
+import { Config } from '../types/config'
 import { readPathFromGit } from './fsHelper'
+import { FileGitRef } from '../types/git'
 
 const XML_PARSER_OPTION = {
   commentPropName: '#comment',
@@ -62,5 +59,3 @@ export const convertJsonToXml = (jsonContent: any) => {
 }
 
 export const ATTRIBUTE_PREFIX = '@_'
-
-export const XML_HEADER_ATTRIBUTE_KEY = '?xml'

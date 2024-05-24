@@ -1,9 +1,8 @@
 'use strict'
 import { expect, describe, it } from '@jest/globals'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 import { MetadataRepositoryImpl } from '../../../../src/metadata/MetadataRepositoryImpl'
-import type { Metadata } from '../../../../src/types/metadata'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
+import { Metadata } from '../../../../src/types/metadata'
 
 describe('MetadataRepositoryImpl', () => {
   let sut: MetadataRepository
@@ -23,25 +22,11 @@ describe('MetadataRepositoryImpl', () => {
         xmlName: 'CustomApplication',
       },
       {
-        directoryName: 'customMetadata',
-        inFolder: false,
-        metaFile: false,
-        suffix: 'md',
-        xmlName: 'CustomMetadata',
-      },
-      {
         directoryName: 'documents',
         inFolder: true,
         metaFile: true,
         suffix: 'document',
         xmlName: 'Document',
-      },
-      {
-        directoryName: 'restrictionRules',
-        inFolder: false,
-        metaFile: false,
-        suffix: 'rule',
-        xmlName: 'RestrictionRule',
       },
       {
         directoryName: 'moderation',
@@ -85,6 +70,13 @@ describe('MetadataRepositoryImpl', () => {
         xmlName: 'CustomObject',
       },
       {
+        directoryName: 'restrictionRules',
+        inFolder: false,
+        metaFile: false,
+        suffix: 'rule',
+        xmlName: 'RestrictionRule',
+      },
+      {
         directoryName: 'classes',
         inFolder: false,
         metaFile: true,
@@ -103,34 +95,6 @@ describe('MetadataRepositoryImpl', () => {
         metaFile: true,
         suffix: 'resource',
         xmlName: 'StaticResource',
-      },
-      {
-        directoryName: 'emailservices',
-        inFolder: false,
-        metaFile: false,
-        suffix: 'xml',
-        xmlName: 'EmailServicesFunction',
-      },
-      {
-        directoryName: 'sites',
-        inFolder: false,
-        metaFile: false,
-        suffix: 'site',
-        xmlName: 'CustomSite',
-      },
-      {
-        directoryName: 'siteDotComSites',
-        inFolder: false,
-        metaFile: true,
-        suffix: 'site',
-        xmlName: 'SiteDotCom',
-      },
-      {
-        directoryName: 'experiences',
-        inFolder: false,
-        metaFile: true,
-        suffix: 'site',
-        xmlName: 'ExperienceBundle',
       },
     ])
   })
@@ -233,60 +197,6 @@ describe('MetadataRepositoryImpl', () => {
           expect.objectContaining({ directoryName: 'moderation' })
         )
       })
-
-      describe('special cases where it should only match on folder', () => {
-        it('matches `md` files inside `customMetadata` folder', () => {
-          // Act
-          const result = sut.get(
-            'force-app/customMetadata/testCustomMetadata.md'
-          )
-
-          // Assert
-          expect(result).toStrictEqual(
-            expect.objectContaining({ directoryName: 'customMetadata' })
-          )
-        })
-        it('matches `xml` files inside `emailservices` folder', () => {
-          // Act
-          const result = sut.get('force-app/emailservices/testService.xml')
-
-          // Assert
-          expect(result).toStrictEqual(
-            expect.objectContaining({ directoryName: 'emailservices' })
-          )
-        })
-        it('should match `Site`', () => {
-          // Act
-          const result = sut.get('Z force-app/main/default/sites/aSite.site')
-
-          // Assert
-          expect(result).toStrictEqual(
-            expect.objectContaining({ directoryName: 'sites' })
-          )
-        })
-        it('should match `SiteDotCom`', () => {
-          // Act
-          const result = sut.get(
-            'Z force-app/main/default/siteDotComSites/aSitedotcom.site'
-          )
-
-          // Assert
-          expect(result).toStrictEqual(
-            expect.objectContaining({ directoryName: 'siteDotComSites' })
-          )
-        })
-        it('should match `ExperienceBundle`', () => {
-          // Act
-          const result = sut.get(
-            'Z force-app/main/default/experiences/aCommunity.site'
-          )
-
-          // Assert
-          expect(result).toStrictEqual(
-            expect.objectContaining({ directoryName: 'experiences' })
-          )
-        })
-      })
     })
 
     describe('when matching on extension', () => {
@@ -356,15 +266,7 @@ describe('MetadataRepositoryImpl', () => {
     })
 
     describe('when it should not match on extension', () => {
-      it('does not match `xml` files outside `emailservices` folder', () => {
-        // Act
-        const result = sut.get('manifest/specificTestClasses.xml')
-
-        // Assert
-        expect(result).toBeUndefined()
-      })
-
-      it('does not match `app` files outside `applications` folder', () => {
+      it('matches on folder', () => {
         // Act
         const result = sut.get(
           'Z force-app/main/folder/aura/TestApp/TestApp.app'
@@ -374,14 +276,6 @@ describe('MetadataRepositoryImpl', () => {
         expect(result).toStrictEqual(
           expect.objectContaining({ directoryName: 'aura' })
         )
-      })
-
-      it('does not match `md` files outside `customMetadata` folder', () => {
-        // Act
-        const result = sut.get('README.md')
-
-        // Assert
-        expect(result).toBeUndefined()
       })
     })
   })

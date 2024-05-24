@@ -1,21 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use strict'
 
-import { isEqual } from 'lodash'
-
-import { MetadataRepository } from '../metadata/MetadataRepository'
-import type { Config } from '../types/config'
-import type { SharedFileMetadata } from '../types/metadata'
-import type { Manifest } from '../types/work'
-
 import {
   asArray,
   parseXmlFileToJson,
   convertJsonToXml,
   ATTRIBUTE_PREFIX,
-  XML_HEADER_ATTRIBUTE_KEY,
 } from './fxpHelper'
+import { isEqual } from 'lodash'
 import { fillPackageWithParameter } from './packageHelper'
+import { Manifest } from '../types/work'
+import { Config } from '../types/config'
+import { SharedFileMetadata } from '../types/metadata'
+import { MetadataRepository } from '../metadata/MetadataRepository'
 
 type ManifestTypeMember = {
   type: string
@@ -37,7 +34,7 @@ const hasMember =
   (subType: string) =>
   (member: string) =>
     attributes.has(subType) &&
-    store.get(attributes.get(subType)!.xmlName!)?.has(member)
+    store.get(attributes.get(subType)!.xmlName)?.has(member)
 
 const selectKey =
   (attributes: Map<string, SharedFileMetadata>) =>
@@ -47,11 +44,7 @@ const selectKey =
 
 // Metadata JSON structure functional area
 const getRootMetadata = (fileContent: any): any =>
-  fileContent[
-    Object.keys(fileContent).find(
-      attribute => attribute !== XML_HEADER_ATTRIBUTE_KEY
-    ) as string
-  ] ?? {}
+  Object.values(fileContent)?.[1] ?? {}
 
 const getSubTypeTags =
   (attributes: Map<string, SharedFileMetadata>) => (fileContent: any) =>
@@ -149,7 +142,7 @@ const generatePartialJSON =
         storeHasMemberForType(key(elem))
       )
       return acc
-    }, structuredClone(jsonContent))
+    }, jsonContent)
   }
 
 export default class MetadataDiff {

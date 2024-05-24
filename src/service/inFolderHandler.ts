@@ -1,17 +1,16 @@
 'use strict'
-import { join, parse } from 'path'
-
-import { EXTENSION_SUFFIX_REGEX, PATH_SEP } from '../constant/fsConstants'
+import StandardHandler from './standardHandler'
 import {
   INFOLDER_SUFFIX,
   META_REGEX,
   METAFILE_SUFFIX,
 } from '../constant/metadataConstants'
+import { join, parse } from 'path'
 import { readDir } from '../utils/fsHelper'
-
-import StandardHandler from './standardHandler'
+import { PATH_SEP } from '../constant/fsConstants'
 
 const INFOLDER_SUFFIX_REGEX = new RegExp(`${INFOLDER_SUFFIX}$`)
+const EXTENSION_SUFFIX_REGEX = new RegExp(/\.[^/.]+$/)
 export default class InFolderHandler extends StandardHandler {
   override async handleAddition() {
     await super.handleAddition()
@@ -52,7 +51,7 @@ export default class InFolderHandler extends StandardHandler {
 
   protected override _getElementName() {
     return this.splittedLine
-      .slice(this.splittedLine.indexOf(this.metadataDef.directoryName) + 1)
+      .slice(this.splittedLine.indexOf(this.type) + 1)
       .join(PATH_SEP)
       .replace(META_REGEX, '')
       .replace(INFOLDER_SUFFIX_REGEX, '')

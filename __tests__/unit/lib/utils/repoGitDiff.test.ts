@@ -1,15 +1,14 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-
+import { getGlobalMetadata } from '../../../__utils__/globalTestHelper'
+import RepoGitDiff from '../../../../src/utils/repoGitDiff'
 import {
   ADDITION,
   DELETION,
   MODIFICATION,
 } from '../../../../src/constant/gitConstants'
+import { Config } from '../../../../src/types/config'
 import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import type { Config } from '../../../../src/types/config'
-import RepoGitDiff from '../../../../src/utils/repoGitDiff'
-import { getGlobalMetadata } from '../../../__utils__/globalTestHelper'
 
 const mockGetDiffLines = jest.fn()
 jest.mock('../../../../src/adapter/GitAdapter', () => ({
@@ -34,6 +33,7 @@ describe(`test if repoGitDiff`, () => {
   let globalMetadata: MetadataRepository
   let config: Config
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     globalMetadata = await getGlobalMetadata()
   })
 

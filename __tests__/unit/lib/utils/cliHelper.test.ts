@@ -1,19 +1,17 @@
 'use strict'
-import { format } from 'util'
-
 import { expect, jest, describe, it } from '@jest/globals'
-
-import messages from '../../../../src/locales/en'
-import { getLatestSupportedVersion } from '../../../../src/metadata/metadataManager'
-import type { Work } from '../../../../src/types/work'
+import { getWork } from '../../../__utils__/globalTestHelper'
 import CLIHelper from '../../../../src/utils/cliHelper'
+import { getLatestSupportedVersion } from '../../../../src/metadata/metadataManager'
+import messages from '../../../../src/locales/en'
+import { Work } from '../../../../src/types/work'
 import {
   readFile,
   dirExists,
   fileExists,
   sanitizePath,
 } from '../../../../src/utils/fsUtils'
-import { getWork } from '../../../__utils__/globalTestHelper'
+import { format } from 'util'
 
 const mockParseRev = jest.fn()
 const mockConfigureRepository = jest.fn()

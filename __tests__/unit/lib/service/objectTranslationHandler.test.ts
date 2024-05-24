@@ -1,11 +1,10 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import ObjectTranslation from '../../../../src/service/objectTranslationHandler'
-import type { Work } from '../../../../src/types/work'
-import { writeFile, copyFiles } from '../../../../src/utils/fsHelper'
 import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import { Work } from '../../../../src/types/work'
+import ObjectTranslation from '../../../../src/service/objectTranslationHandler'
+import { writeFile, copyFiles } from '../../../../src/utils/fsHelper'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 const mockCompare = jest.fn()
 const mockprune = jest.fn()
@@ -17,14 +16,7 @@ jest.mock('../../../../src/utils/metadataDiff', () => {
 
 jest.mock('../../../../src/utils/fsHelper')
 
-const objectType = {
-  directoryName: 'objectTranslations',
-  inFolder: false,
-  metaFile: false,
-  suffix: 'objectTranslation',
-  xmlName: 'CustomObjectTranslation',
-  pruneOnly: true,
-}
+const objectType = 'objectTranslations'
 const xmlName = 'CustomObjectTranslation'
 const line =
   'A       force-app/main/default/objectTranslations/Account-es/Account-es.objectTranslation-meta.xml'
@@ -41,6 +33,7 @@ beforeEach(() => {
 describe('ObjectTranslation', () => {
   let globalMetadata: MetadataRepository
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     globalMetadata = await getGlobalMetadata()
   })
 
@@ -98,7 +91,7 @@ describe('ObjectTranslation', () => {
         await sut.handleAddition()
 
         // Assert
-        expect(copyFiles).toBeCalledTimes(2)
+        expect(copyFiles).toBeCalledTimes(1)
         expect(copyFiles).toHaveBeenCalledWith(
           work.config,
           expect.stringContaining('BillingFloor__c.fieldTranslation')

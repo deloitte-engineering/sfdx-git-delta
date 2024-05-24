@@ -1,16 +1,14 @@
 'use strict'
-import { join } from 'path'
-
-import { PATH_SEP } from '../constant/fsConstants'
+import StandardHandler from './standardHandler'
 import {
   MASTER_DETAIL_TAG,
   OBJECT_META_XML_SUFFIX,
 } from '../constant/metadataConstants'
 import { readPathFromGit } from '../utils/fsHelper'
+import { join } from 'path'
+import { PATH_SEP } from '../constant/fsConstants'
 
-import DecomposedHandler from './decomposedHandler'
-
-export default class CustomFieldHandler extends DecomposedHandler {
+export default class SubCustomObjectHandler extends StandardHandler {
   public override async handleAddition() {
     await super.handleAddition()
     if (!this.config.generateDelta) return
@@ -23,12 +21,10 @@ export default class CustomFieldHandler extends DecomposedHandler {
     if (!data.includes(MASTER_DETAIL_TAG)) return
 
     const customObjectDirPath = this.splittedLine
-      .slice(0, this.splittedLine.indexOf(this.metadataDef.directoryName))
+      .slice(0, this.splittedLine.indexOf(this.type))
       .join(PATH_SEP)
     const customObjectName =
-      this.splittedLine[
-        this.splittedLine.indexOf(this.metadataDef.directoryName) - 1
-      ]
+      this.splittedLine[this.splittedLine.indexOf(this.type) - 1]
 
     const customObjectPath = join(
       customObjectDirPath,
@@ -36,5 +32,11 @@ export default class CustomFieldHandler extends DecomposedHandler {
     )
 
     await this._copyWithMetaFile(customObjectPath)
+  }
+
+  protected override _getElementName() {
+    const prefix = this.splittedLine[this.splittedLine.indexOf(this.type) - 1]
+    const elementName = super._getElementName()
+    return `${prefix}.${elementName}`
   }
 }

@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import type { Work } from '../../../../src/types/work'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import MetadataDiff from '../../../../src/utils/metadataDiff'
 import {
   parseXmlFileToJson,
   convertJsonToXml,
 } from '../../../../src/utils/fxpHelper'
-import MetadataDiff from '../../../../src/utils/metadataDiff'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import { Work } from '../../../../src/types/work'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 jest.mock('../../../../src/utils/fxpHelper', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,86 +27,13 @@ const workFlowAttributes = new Map([
   ['alerts', { xmlName: 'WorkflowAlert', key: 'fullName' }],
 ])
 
-const xmlHeader = { '?xml': { '@_version': '1.0', '@_encoding': 'UTF-8' } }
-
-const alert = {
-  Workflow: {
-    '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
-    alerts: [
-      {
-        fullName: 'TestEmailAlert',
-        description: 'awesome',
-        protected: 'false',
-        recipients: { field: 'OtherEmail', type: 'email' },
-        senderAddress: 'awesome@awesome.com',
-        senderType: 'OrgWideEmailAddress',
-        template: 'None',
-      },
-      {
-        fullName: 'OtherTestEmailAlert',
-        description: 'awesome',
-        protected: 'false',
-        recipients: { field: 'OtherEmail', type: 'email' },
-        senderAddress: 'awesome@awesome.com',
-        senderType: 'OrgWideEmailAddress',
-        template: 'None',
-      },
-    ],
-  },
-}
-
-const alertOther = {
-  Workflow: {
-    '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
-    alerts: [
-      {
-        fullName: 'OtherTestEmailAlert',
-        description: 'awesome',
-        protected: 'false',
-        recipients: { field: 'OtherEmail', type: 'email' },
-        senderAddress: 'awesome@awesome.com',
-        senderType: 'OrgWideEmailAddress',
-        template: 'None',
-      },
-    ],
-  },
-}
-
-const alertTest = {
-  Workflow: {
-    '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
-    alerts: {
-      fullName: 'TestEmailAlert',
-      description: 'awesome',
-      protected: 'false',
-      recipients: { field: 'OtherEmail', type: 'email' },
-      senderAddress: 'awesome@awesome.com',
-      senderType: 'OrgWideEmailAddress',
-      template: 'None',
-    },
-  },
-}
-
-const wfBase = {
-  Workflow: {
-    '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
-  },
-}
-
-const unTracked = {
-  Workflow: {
-    '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
-    unTracked: {
-      fullName: 'untracked',
-    },
-  },
-}
-
-describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
+describe(`MetadataDiff`, () => {
   let metadataDiff: MetadataDiff
   let globalMetadata: MetadataRepository
   let work: Work
+  let alert: any, alertOther: any, alertTest: any, wfBase: any, unTracked: any
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     globalMetadata = await getGlobalMetadata()
   })
   beforeEach(() => {
@@ -120,9 +46,87 @@ describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
       globalMetadata,
       workFlowAttributes
     )
+
+    alert = {
+      '?xml': { '@_version': '1.0', '@_encoding': 'UTF-8' },
+      Workflow: {
+        '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
+        alerts: [
+          {
+            fullName: 'TestEmailAlert',
+            description: 'awesome',
+            protected: 'false',
+            recipients: { field: 'OtherEmail', type: 'email' },
+            senderAddress: 'awesome@awesome.com',
+            senderType: 'OrgWideEmailAddress',
+            template: 'None',
+          },
+          {
+            fullName: 'OtherTestEmailAlert',
+            description: 'awesome',
+            protected: 'false',
+            recipients: { field: 'OtherEmail', type: 'email' },
+            senderAddress: 'awesome@awesome.com',
+            senderType: 'OrgWideEmailAddress',
+            template: 'None',
+          },
+        ],
+      },
+    }
+
+    alertOther = {
+      '?xml': { '@_version': '1.0', '@_encoding': 'UTF-8' },
+      Workflow: {
+        '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
+        alerts: [
+          {
+            fullName: 'OtherTestEmailAlert',
+            description: 'awesome',
+            protected: 'false',
+            recipients: { field: 'OtherEmail', type: 'email' },
+            senderAddress: 'awesome@awesome.com',
+            senderType: 'OrgWideEmailAddress',
+            template: 'None',
+          },
+        ],
+      },
+    }
+
+    alertTest = {
+      '?xml': { '@_version': '1.0', '@_encoding': 'UTF-8' },
+      Workflow: {
+        '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
+        alerts: {
+          fullName: 'TestEmailAlert',
+          description: 'awesome',
+          protected: 'false',
+          recipients: { field: 'OtherEmail', type: 'email' },
+          senderAddress: 'awesome@awesome.com',
+          senderType: 'OrgWideEmailAddress',
+          template: 'None',
+        },
+      },
+    }
+
+    wfBase = {
+      '?xml': { '@_version': '1.0', '@_encoding': 'UTF-8' },
+      Workflow: {
+        '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
+      },
+    }
+
+    unTracked = {
+      '?xml': { '@_version': '1.0', '@_encoding': 'UTF-8' },
+      Workflow: {
+        '@_xmlns': 'http://soap.sforce.com/2006/04/metadata',
+        unTracked: {
+          fullName: 'untracked',
+        },
+      },
+    }
   })
 
-  describe(`compare with ${JSON.stringify(header)} header`, () => {
+  describe('compare', () => {
     it('does not detect null file content', async () => {
       // Arrange
       mockedParseXmlFileToJson.mockResolvedValueOnce('')
@@ -138,11 +142,8 @@ describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
 
     it('does not detect not tracked elements', async () => {
       // Arrange
-      mockedParseXmlFileToJson.mockResolvedValueOnce({
-        ...header,
-        ...unTracked,
-      })
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...wfBase })
+      mockedParseXmlFileToJson.mockResolvedValueOnce(unTracked)
+      mockedParseXmlFileToJson.mockResolvedValueOnce(wfBase)
 
       // Act
       const { added, deleted } = await metadataDiff.compare('file/path')
@@ -154,8 +155,8 @@ describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
 
     it('detects added elements', async () => {
       // Arrange
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...alert })
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...wfBase })
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alert)
+      mockedParseXmlFileToJson.mockResolvedValueOnce(wfBase)
 
       // Act
       const { added, deleted } = await metadataDiff.compare('file/path')
@@ -168,8 +169,8 @@ describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
     })
     it('detects removed elements', async () => {
       // Arrange
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...wfBase })
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...alert })
+      mockedParseXmlFileToJson.mockResolvedValueOnce(wfBase)
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alert)
 
       // Act
       const { added, deleted } = await metadataDiff.compare('file/path')
@@ -184,7 +185,7 @@ describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
     it('detects deleted file', async () => {
       // Arrange
       mockedParseXmlFileToJson.mockResolvedValueOnce('')
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...alert })
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alert)
 
       // Act
       const { added, deleted } = await metadataDiff.compare('file/path')
@@ -198,12 +199,8 @@ describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
 
     it('detects modified elements', async () => {
       // Arrange
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alertTest)
       mockedParseXmlFileToJson.mockResolvedValueOnce({
-        ...header,
-        ...alertTest,
-      })
-      mockedParseXmlFileToJson.mockResolvedValueOnce({
-        ...header,
         ...alertTest,
         Workflow: {
           ...alertTest.Workflow,
@@ -219,14 +216,24 @@ describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
       expect(added.get('WorkflowAlert')).toEqual(new Set(['TestEmailAlert']))
     })
   })
-  describe(`prune with ${JSON.stringify(header)} header`, () => {
+  describe('prune', () => {
     it('given one element added, the generated file contains only this element', async () => {
       // Arrange
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...alert })
-      mockedParseXmlFileToJson.mockResolvedValueOnce({
-        ...header,
-        ...alertTest,
-      })
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alert)
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alertTest)
+      await metadataDiff.compare('file/path')
+
+      // Act
+      const { isEmpty } = metadataDiff.prune()
+
+      // Assert
+      expect(convertJsonToXml).toHaveBeenCalledWith(alertOther)
+      expect(isEmpty).toBe(false)
+    })
+    it('given every element deleted, the generated file is empty', async () => {
+      // Arrange
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alertTest)
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alert)
       await metadataDiff.compare('file/path')
 
       // Act
@@ -234,46 +241,32 @@ describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
 
       // Assert
       expect(convertJsonToXml).toHaveBeenCalledWith({
-        ...header,
-        ...alertOther,
+        ...wfBase,
+        Workflow: {
+          ...wfBase.Workflow,
+          alerts: [],
+        },
       })
-      expect(isEmpty).toBe(false)
-    })
-    it('given every element deleted, the generated file is empty', async () => {
-      // Arrange
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...wfBase })
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...alert })
-      await metadataDiff.compare('file/path')
-
-      // Act
-      const { isEmpty } = metadataDiff.prune()
-
-      // Assert
-      expect(convertJsonToXml).toHaveBeenCalledWith({ ...header, ...wfBase })
       expect(isEmpty).toBe(true)
     })
     it('given file contains only new element, it keeps the file identical', async () => {
       // Arrange
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...alert })
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...wfBase })
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alert)
+      mockedParseXmlFileToJson.mockResolvedValueOnce(wfBase)
       await metadataDiff.compare('file/path')
 
       // Act
       const { isEmpty } = metadataDiff.prune()
 
       // Assert
-      expect(convertJsonToXml).toHaveBeenCalledWith({ ...header, ...alert })
+      expect(convertJsonToXml).toHaveBeenCalledWith(alert)
       expect(isEmpty).toBe(false)
     })
 
     it('given one element modified, the generated file contains only this element', async () => {
       // Arrange
+      mockedParseXmlFileToJson.mockResolvedValueOnce(alertOther)
       mockedParseXmlFileToJson.mockResolvedValueOnce({
-        ...header,
-        ...alertOther,
-      })
-      mockedParseXmlFileToJson.mockResolvedValueOnce({
-        ...header,
         ...alertOther,
         Workflow: {
           ...alertOther.Workflow,
@@ -286,27 +279,21 @@ describe.each([[{}], [xmlHeader]])(`MetadataDiff`, header => {
       const { isEmpty } = metadataDiff.prune()
 
       // Assert
-      expect(convertJsonToXml).toHaveBeenCalledWith({
-        ...header,
-        ...alertOther,
-      })
+      expect(convertJsonToXml).toHaveBeenCalledWith(alertOther)
       expect(isEmpty).toBe(false)
     })
 
     it('given untracked element, nothing trackable changed, the generated file contains untracked elements', async () => {
       // Arrange
-      mockedParseXmlFileToJson.mockResolvedValueOnce({
-        ...header,
-        ...unTracked,
-      })
-      mockedParseXmlFileToJson.mockResolvedValueOnce({ ...header, ...wfBase })
+      mockedParseXmlFileToJson.mockResolvedValueOnce(unTracked)
+      mockedParseXmlFileToJson.mockResolvedValueOnce(wfBase)
       await metadataDiff.compare('file/path')
 
       // Act
       const { isEmpty } = metadataDiff.prune()
 
       // Assert
-      expect(convertJsonToXml).toHaveBeenCalledWith({ ...header, ...unTracked })
+      expect(convertJsonToXml).toHaveBeenCalledWith(unTracked)
       expect(isEmpty).toBe(false)
     })
   })

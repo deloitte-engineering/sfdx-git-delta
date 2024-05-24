@@ -1,13 +1,12 @@
 'use strict'
-import { availableParallelism } from 'os'
-
-import { queue } from 'async'
-
 import { MetadataRepository } from '../metadata/MetadataRepository'
-import type { Work } from '../types/work'
-
-import StandardHandler from './standardHandler'
+import { Work } from '../types/work'
 import TypeHandlerFactory from './typeHandlerFactory'
+import { availableParallelism } from 'os'
+import { queue } from 'async'
+import StandardHandler from './standardHandler'
+
+const MAX_PARALLELISM = Math.min(availableParallelism(), 6)
 
 export default class DiffLineInterpreter {
   constructor(
@@ -19,7 +18,6 @@ export default class DiffLineInterpreter {
 
   public async process(lines: string[]) {
     const typeHandlerFactory = new TypeHandlerFactory(this.work, this.metadata)
-    const MAX_PARALLELISM = this.getConcurrencyThreshold()
     const processor = queue(
       async (handler: StandardHandler) => await handler.handle(),
       MAX_PARALLELISM
@@ -33,14 +31,5 @@ export default class DiffLineInterpreter {
     if (processor.length() > 0) {
       await processor.drain()
     }
-  }
-
-  protected getConcurrencyThreshold() {
-    // This is because of this issue: https://github.com/scolladon/sfdx-git-delta/issues/762#issuecomment-1907609957
-    const AVAILABLE_PARALLELISM = availableParallelism
-      ? availableParallelism()
-      : Infinity
-
-    return Math.min(AVAILABLE_PARALLELISM, 6)
   }
 }

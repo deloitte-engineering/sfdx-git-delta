@@ -1,9 +1,8 @@
 'use strict'
-import fs from 'fs'
-import readline from 'readline'
-
-import { execCmd } from '@salesforce/cli-plugins-testkit'
 import { expect } from '@salesforce/command/lib/test'
+import { execCmd } from '@salesforce/cli-plugins-testkit'
+import readline from 'readline'
+import fs from 'fs'
 
 describe('sgd:source:delta NUTS', () => {
   it('run help', () => {
@@ -61,8 +60,8 @@ describe('sgd:source:delta NUTS', () => {
     const destructiveChangesLineCount = await getFileLineNumber(
       'e2e/expected/destructiveChanges/destructiveChanges.xml'
     )
-    expect(packageLineCount).to.equal(232)
-    expect(destructiveChangesLineCount).to.equal(137)
+    expect(packageLineCount).to.equal(220)
+    expect(destructiveChangesLineCount).to.equal(130)
     expect(result).to.include('"error": null')
     expect(result).to.include('"success": true')
   })
