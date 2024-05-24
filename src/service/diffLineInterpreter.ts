@@ -3,7 +3,6 @@ import { MetadataRepository } from '../metadata/MetadataRepository'
 import { Work } from '../types/work'
 import TypeHandlerFactory from './typeHandlerFactory'
 import { availableParallelism } from 'os'
-import { queue } from 'async'
 import StandardHandler from './standardHandler'
 
 const MAX_PARALLELISM = Math.min(availableParallelism(), 6)
