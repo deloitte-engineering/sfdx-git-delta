@@ -1,11 +1,10 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-import fse from 'fs-extra'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import PackageGenerator from '../../../../src/post-processor/packageGenerator'
-import type { Work } from '../../../../src/types/work'
 import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import PackageGenerator from '../../../../src/post-processor/packageGenerator'
+import fse from 'fs-extra'
+import { Work } from '../../../../src/types/work'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
 jest.mock('fs-extra')
 

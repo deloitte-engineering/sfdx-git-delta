@@ -16,5 +16,3 @@ perf-result.txt
 .stryker-tmp
 
 megalinter-reports/
-.wireit
-.eslintcache

@@ -1,42 +1,47 @@
 'use strict'
-import { basename } from 'path'
-
-import { DOT } from '../constant/fsConstants'
-import { MetadataRepository } from '../metadata/MetadataRepository'
-import { getInFileAttributes, isPackable } from '../metadata/metadataManager'
-import { Metadata } from '../types/metadata'
-import type { Manifest, Work } from '../types/work'
-import { writeFile } from '../utils/fsHelper'
-import MetadataDiff from '../utils/metadataDiff'
-import { fillPackageWithParameter } from '../utils/packageHelper'
-
+import { LABEL_EXTENSION, LABEL_XML_NAME } from '../constant/metadataConstants'
 import StandardHandler from './standardHandler'
+import { basename } from 'path'
+import { writeFile, DOT } from '../utils/fsHelper'
+import { getInFileAttributes, isPackable } from '../metadata/metadataManager'
+import MetadataDiff from '../utils/metadataDiff'
+import {
+  cleanUpPackageMember,
+  fillPackageWithParameter,
+} from '../utils/packageHelper'
+import { Manifest, Work } from '../types/work'
+import { MetadataRepository } from '../metadata/MetadataRepository'
 
 const getRootType = (line: string) => basename(line).split(DOT)[0]
+const getNamePrefix = ({ subType, line }: { subType: string; line: string }) =>
+  subType !== LABEL_XML_NAME ? `${getRootType(line)}.` : ''
 
 export default class InFileHandler extends StandardHandler {
   protected readonly metadataDiff: MetadataDiff
   constructor(
     line: string,
-    metadataDef: Metadata,
+    type: string,
     work: Work,
     metadata: MetadataRepository
   ) {
-    super(line, metadataDef, work, metadata)
+    super(line, type, work, metadata)
     const inFileMetadata = getInFileAttributes(metadata)
     this.metadataDiff = new MetadataDiff(this.config, metadata, inFileMetadata)
-    this.suffixRegex = new RegExp(`\\.${this.ext}$`)
   }
 
   public override async handleAddition() {
-    await this._compareRevisionAndStoreComparison()
+    await super.handleAddition()
+    await this._compareRevision()
+
+    if (!this.config.generateDelta) return
+    await this._writeScopedContent()
   }
 
   public override async handleDeletion() {
-    if (this._shouldTreatDeletionAsDeletion()) {
+    if (this.metadataDef.pruneOnly) {
       await super.handleDeletion()
     } else {
-      await this.handleAddition()
+      await this._compareRevision()
     }
   }
 
@@ -44,17 +49,16 @@ export default class InFileHandler extends StandardHandler {
     await this.handleAddition()
   }
 
-  protected async _compareRevisionAndStoreComparison() {
+  protected async _compareRevision() {
     const { added, deleted } = await this.metadataDiff.compare(this.line)
     this._storeComparison(this.diffs.destructiveChanges, deleted)
     this._storeComparison(this.diffs.package, added)
+  }
+
+  protected async _writeScopedContent() {
     const { xmlContent, isEmpty } = this.metadataDiff.prune()
-    if (this._shouldTreatContainerType(isEmpty)) {
-      // Call from super.handleAddition to add the Root Type
-      // QUESTION: Why InFile element are not deployable when root component is not listed in package.xml ?
-      await super.handleAddition()
-    }
-    if (this.config.generateDelta && !isEmpty) {
+
+    if (!isEmpty) {
       await writeFile(this.line, xmlContent, this.config)
     }
   }
@@ -73,7 +77,9 @@ export default class InFileHandler extends StandardHandler {
     member: string
   ) {
     if (isPackable(subType)) {
-      const cleanedMember = `${this._getQualifiedName()}${member}`
+      const cleanedMember = cleanUpPackageMember(
+        `${getNamePrefix({ subType, line: this.line })}${member}`
+      )
 
       fillPackageWithParameter({
         store,
@@ -83,19 +89,15 @@ export default class InFileHandler extends StandardHandler {
     }
   }
 
-  protected _getQualifiedName() {
-    return `${getRootType(this.line)}${DOT}`
-  }
-
-  protected override _delegateFileCopy() {
+  override _delegateFileCopy() {
     return false
   }
 
-  protected _shouldTreatDeletionAsDeletion() {
-    return this.metadataDef.pruneOnly
-  }
-
-  protected _shouldTreatContainerType(fileIsEmpty: boolean) {
-    return !fileIsEmpty
+  override _fillPackage(store: Manifest) {
+    // Call from super.handleAddition to add the Root Type
+    // QUESTION: Why InFile element are not deployable when root component is not listed in package.xml ?
+    if (this.type !== LABEL_EXTENSION) {
+      super._fillPackage(store)
+    }
   }
 }

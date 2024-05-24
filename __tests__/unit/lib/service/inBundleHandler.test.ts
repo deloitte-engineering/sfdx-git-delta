@@ -1,18 +1,11 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-
-import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
-import InBundleHandler from '../../../../src/service/inBundleHandler'
-import type { Work } from '../../../../src/types/work'
 import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
+import InBundleHandler from '../../../../src/service/inBundleHandler'
+import { Work } from '../../../../src/types/work'
+import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
 
-const objectType = {
-  directoryName: 'digitalExperiences',
-  inFolder: false,
-  metaFile: true,
-  suffix: 'digitalExperience',
-  xmlName: 'DigitalExperienceBundle',
-}
+const objectType = 'digitalExperiences'
 const entityPath =
   'force-app/main/default/digitalExperiences/site/component.digitalExperience-meta.xml'
 const line = `A       ${entityPath}`
@@ -26,6 +19,7 @@ beforeEach(() => {
 describe('InBundleHandler', () => {
   let globalMetadata: MetadataRepository
   beforeAll(async () => {
+    // eslint-disable-next-line no-undef
     globalMetadata = await getGlobalMetadata()
   })
 

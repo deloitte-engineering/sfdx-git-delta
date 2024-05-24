@@ -1,5 +1,5 @@
 import ignore, { Ignore } from 'ignore'
-
+import { readFile } from './fsUtils'
 import {
   ADDITION,
   DELETION,
@@ -7,10 +7,6 @@ import {
   GIT_DIFF_TYPE_REGEX,
 } from '../constant/gitConstants'
 
-import { readFile } from './fsUtils'
-
-// QUESTION: Why we should ignore recordTypes for destructive changes manifest ?
-// Because the operation is note enabled on the metadata API https://ideas.salesforce.com/s/idea/a0B8W00000GdeGKUAZ/allow-deletion-of-record-type-using-metadata-api
 const BASE_DESTRUCTIVE_IGNORE = ['recordTypes/']
 
 export class IgnoreHelper {
@@ -25,7 +21,7 @@ export class IgnoreHelper {
     const changeType = line.charAt(0)
 
     let ignInstance!: Ignore
-    if (DELETION === changeType) {
+    if (DELETION == changeType) {
       ignInstance = this.destructiveIgnore
     } else if ([ADDITION, MODIFICATION].includes(changeType)) {
       ignInstance = this.globalIgnore
@@ -47,7 +43,9 @@ export const buildIgnoreHelper = async ({
 }) => {
   if (!ignoreInstance) {
     const globalIgnore = await _buildIgnore(ignore)
-    const destructiveIgnore = await _buildIgnore(ignoreDestructive || ignore)
+    const destructiveIgnore = ignoreDestructive
+      ? await _buildIgnore(ignoreDestructive)
+      : await _buildIgnore(ignore)
 
     destructiveIgnore.add(BASE_DESTRUCTIVE_IGNORE)
 
