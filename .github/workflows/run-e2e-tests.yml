@@ -8,7 +8,7 @@ on:
         default: latest-rc
 
 jobs:
-  e2e-test:
+  source:
     strategy:
       fail-fast: false
       matrix:
