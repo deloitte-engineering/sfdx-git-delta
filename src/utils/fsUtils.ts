@@ -10,8 +10,7 @@ import {
 } from '../constant/fsConstants'
 
 export const treatPathSep = (data: string) =>
-  data.replace(PATH_SEPARATOR_REGEX, PATH_SEP)
-
+  data.split(PATH_SEPARATOR_REGEX).filter(Boolean).join(PATH_SEP)
 export const sanitizePath = (data: string) =>
   data ? normalize(treatPathSep(data)) : data
 
