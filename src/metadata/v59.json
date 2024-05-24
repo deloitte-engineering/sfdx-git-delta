@@ -1,12 +1,5 @@
 [
   {
-    "directoryName": "messagingChannels",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "messagingChannel",
-    "xmlName": "MessagingChannel"
-  },
-  {
     "directoryName": "recordAlertCategories",
     "inFolder": false,
     "metaFile": false,
@@ -2200,12 +2193,5 @@
     "metaFile": false,
     "suffix": "sustainabilityUom",
     "xmlName": "SustainabilityUom"
-  },
-  {
-    "directoryName": "documentGenerationSettings",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "documentGenerationSetting",
-    "xmlName": "DocumentGenerationSetting"
   }
 ]

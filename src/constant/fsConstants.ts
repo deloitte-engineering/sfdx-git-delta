@@ -1,6 +1,6 @@
 'use strict'
 
-import { posix } from 'path'
+import { posix } from "path"
 
 export const DOT = '.'
 export const UTF8_ENCODING = 'utf8'

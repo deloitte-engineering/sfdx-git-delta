@@ -5,9 +5,9 @@ import {
   META_REGEX,
   METAFILE_SUFFIX,
 } from '../constant/metadataConstants'
-import { join, parse } from 'path'
+import { cleanUpPackageMember } from '../utils/packageHelper'
+import { join, parse, sep } from 'path'
 import { readDir } from '../utils/fsHelper'
-import { PATH_SEP } from '../constant/fsConstants'
 
 const INFOLDER_SUFFIX_REGEX = new RegExp(`${INFOLDER_SUFFIX}$`)
 const EXTENSION_SUFFIX_REGEX = new RegExp(/\.[^/.]+$/)
@@ -22,11 +22,9 @@ export default class InFolderHandler extends StandardHandler {
   protected async _copyFolderMetaFile() {
     const [, folderPath, folderName] = this._parseLine()!
 
-    const suffix = folderName.endsWith(INFOLDER_SUFFIX)
-      ? ''
-      : `.${this.metadataDef.suffix!.toLowerCase()}`
-
-    let folderFileName = `${folderName}${suffix}${METAFILE_SUFFIX}`
+    let folderFileName = `${folderName}.${
+      this.metadataDef.suffix!.toLowerCase() + METAFILE_SUFFIX
+    }`
 
     await this._copyWithMetaFile(join(folderPath, folderFileName))
 
@@ -44,18 +42,20 @@ export default class InFolderHandler extends StandardHandler {
 
     await Promise.all(
       dirContent
-        .filter((file: string) => file.includes(parsedLine.name))
-        .map((file: string) => this._copyWithMetaFile(file))
+        .filter(file => file.includes(parsedLine.name))
+        .map(file => this._copyWithMetaFile(join(parsedLine.dir, file)))
     )
   }
 
   protected override _getElementName() {
-    return this.splittedLine
+    const packageMember = this.splittedLine
       .slice(this.splittedLine.indexOf(this.type) + 1)
-      .join(PATH_SEP)
+      .join(sep)
       .replace(META_REGEX, '')
       .replace(INFOLDER_SUFFIX_REGEX, '')
       .replace(EXTENSION_SUFFIX_REGEX, '')
+
+    return cleanUpPackageMember(packageMember)
   }
 
   protected override _isProcessable() {

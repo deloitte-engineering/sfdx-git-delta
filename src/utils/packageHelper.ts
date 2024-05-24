@@ -52,3 +52,8 @@ export const fillPackageWithParameter = ({
   }
   store.get(type)?.add(member)
 }
+
+const PACKAGE_MEMBER_PATH_SEP = '/'
+export const cleanUpPackageMember = (packageMember: string) => {
+  return `${packageMember}`.replace(/\\+/g, PACKAGE_MEMBER_PATH_SEP)
+}

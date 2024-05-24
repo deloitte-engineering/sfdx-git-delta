@@ -27,9 +27,9 @@ export default class CustomObjectHandler extends StandardHandler {
     const fields = await readDir(fieldsFolder, this.config)
     const masterDetailsFields = await asyncFilter(
       fields,
-      async (path: string) => {
+      async (fieldPath: string) => {
         const content = await readPathFromGit(
-          path,
+          join(fieldsFolder, fieldPath),
           this.config
         )
         return content.includes(MASTER_DETAIL_TAG)
@@ -37,7 +37,9 @@ export default class CustomObjectHandler extends StandardHandler {
     )
 
     await Promise.all(
-      masterDetailsFields.map((field: string) => this._copyWithMetaFile(field))
+      masterDetailsFields.map((field: string) =>
+        this._copyWithMetaFile(join(fieldsFolder, field))
+      )
     )
   }
 }

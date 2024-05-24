@@ -32,9 +32,12 @@ const hasMember =
   (store: Manifest) =>
   (attributes: Map<string, SharedFileMetadata>) =>
   (subType: string) =>
-  (member: string) =>
-    attributes.has(subType) &&
-    store.get(attributes.get(subType)!.xmlName)?.has(member)
+  (member: string) => {
+    return (
+      attributes.has(subType) &&
+      store.get(attributes.get(subType)!.xmlName)?.has(member)
+    )
+  }
 
 const selectKey =
   (attributes: Map<string, SharedFileMetadata>) =>
@@ -125,7 +128,7 @@ const getElementProcessor =
     return metadataMember
   }
 
-// Partial JSON generation functional area
+// Partial JSON generation functional are
 // Side effect on jsonContent
 const generatePartialJSON =
   (attributes: Map<string, SharedFileMetadata>) =>
@@ -146,26 +149,31 @@ const generatePartialJSON =
   }
 
 export default class MetadataDiff {
+  protected readonly configTo: Config
+  protected readonly configFrom: Config
   protected toContent: any
   protected add!: Manifest
   constructor(
-    // eslint-disable-next-line no-unused-vars
     protected readonly config: Config,
-    // eslint-disable-next-line no-unused-vars
     protected readonly metadata: MetadataRepository,
-    // eslint-disable-next-line no-unused-vars
     protected readonly attributes: Map<string, SharedFileMetadata>
-  ) {}
+  ) {
+    this.config = config
+    this.metadata = metadata
+    this.attributes = attributes
+    this.configTo = {
+      repo: this.config.repo,
+      to: this.config.to,
+    } as Config
+    this.configFrom = {
+      repo: this.config.repo,
+      to: this.config.from,
+    } as Config
+  }
 
   public async compare(path: string) {
-    this.toContent = await parseXmlFileToJson(
-      { path, oid: this.config.to },
-      this.config
-    )
-    const fromContent = await parseXmlFileToJson(
-      { path, oid: this.config.from },
-      this.config
-    )
+    this.toContent = await parseXmlFileToJson(path, this.configTo)
+    const fromContent = await parseXmlFileToJson(path, this.configFrom)
 
     const diff = compareContent(this.attributes)
 

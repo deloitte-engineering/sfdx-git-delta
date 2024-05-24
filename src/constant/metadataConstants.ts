@@ -1,6 +1,5 @@
 'use strict'
 
-export const CUSTOM_APPLICATION_TYPE = 'applications'
 export const FIELD_DIRECTORY_NAME = 'fields'
 export const FLOW_XML_NAME = 'Flow'
 export const INFOLDER_SUFFIX = `Folder`
@@ -32,3 +31,4 @@ export const SUB_OBJECT_TYPES = [
 export const TERRITORY_MODEL_TYPE = 'territory2Models'
 export const TRANSLATION_EXTENSION = 'translation'
 export const TRANSLATION_TYPE = 'Translations'
+export const XML_HEADER_TAG_END = '?>'

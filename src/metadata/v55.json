@@ -1,12 +1,5 @@
 [
   {
-    "directoryName": "messagingChannels",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "messagingChannel",
-    "xmlName": "MessagingChannel"
-  },
-  {
     "directoryName": "recordAlertCategories",
     "inFolder": false,
     "metaFile": false,
@@ -2060,12 +2053,5 @@
     "xmlTag": "workflowTasks",
     "key": "name",
     "excluded": true
-  },
-  {
-    "directoryName": "documentGenerationSettings",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "documentGenerationSetting",
-    "xmlName": "DocumentGenerationSetting"
   }
 ]

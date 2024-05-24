@@ -5,8 +5,7 @@ import {
   OBJECT_META_XML_SUFFIX,
 } from '../constant/metadataConstants'
 import { readPathFromGit } from '../utils/fsHelper'
-import { join } from 'path'
-import { PATH_SEP } from '../constant/fsConstants'
+import { join, sep } from 'path'
 
 export default class SubCustomObjectHandler extends StandardHandler {
   public override async handleAddition() {
@@ -14,15 +13,12 @@ export default class SubCustomObjectHandler extends StandardHandler {
     if (!this.config.generateDelta) return
 
     // QUESTION: Why we need to add parent object for Master Detail field ? https://help.salesforce.com/s/articleView?id=000386883&type=1
-    const data = await readPathFromGit(
-      this.line,
-      this.config
-    )
+    const data = await readPathFromGit(this.line, this.config)
     if (!data.includes(MASTER_DETAIL_TAG)) return
 
     const customObjectDirPath = this.splittedLine
       .slice(0, this.splittedLine.indexOf(this.type))
-      .join(PATH_SEP)
+      .join(sep)
     const customObjectName =
       this.splittedLine[this.splittedLine.indexOf(this.type) - 1]
 

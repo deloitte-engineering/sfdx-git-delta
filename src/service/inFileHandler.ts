@@ -2,11 +2,13 @@
 import { LABEL_EXTENSION, LABEL_XML_NAME } from '../constant/metadataConstants'
 import StandardHandler from './standardHandler'
 import { basename } from 'path'
-import { writeFile } from '../utils/fsHelper'
-import { DOT } from '../constant/fsConstants'
+import { writeFile, DOT } from '../utils/fsHelper'
 import { getInFileAttributes, isPackable } from '../metadata/metadataManager'
 import MetadataDiff from '../utils/metadataDiff'
-import { fillPackageWithParameter } from '../utils/packageHelper'
+import {
+  cleanUpPackageMember,
+  fillPackageWithParameter,
+} from '../utils/packageHelper'
 import { Manifest, Work } from '../types/work'
 import { MetadataRepository } from '../metadata/MetadataRepository'
 
@@ -75,10 +77,9 @@ export default class InFileHandler extends StandardHandler {
     member: string
   ) {
     if (isPackable(subType)) {
-      const cleanedMember = `${getNamePrefix({
-        subType,
-        line: this.line,
-      })}${member}`
+      const cleanedMember = cleanUpPackageMember(
+        `${getNamePrefix({ subType, line: this.line })}${member}`
+      )
 
       fillPackageWithParameter({
         store,

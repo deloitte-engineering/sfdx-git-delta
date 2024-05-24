@@ -1,48 +1,59 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
 import { getWork } from '../../../__utils__/globalTestHelper'
+import {
+  COMMIT_REF_TYPE,
+  TAG_REF_TYPE,
+} from '../../../../src/constant/gitConstants'
 import CLIHelper from '../../../../src/utils/cliHelper'
 import { getLatestSupportedVersion } from '../../../../src/metadata/metadataManager'
 import messages from '../../../../src/locales/en'
 import { Work } from '../../../../src/types/work'
-import {
-  readFile,
-  dirExists,
-  fileExists,
-  sanitizePath,
-} from '../../../../src/utils/fsUtils'
+import { isGit } from '../../../../src/utils/fsHelper'
+import { readFile, dirExists, fileExists } from '../../../../src/utils/fsUtils'
 import { format } from 'util'
 
-const mockParseRev = jest.fn()
-const mockConfigureRepository = jest.fn()
-const setGitDirMock = jest.fn()
-jest.mock('../../../../src/adapter/GitAdapter', () => ({
-  getInstance: () => ({
-    parseRev: mockParseRev,
-    configureRepository: mockConfigureRepository,
-    setGitDir: setGitDirMock,
-  }),
-}))
+jest.mock('../../../../src/utils/childProcessUtils', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const actualModule: any = jest.requireActual(
+    '../../../../src/utils/childProcessUtils'
+  )
+  return {
+    ...actualModule,
+    getSpawnContent: jest.fn(),
+  }
+})
 
+const mockGetCommitRefType = jest.fn()
+jest.mock('../../../../src/utils/repoSetup', () => {
+  return jest.fn().mockImplementation(function () {
+    return {
+      repoConfiguration: jest.fn(),
+      getCommitRefType: mockGetCommitRefType,
+    }
+  })
+})
+
+jest.mock('../../../../src/utils/fsHelper')
 jest.mock('../../../../src/utils/fsUtils')
+
 const mockedReadFile = jest.mocked(readFile)
-const mockedSanitizePath = jest.mocked(sanitizePath)
 const mockedDirExists = jest.mocked(dirExists)
 const mockedFileExists = jest.mocked(fileExists)
-
-mockedSanitizePath.mockImplementation(data => data)
+const mockedIsGit = jest.mocked(isGit)
 
 describe(`test if the application`, () => {
   let work: Work
   beforeEach(() => {
     work = getWork()
-    work.config.repo = '.'
     work.config.to = 'test'
     work.config.apiVersion = 46
     mockedFileExists.mockImplementation(() => Promise.resolve(true))
     mockedDirExists.mockImplementation(() => Promise.resolve(true))
-    setGitDirMock.mockImplementation(() => Promise.resolve(true))
-    mockParseRev.mockImplementation(() => Promise.resolve('ref'))
+    mockedIsGit.mockImplementation(() => Promise.resolve(true))
+    mockGetCommitRefType.mockImplementation(() =>
+      Promise.resolve(COMMIT_REF_TYPE)
+    )
   })
 
   it('resume nicely when everything is well configured', async () => {
@@ -64,7 +75,7 @@ describe(`test if the application`, () => {
   })
 
   it('throws errors when repo is not a git repository', async () => {
-    setGitDirMock.mockImplementationOnce(() => Promise.reject(new Error()))
+    mockedIsGit.mockResolvedValueOnce(false)
     const cliHelper = new CLIHelper({
       ...work,
       config: {
@@ -321,8 +332,11 @@ describe(`test if the application`, () => {
   })
 
   it('throws errors when "-t" is not a valid sha pointer', async () => {
-    mockParseRev.mockImplementationOnce(() =>
-      Promise.reject(new Error('not a valid sha pointer'))
+    mockGetCommitRefType.mockImplementationOnce(() =>
+      Promise.resolve('not a valid sha pointer')
+    )
+    mockGetCommitRefType.mockImplementationOnce(() =>
+      Promise.resolve(TAG_REF_TYPE)
     )
     const notHeadSHA = 'test'
     const cliHelper = new CLIHelper({
@@ -340,9 +354,11 @@ describe(`test if the application`, () => {
   })
 
   it('throws errors when "-f" is not a valid sha pointer', async () => {
-    mockParseRev.mockImplementationOnce(() => Promise.resolve('ref'))
-    mockParseRev.mockImplementationOnce(() =>
-      Promise.reject(new Error('not a valid sha pointer'))
+    mockGetCommitRefType.mockImplementationOnce(() =>
+      Promise.resolve('not a valid sha pointer')
+    )
+    mockGetCommitRefType.mockImplementationOnce(() =>
+      Promise.resolve(COMMIT_REF_TYPE)
     )
     const notHeadSHA = 'test'
     const cliHelper = new CLIHelper({
@@ -360,12 +376,11 @@ describe(`test if the application`, () => {
   })
 
   it('throws errors when "-t" and "-f" are not a valid sha pointer', async () => {
-    expect.assertions(2)
-    mockParseRev.mockImplementationOnce(() =>
-      Promise.reject(new Error('not a valid sha pointer'))
+    mockGetCommitRefType.mockImplementationOnce(() =>
+      Promise.resolve('not a valid sha pointer')
     )
-    mockParseRev.mockImplementationOnce(() =>
-      Promise.reject(new Error('not a valid sha pointer'))
+    mockGetCommitRefType.mockImplementationOnce(() =>
+      Promise.resolve('not a valid sha pointer')
     )
     const notHeadSHA = 'test'
     const cliHelper = new CLIHelper({
@@ -378,21 +393,23 @@ describe(`test if the application`, () => {
       },
     })
 
-    try {
-      await cliHelper.validateConfig()
-    } catch (err) {
-      const error = err as Error
-      expect(error.message).toContain(
-        format(messages.errorParameterIsNotGitSHA, 'from', notHeadSHA)
-      )
-      expect(error.message).toContain(
-        format(messages.errorParameterIsNotGitSHA, 'to', notHeadSHA)
-      )
-    }
+    await expect(cliHelper.validateConfig()).rejects.toThrow(
+      format(messages.errorParameterIsNotGitSHA, 'from', notHeadSHA)
+    )
+
+    await expect(cliHelper.validateConfig()).rejects.toThrow(
+      format(messages.errorParameterIsNotGitSHA, 'to', notHeadSHA)
+    )
   })
 
   it('do not throw errors when "-t" and "-f" are valid sha pointer', async () => {
     // Arrange
+    mockGetCommitRefType.mockImplementationOnce(() =>
+      Promise.resolve(TAG_REF_TYPE)
+    )
+    mockGetCommitRefType.mockImplementationOnce(() =>
+      Promise.resolve(COMMIT_REF_TYPE)
+    )
     const notHeadSHA = 'test'
 
     const cliHelper = new CLIHelper({
@@ -413,7 +430,7 @@ describe(`test if the application`, () => {
 
   it('do not throw errors when repo contains submodule git file', async () => {
     expect.assertions(1)
-    setGitDirMock.mockImplementationOnce(() => Promise.resolve(true))
+    mockedIsGit.mockResolvedValueOnce(true)
     const cliHelper = new CLIHelper({
       ...work,
       config: {
@@ -428,7 +445,7 @@ describe(`test if the application`, () => {
 
   it('do not throw errors when repo submodule git folder', async () => {
     expect.assertions(1)
-    setGitDirMock.mockImplementationOnce(() => Promise.resolve(true))
+    mockedIsGit.mockResolvedValueOnce(true)
     const cliHelper = new CLIHelper({
       ...work,
       config: {

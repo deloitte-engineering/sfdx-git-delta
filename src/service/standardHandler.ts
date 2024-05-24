@@ -1,5 +1,5 @@
 'use strict'
-import { join, parse, ParsedPath } from 'path'
+import { join, parse, sep, ParsedPath } from 'path'
 import {
   ADDITION,
   DELETION,
@@ -7,9 +7,11 @@ import {
   GIT_DIFF_TYPE_REGEX,
 } from '../constant/gitConstants'
 import { META_REGEX, METAFILE_SUFFIX } from '../constant/metadataConstants'
-import { DOT, PATH_SEP } from '../constant/fsConstants'
-import { fillPackageWithParameter } from '../utils/packageHelper'
-import { copyFiles } from '../utils/fsHelper'
+import {
+  cleanUpPackageMember,
+  fillPackageWithParameter,
+} from '../utils/packageHelper'
+import { copyFiles, DOT } from '../utils/fsHelper'
 import { Manifest, Manifests, Work } from '../types/work'
 import { Metadata } from '../types/metadata'
 import { Config } from '../types/config'
@@ -39,10 +41,11 @@ export default class StandardHandler {
   ) {
     this.changeType = line.charAt(0) as string
     this.line = line.replace(GIT_DIFF_TYPE_REGEX, '')
+    // internal getters
     this.diffs = work.diffs
     this.config = work.config
     this.warnings = work.warnings
-    this.splittedLine = this.line.split(PATH_SEP)
+    this.splittedLine = this.line.split(sep)
 
     if (this.metadata.get(this.type)?.metaFile === true) {
       this.line = this.line.replace(METAFILE_SUFFIX, '')
@@ -56,7 +59,7 @@ export default class StandardHandler {
       .split(DOT)
       .pop() as string
 
-    this.parentFolder = this.parsedLine.dir.split(PATH_SEP).slice(-1)[0]
+    this.parentFolder = this.parsedLine.dir.split(sep).slice(-1)[0]
     this.metadataDef = this.metadata.get(this.type) as Metadata
   }
 
@@ -104,7 +107,7 @@ export default class StandardHandler {
         .slice(
           this.splittedLine.findIndex(x => x.includes(METAFILE_SUFFIX)) - 1
         )
-        .join(PATH_SEP)
+        .join(sep)
 
         .replace(META_REGEX, '')
         .replace(this.suffixRegex, '')
@@ -113,7 +116,7 @@ export default class StandardHandler {
 
   protected _getElementName() {
     const parsedPath = this._getParsedPath()
-    return parsedPath.base
+    return cleanUpPackageMember(parsedPath.base)
   }
 
   protected _fillPackage(store: Manifest) {

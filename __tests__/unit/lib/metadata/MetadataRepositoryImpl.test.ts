@@ -9,19 +9,6 @@ describe('MetadataRepositoryImpl', () => {
   beforeEach(() => {
     sut = new MetadataRepositoryImpl([
       {
-        directoryName: 'aura',
-        inFolder: false,
-        metaFile: false,
-        xmlName: 'AuraDefinitionBundle',
-      },
-      {
-        directoryName: 'applications',
-        inFolder: false,
-        metaFile: false,
-        suffix: 'app',
-        xmlName: 'CustomApplication',
-      },
-      {
         directoryName: 'documents',
         inFolder: true,
         metaFile: true,
@@ -262,20 +249,6 @@ describe('MetadataRepositoryImpl', () => {
 
         // Assert
         expect(result).toBeUndefined()
-      })
-    })
-
-    describe('when it should not match on extension', () => {
-      it('matches on folder', () => {
-        // Act
-        const result = sut.get(
-          'Z force-app/main/folder/aura/TestApp/TestApp.app'
-        )
-
-        // Assert
-        expect(result).toStrictEqual(
-          expect.objectContaining({ directoryName: 'aura' })
-        )
       })
     })
   })
