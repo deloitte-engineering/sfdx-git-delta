@@ -1,12 +1,5 @@
 [
   {
-    "directoryName": "dw",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "dwl",
-    "xmlName": "DataWeaveResource"
-  },
-  {
     "directoryName": "useraccesspolicies",
     "inFolder": false,
     "metaFile": false,

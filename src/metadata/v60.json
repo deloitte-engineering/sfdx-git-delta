@@ -1,26 +1,5 @@
 [
   {
-  "directoryName": "genAiPromptTemplateActivations",
-  "inFolder": false,
-  "metaFile": false,
-  "suffix": "genAiPromptTemplateActivation",
-  "xmlName": "GenAiPromptTemplateActv"
-  },
-  {
-  "directoryName": "genAiPromptTemplates",
-  "inFolder": false,
-  "metaFile": false,
-  "suffix": "genAiPromptTemplate",
-  "xmlName": "GenAiPromptTemplate"
-  },
-  {
-    "directoryName": "dw",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "dwl",
-    "xmlName": "DataWeaveResource"
-  },
-  {
     "directoryName": "useraccesspolicies",
     "inFolder": false,
     "metaFile": false,
