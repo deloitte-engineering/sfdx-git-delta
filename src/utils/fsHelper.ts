@@ -64,7 +64,7 @@ const isDirectory = async (path: string) => {
     return lstatSync(path).isDirectory()
   } catch {
     // Path does not exist. Defaulting to false
-    return false;
+    return false
   }
 }
 
