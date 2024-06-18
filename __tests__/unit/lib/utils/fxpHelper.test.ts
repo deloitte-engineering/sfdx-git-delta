@@ -1,13 +1,14 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
+
+import type { Config } from '../../../../src/types/config'
+import { readPathFromGit } from '../../../../src/utils/fsHelper'
 import {
   asArray,
   parseXmlFileToJson,
   convertJsonToXml,
   xml2Json,
 } from '../../../../src/utils/fxpHelper'
-import { readPathFromGit } from '../../../../src/utils/fsHelper'
-import { Config } from '../../../../src/types/config'
 
 const mockedReadPathFromGit = jest.mocked(readPathFromGit)
 
@@ -63,7 +64,7 @@ describe('fxpHelper', () => {
       it('returns empty object', async () => {
         // Act
         const jsonResult = await parseXmlFileToJson(
-          'path/to/empty/file',
+          { path: 'path/to/empty/file', oid: config.to },
           config
         )
 
@@ -81,7 +82,7 @@ describe('fxpHelper', () => {
       it('returns json content', async () => {
         // Act
         const jsonContent = await parseXmlFileToJson(
-          'path/to/empty/file',
+          { path: 'path/to/empty/file', oid: config.to },
           config
         )
 
@@ -97,7 +98,7 @@ describe('fxpHelper', () => {
       it('returns empty object', async () => {
         // Act
         const jsonContent = await parseXmlFileToJson(
-          'path/to/empty/file',
+          { path: 'path/to/empty/file', oid: config.to },
           config
         )
 

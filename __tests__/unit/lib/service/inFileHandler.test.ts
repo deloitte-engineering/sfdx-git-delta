@@ -1,10 +1,11 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
-import { writeFile } from '../../../../src/utils/fsHelper'
-import { Work } from '../../../../src/types/work'
-import InFileHandler from '../../../../src/service/inFileHandler'
+
 import { MetadataRepository } from '../../../../src/metadata/MetadataRepository'
+import InFileHandler from '../../../../src/service/inFileHandler'
+import type { Work } from '../../../../src/types/work'
+import { writeFile } from '../../../../src/utils/fsHelper'
+import { getGlobalMetadata, getWork } from '../../../__utils__/globalTestHelper'
 
 const mockCompare = jest.fn()
 const mockPrune = jest.fn()
@@ -15,27 +16,53 @@ jest.mock('../../../../src/utils/metadataDiff', () => {
 })
 jest.mock('../../../../src/utils/fsHelper')
 
-describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
-  let globalMetadata: MetadataRepository
-  beforeAll(async () => {
-    // eslint-disable-next-line no-undef
-    globalMetadata = await getGlobalMetadata()
-  })
-  let work: Work
-  beforeEach(() => {
-    jest.clearAllMocks()
-    work = getWork()
-    work.config.generateDelta = generateDelta
-    mockPrune.mockReturnValue({ xmlContent: '<xmlContent>', isEmpty: false })
-  })
+const workflowType = {
+  childXmlNames: [
+    'WorkflowFieldUpdate',
+    'WorkflowKnowledgePublish',
+    'WorkflowTask',
+    'WorkflowAlert',
+    'WorkflowSend',
+    'WorkflowOutboundMessage',
+    'WorkflowRule',
+  ],
+  directoryName: 'workflows',
+  inFolder: false,
+  metaFile: false,
+  suffix: 'workflow',
+  xmlName: 'Workflow',
+}
+const globalValueSetTranslationsType = {
+  directoryName: 'globalValueSetTranslations',
+  inFolder: false,
+  metaFile: false,
+  suffix: 'globalValueSetTranslation',
+  xmlName: 'GlobalValueSetTranslation',
+  pruneOnly: true,
+}
 
+let globalMetadata: MetadataRepository
+beforeAll(async () => {
+  globalMetadata = await getGlobalMetadata()
+})
+let work: Work
+beforeEach(() => {
+  jest.clearAllMocks()
+  work = getWork()
+
+  mockPrune.mockReturnValue({ xmlContent: '<xmlContent>', isEmpty: false })
+})
+describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
+  beforeEach(() => {
+    work.config.generateDelta = generateDelta
+  })
   describe('when file is added', () => {
     let sut: InFileHandler
     beforeEach(() => {
       // Arrange
       sut = new InFileHandler(
         'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-        'workflows',
+        workflowType,
         work,
         globalMetadata
       )
@@ -57,49 +84,85 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         new Set(['Account.test'])
       )
 
+      expect(mockPrune).toHaveBeenCalled()
       if (generateDelta) {
-        expect(mockPrune).toHaveBeenCalled()
         expect(writeFile).toHaveBeenCalled()
       } else {
-        expect(mockPrune).not.toHaveBeenCalled()
         expect(writeFile).not.toHaveBeenCalled()
       }
     })
 
     describe('when metadata in file is not packable', () => {
-      beforeEach(() => {
-        // Arrange
-        sut = new InFileHandler(
-          'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
-          'globalValueSetTranslations',
-          work,
-          globalMetadata
-        )
-        mockCompare.mockImplementation(() =>
-          Promise.resolve({
-            added: new Map([['ValueTranslation', new Set(['Three'])]]),
-            deleted: new Map(),
-          })
-        )
-      })
-      it('should only store file name and not the metadata in file', async () => {
-        // Act
-        await sut.handleAddition()
+      describe('when file have comparable metadata', () => {
+        beforeEach(() => {
+          // Arrange
+          sut = new InFileHandler(
+            'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
+            globalValueSetTranslationsType,
+            work,
+            globalMetadata
+          )
+          mockCompare.mockImplementation(() =>
+            Promise.resolve({
+              added: new Map([['ValueTranslation', new Set(['Three'])]]),
+              deleted: new Map(),
+            })
+          )
+        })
+        it('should only store file name and not the metadata in file', async () => {
+          // Act
+          await sut.handleAddition()
 
-        // Assert
-        expect(work.diffs.destructiveChanges.size).toEqual(0)
-        expect(work.diffs.package.get('GlobalValueSetTranslation')).toEqual(
-          new Set(['Numbers-fr'])
-        )
-        expect(work.diffs.package.size).toEqual(1)
+          // Assert
+          expect(work.diffs.destructiveChanges.size).toEqual(0)
+          expect(work.diffs.package.get('GlobalValueSetTranslation')).toEqual(
+            new Set(['Numbers-fr'])
+          )
+          expect(work.diffs.package.size).toEqual(1)
 
-        if (generateDelta) {
           expect(mockPrune).toHaveBeenCalled()
-          expect(writeFile).toHaveBeenCalled()
-        } else {
-          expect(mockPrune).not.toHaveBeenCalled()
-          expect(writeFile).not.toHaveBeenCalled()
-        }
+          if (generateDelta) {
+            expect(writeFile).toHaveBeenCalled()
+          } else {
+            expect(writeFile).not.toHaveBeenCalled()
+          }
+        })
+      })
+
+      describe('when file does not have comparable metadata but is not empty', () => {
+        beforeEach(() => {
+          // Arrange
+          sut = new InFileHandler(
+            'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
+            globalValueSetTranslationsType,
+            work,
+            globalMetadata
+          )
+          mockCompare.mockImplementation(() =>
+            Promise.resolve({
+              added: new Map(),
+              deleted: new Map(),
+            })
+          )
+        })
+        it('should only store file name and not the metadata in file', async () => {
+          // Act
+          await sut.handleAddition()
+
+          // Assert
+          expect(work.diffs.destructiveChanges.size).toEqual(0)
+          expect(work.diffs.package.get('GlobalValueSetTranslation')).toEqual(
+            new Set(['Numbers-fr'])
+          )
+          expect(work.diffs.package.size).toEqual(1)
+
+          expect(mockPrune).toHaveBeenCalled()
+          if (generateDelta) {
+            expect(writeFile).toHaveBeenCalled()
+          } else {
+            expect(writeFile).not.toHaveBeenCalled()
+          }
+        })
       })
     })
   })
@@ -112,7 +175,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         // Arrange
         sut = new InFileHandler(
           'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-          'workflows',
+          workflowType,
           work,
           globalMetadata
         )
@@ -136,11 +199,10 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
           new Set(['Account.deleted'])
         )
         expect(work.diffs.destructiveChanges.has('Workflow')).toBe(false)
+        expect(mockPrune).toHaveBeenCalled()
         if (generateDelta) {
-          expect(mockPrune).toHaveBeenCalled()
           expect(writeFile).toHaveBeenCalled()
         } else {
-          expect(mockPrune).not.toHaveBeenCalled()
           expect(writeFile).not.toHaveBeenCalled()
         }
       })
@@ -151,7 +213,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         // Arrange
         sut = new InFileHandler(
           'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-          'workflows',
+          workflowType,
           work,
           globalMetadata
         )
@@ -161,33 +223,31 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
             deleted: new Map([['WorkflowAlert', new Set(['deleted'])]]),
           })
         )
+        mockPrune.mockReturnValue({
+          xmlContent: '<xmlContent>',
+          isEmpty: true,
+        })
       })
       it('should store the deleted in the destructiveChanges and not copy the file', async () => {
         // Act
         await sut.handleModification()
 
         // Assert
-        expect(work.diffs.package.get('Workflow')).toEqual(new Set(['Account']))
-        expect(work.diffs.package.get('WorkflowAlert')).toBeUndefined()
+        expect(work.diffs.package.size).toBe(0)
         expect(work.diffs.destructiveChanges.get('WorkflowAlert')).toEqual(
           new Set(['Account.deleted'])
         )
         expect(work.diffs.destructiveChanges.has('Workflow')).toBe(false)
-        if (generateDelta) {
-          expect(mockPrune).toHaveBeenCalled()
-          expect(writeFile).toHaveBeenCalled()
-        } else {
-          expect(mockPrune).not.toHaveBeenCalled()
-          expect(writeFile).not.toHaveBeenCalled()
-        }
+        expect(mockPrune).toHaveBeenCalled()
+        expect(writeFile).not.toHaveBeenCalled()
       })
 
       describe('when no metadata element are added/deleted and the file does not contains attributes', () => {
         beforeEach(() => {
           // Arrange
           sut = new InFileHandler(
-            'force-app/main/default/labels/CustomLabel.label-meta.xml',
-            'labels',
+            'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
+            workflowType,
             work,
             globalMetadata
           )
@@ -211,11 +271,10 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
           // Assert
           expect(work.diffs.package.size).toEqual(0)
           expect(work.diffs.destructiveChanges.size).toEqual(0)
+          expect(mockPrune).toHaveBeenCalled()
           if (generateDelta) {
-            expect(mockPrune).toHaveBeenCalled()
             expect(writeFile).not.toHaveBeenCalled()
           } else {
-            expect(mockPrune).not.toHaveBeenCalled()
             expect(writeFile).not.toHaveBeenCalled()
           }
         })
@@ -225,20 +284,20 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         beforeEach(() => {
           // Arrange
           sut = new InFileHandler(
-            'force-app/main/default/labels/CustomLabel.label-meta.xml',
-            'labels',
+            'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
+            workflowType,
             work,
             globalMetadata
           )
           mockCompare.mockImplementation(() =>
             Promise.resolve({
               added: new Map(),
-              deleted: new Map([['CustomLabel', new Set(['Deleted'])]]),
+              deleted: new Map([['Workflow', new Set(['Deleted'])]]),
             })
           )
           mockPrune.mockReturnValue({
             xmlContent: '<xmlContent>',
-            isEmpty: false,
+            isEmpty: true,
           })
         })
         it('should store the added metadata in the package and the file should be copied', async () => {
@@ -248,55 +307,90 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
           // Assert
           expect(work.diffs.package.size).toEqual(0)
           expect(work.diffs.destructiveChanges.size).toEqual(1)
-          expect(work.diffs.destructiveChanges.get('CustomLabel')).toEqual(
-            new Set(['Deleted'])
+          expect(work.diffs.destructiveChanges.get('Workflow')).toEqual(
+            new Set(['Account.Deleted'])
           )
-          if (generateDelta) {
-            expect(mockPrune).toHaveBeenCalled()
-            expect(writeFile).toHaveBeenCalled()
-          } else {
-            expect(mockPrune).not.toHaveBeenCalled()
-            expect(writeFile).not.toHaveBeenCalled()
-          }
+          expect(mockPrune).toHaveBeenCalled()
+          expect(writeFile).not.toHaveBeenCalled()
         })
       })
     })
 
     describe('when metadata in file is not packable', () => {
-      beforeEach(() => {
-        // Arrange
-        sut = new InFileHandler(
-          'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
-          'globalValueSetTranslations',
-          work,
-          globalMetadata
-        )
-
-        mockCompare.mockImplementation(() =>
-          Promise.resolve({
-            added: new Map([['ValueTranslation', new Set(['Three'])]]),
-            deleted: new Map(),
+      describe('when file have comparable metadata', () => {
+        beforeEach(() => {
+          // Arrange
+          sut = new InFileHandler(
+            'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
+            globalValueSetTranslationsType,
+            work,
+            globalMetadata
+          )
+          mockCompare.mockImplementation(() =>
+            Promise.resolve({
+              added: new Map([['ValueTranslation', new Set(['Three'])]]),
+              deleted: new Map(),
+            })
+          )
+          mockPrune.mockReturnValue({
+            xmlContent: '<xmlContent>',
+            isEmpty: false,
           })
-        )
-      })
-      it('should only store file name and not the metadata in file', async () => {
-        // Act
-        await sut.handleModification()
+        })
+        it('should only store file name and not the metadata in file', async () => {
+          // Act
+          await sut.handleModification()
 
-        // Assert
-        expect(work.diffs.destructiveChanges.size).toEqual(0)
-        expect(work.diffs.package.get('GlobalValueSetTranslation')).toEqual(
-          new Set(['Numbers-fr'])
-        )
-        expect(work.diffs.package.size).toEqual(1)
+          // Assert
+          expect(work.diffs.destructiveChanges.size).toEqual(0)
+          expect(work.diffs.package.get('GlobalValueSetTranslation')).toEqual(
+            new Set(['Numbers-fr'])
+          )
+          expect(work.diffs.package.size).toEqual(1)
 
-        if (generateDelta) {
           expect(mockPrune).toHaveBeenCalled()
-          expect(writeFile).toHaveBeenCalled()
-        } else {
-          expect(mockPrune).not.toHaveBeenCalled()
-          expect(writeFile).not.toHaveBeenCalled()
-        }
+          if (generateDelta) {
+            expect(writeFile).toHaveBeenCalled()
+          } else {
+            expect(writeFile).not.toHaveBeenCalled()
+          }
+        })
+      })
+
+      describe('when file does not have comparable metadata but is not empty', () => {
+        beforeEach(() => {
+          // Arrange
+          sut = new InFileHandler(
+            'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
+            globalValueSetTranslationsType,
+            work,
+            globalMetadata
+          )
+          mockCompare.mockImplementation(() =>
+            Promise.resolve({
+              added: new Map(),
+              deleted: new Map(),
+            })
+          )
+        })
+        it('should only store file name and not the metadata in file', async () => {
+          // Act
+          await sut.handleModification()
+
+          // Assert
+          expect(work.diffs.destructiveChanges.size).toEqual(0)
+          expect(work.diffs.package.get('GlobalValueSetTranslation')).toEqual(
+            new Set(['Numbers-fr'])
+          )
+          expect(work.diffs.package.size).toEqual(1)
+
+          expect(mockPrune).toHaveBeenCalled()
+          if (generateDelta) {
+            expect(writeFile).toHaveBeenCalled()
+          } else {
+            expect(writeFile).not.toHaveBeenCalled()
+          }
+        })
       })
     })
   })
@@ -307,7 +401,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
       // Arrange
       sut = new InFileHandler(
         'force-app/main/default/workflows/Test/Account.workflow-meta.xml',
-        'workflows',
+        workflowType,
         work,
         globalMetadata
       )
@@ -317,6 +411,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
           deleted: new Map([['WorkflowAlert', new Set(['test'])]]),
         })
       )
+      mockPrune.mockReturnValue({ xmlContent: '<xmlContent>', isEmpty: true })
     })
     it('should store the deleted metadata in the destructiveChanges', async () => {
       // Act
@@ -329,7 +424,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         new Set(['Account.test'])
       )
       expect(mockCompare).toHaveBeenCalled()
-      expect(mockPrune).not.toHaveBeenCalled()
+      expect(mockPrune).toHaveBeenCalled()
       expect(writeFile).not.toHaveBeenCalled()
     })
     describe('when metadata in file is prune Only', () => {
@@ -337,7 +432,7 @@ describe.each([true, false])(`inFileHandler -d: %s`, generateDelta => {
         // Arrange
         sut = new InFileHandler(
           'force-app/main/default/globalValueSetTranslations/Numbers-fr.globalValueSetTranslation-meta.xml',
-          'globalValueSetTranslations',
+          globalValueSetTranslationsType,
           work,
           globalMetadata
         )
