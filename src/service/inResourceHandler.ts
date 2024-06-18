@@ -1,22 +1,25 @@
 'use strict'
-import StandardHandler from './standardHandler'
-import { join, parse, sep } from 'path'
-import { pathExists, DOT } from '../utils/fsHelper'
-import { META_REGEX, METAFILE_SUFFIX } from '../constant/metadataConstants'
-import { cleanUpPackageMember } from '../utils/packageHelper'
-import { Work } from '../types/work'
+import { join, parse } from 'path'
+
+import { DOT, PATH_SEP } from '../constant/fsConstants'
+import { METAFILE_SUFFIX, META_REGEX } from '../constant/metadataConstants'
 import { MetadataRepository } from '../metadata/MetadataRepository'
+import { Metadata } from '../types/metadata'
+import type { Work } from '../types/work'
+import { pathExists } from '../utils/fsHelper'
+
+import StandardHandler from './standardHandler'
 
 export default class ResourceHandler extends StandardHandler {
   protected readonly metadataName: string
 
   constructor(
     line: string,
-    type: string,
+    metadataDef: Metadata,
     work: Work,
     metadata: MetadataRepository
   ) {
-    super(line, type, work, metadata)
+    super(line, metadataDef, work, metadata)
     this.metadataName = this._getMetadataName()
   }
 
@@ -47,21 +50,23 @@ export default class ResourceHandler extends StandardHandler {
     if (exists) {
       await this.handleModification()
     } else {
-      super.handleDeletion()
+      await super.handleDeletion()
     }
   }
 
   protected override _getElementName() {
     const parsedPath = this._getParsedPath()
-    return cleanUpPackageMember(parsedPath.name)
+    return parsedPath.name
   }
 
   protected override _getParsedPath() {
-    return parse(
-      this.splittedLine[this.splittedLine.indexOf(this.type) + 1]
-        .replace(META_REGEX, '')
-        .replace(this.suffixRegex, '')
-    )
+    const base =
+      !this.metadataDef.excluded && this.ext === this.metadataDef.suffix
+        ? this.splittedLine.at(-1)!
+        : this.splittedLine[
+            this.splittedLine.indexOf(this.metadataDef.directoryName) + 1
+          ]
+    return parse(base.replace(META_REGEX, ''))
   }
 
   protected override _isProcessable() {
@@ -71,18 +76,20 @@ export default class ResourceHandler extends StandardHandler {
   protected _getMetadataName() {
     const resourcePath = []
     for (const pathElement of this.splittedLine) {
-      if (resourcePath.slice(-2)[0] === this.type) {
+      if (resourcePath.slice(-2)[0] === this.metadataDef.directoryName) {
         break
       }
       resourcePath.push(pathElement)
     }
-    const lastPathElement = resourcePath[resourcePath.length - 1].split(DOT)
+    const lastPathElement = resourcePath[resourcePath.length - 1]
+      .replace(METAFILE_SUFFIX, '')
+      .split(DOT)
     if (lastPathElement.length > 1) {
       lastPathElement.pop()
     }
 
     resourcePath[resourcePath.length - 1] = lastPathElement.join(DOT)
-    return `${resourcePath.join(sep)}`
+    return `${resourcePath.join(PATH_SEP)}`
   }
 
   protected _getRootElementAfterMetadataName() {
@@ -97,5 +104,9 @@ export default class ResourceHandler extends StandardHandler {
 
   protected override _getMetaTypeFilePath() {
     return `${this.metadataName}.${this.metadataDef.suffix}${METAFILE_SUFFIX}`
+  }
+
+  protected override _shouldCopyMetaFile(): boolean {
+    return true
   }
 }

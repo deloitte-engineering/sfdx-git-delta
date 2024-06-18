@@ -1,13 +1,14 @@
 ;`use strict`
+import { expect, jest, describe, it } from '@jest/globals'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const sgd = require('../../src/main')
-import { expect, jest, describe, it } from '@jest/globals'
 
 const mockValidateConfig = jest.fn()
 jest.mock('../../src/utils/cliHelper', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const actualModule: any = jest.requireActual('../../src/utils/cliHelper')
-  return jest.fn().mockImplementation(function () {
+  return jest.fn().mockImplementation(() => {
     return {
       ...actualModule,
       validateConfig: mockValidateConfig,
@@ -19,7 +20,7 @@ const mockGetLines = jest.fn()
 jest.mock('../../src/utils/repoGitDiff', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const actualModule: any = jest.requireActual('../../src/utils/repoGitDiff')
-  return jest.fn().mockImplementation(function () {
+  return jest.fn().mockImplementation(() => {
     return {
       ...actualModule,
       getLines: mockGetLines,
@@ -33,7 +34,7 @@ jest.mock('../../src/service/diffLineInterpreter', () => {
   const actualModule: any = jest.requireActual(
     '../../src/service/diffLineInterpreter'
   )
-  return jest.fn().mockImplementation(function () {
+  return jest.fn().mockImplementation(() => {
     return {
       ...actualModule,
       process: mockProcess,

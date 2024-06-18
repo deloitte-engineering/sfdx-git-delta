@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use strict'
 
+import { isEqual } from 'lodash'
+
+import { MetadataRepository } from '../metadata/MetadataRepository'
+import type { Config } from '../types/config'
+import type { SharedFileMetadata } from '../types/metadata'
+import type { Manifest } from '../types/work'
+
 import {
   asArray,
   parseXmlFileToJson,
   convertJsonToXml,
   ATTRIBUTE_PREFIX,
+  XML_HEADER_ATTRIBUTE_KEY,
 } from './fxpHelper'
-import { isEqual } from 'lodash'
 import { fillPackageWithParameter } from './packageHelper'
-import { Manifest } from '../types/work'
-import { Config } from '../types/config'
-import { SharedFileMetadata } from '../types/metadata'
-import { MetadataRepository } from '../metadata/MetadataRepository'
 
 type ManifestTypeMember = {
   type: string
@@ -32,12 +35,9 @@ const hasMember =
   (store: Manifest) =>
   (attributes: Map<string, SharedFileMetadata>) =>
   (subType: string) =>
-  (member: string) => {
-    return (
-      attributes.has(subType) &&
-      store.get(attributes.get(subType)!.xmlName)?.has(member)
-    )
-  }
+  (member: string) =>
+    attributes.has(subType) &&
+    store.get(attributes.get(subType)!.xmlName!)?.has(member)
 
 const selectKey =
   (attributes: Map<string, SharedFileMetadata>) =>
@@ -47,7 +47,11 @@ const selectKey =
 
 // Metadata JSON structure functional area
 const getRootMetadata = (fileContent: any): any =>
-  Object.values(fileContent)?.[1] ?? {}
+  fileContent[
+    Object.keys(fileContent).find(
+      attribute => attribute !== XML_HEADER_ATTRIBUTE_KEY
+    ) as string
+  ] ?? {}
 
 const getSubTypeTags =
   (attributes: Map<string, SharedFileMetadata>) => (fileContent: any) =>
@@ -128,7 +132,7 @@ const getElementProcessor =
     return metadataMember
   }
 
-// Partial JSON generation functional are
+// Partial JSON generation functional area
 // Side effect on jsonContent
 const generatePartialJSON =
   (attributes: Map<string, SharedFileMetadata>) =>
@@ -145,35 +149,30 @@ const generatePartialJSON =
         storeHasMemberForType(key(elem))
       )
       return acc
-    }, jsonContent)
+    }, structuredClone(jsonContent))
   }
 
 export default class MetadataDiff {
-  protected readonly configTo: Config
-  protected readonly configFrom: Config
   protected toContent: any
   protected add!: Manifest
   constructor(
+    // eslint-disable-next-line no-unused-vars
     protected readonly config: Config,
+    // eslint-disable-next-line no-unused-vars
     protected readonly metadata: MetadataRepository,
+    // eslint-disable-next-line no-unused-vars
     protected readonly attributes: Map<string, SharedFileMetadata>
-  ) {
-    this.config = config
-    this.metadata = metadata
-    this.attributes = attributes
-    this.configTo = {
-      repo: this.config.repo,
-      to: this.config.to,
-    } as Config
-    this.configFrom = {
-      repo: this.config.repo,
-      to: this.config.from,
-    } as Config
-  }
+  ) {}
 
   public async compare(path: string) {
-    this.toContent = await parseXmlFileToJson(path, this.configTo)
-    const fromContent = await parseXmlFileToJson(path, this.configFrom)
+    this.toContent = await parseXmlFileToJson(
+      { path, oid: this.config.to },
+      this.config
+    )
+    const fromContent = await parseXmlFileToJson(
+      { path, oid: this.config.from },
+      this.config
+    )
 
     const diff = compareContent(this.attributes)
 

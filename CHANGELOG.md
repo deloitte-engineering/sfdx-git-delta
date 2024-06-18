@@ -4,6 +4,115 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.40.2](https://github.com/scolladon/sfdx-git-delta/compare/v5.40.1...v5.40.2) (2024-06-13)
+
+
+### Bug Fixes
+
+* allow to detect resource metadata kind by extension ([#882](https://github.com/scolladon/sfdx-git-delta/issues/882)) ([61524c6](https://github.com/scolladon/sfdx-git-delta/commit/61524c61f0a5311625edef91817bdce92945a256))
+
+## [5.40.1](https://github.com/scolladon/sfdx-git-delta/compare/v5.40.0...v5.40.1) (2024-06-08)
+
+
+### Bug Fixes
+
+* sub directory detection when walking vcs content ([#880](https://github.com/scolladon/sfdx-git-delta/issues/880)) ([788478d](https://github.com/scolladon/sfdx-git-delta/commit/788478d1caf0cb68c58f7693238a0ef962a17058))
+
+## [5.40.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.39.2...v5.40.0) (2024-05-16)
+
+
+### Features
+
+* support new `GenAI` metadata kind ([#865](https://github.com/scolladon/sfdx-git-delta/issues/865)) ([744abea](https://github.com/scolladon/sfdx-git-delta/commit/744abeaf9d0f608e3b4ea72560520d4e7fd3f11e))
+* support preview api version `61` ([#867](https://github.com/scolladon/sfdx-git-delta/issues/867)) ([1442b32](https://github.com/scolladon/sfdx-git-delta/commit/1442b32f73cb95755cdde822b4ac8c61394a6bdb))
+
+## [5.39.2](https://github.com/scolladon/sfdx-git-delta/compare/v5.39.1...v5.39.2) (2024-05-06)
+
+
+### Bug Fixes
+
+* metadata type detection for subtype not packageable contained inside file ([#858](https://github.com/scolladon/sfdx-git-delta/issues/858)) ([a55a528](https://github.com/scolladon/sfdx-git-delta/commit/a55a528239631fd840ffeb57feedb7f01bdf64c6))
+
+## [5.39.1](https://github.com/scolladon/sfdx-git-delta/compare/v5.39.0...v5.39.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* detection of `CustomMetadata` type ([#844](https://github.com/scolladon/sfdx-git-delta/issues/844)) ([412592b](https://github.com/scolladon/sfdx-git-delta/commit/412592b46b96f253cdc9ecb2af75176d73ba3fd4))
+
+## [5.39.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.38.4...v5.39.0) (2024-04-22)
+
+
+### Features
+
+* handle decomposed type ([#825](https://github.com/scolladon/sfdx-git-delta/issues/825)) ([ec9ea59](https://github.com/scolladon/sfdx-git-delta/commit/ec9ea59d06f89057ffd1f30f1c00f03737afbdb2))
+
+## [5.38.4](https://github.com/scolladon/sfdx-git-delta/compare/v5.38.3...v5.38.4) (2024-04-17)
+
+
+### Bug Fixes
+
+* metadata type detection on file extension ([#835](https://github.com/scolladon/sfdx-git-delta/issues/835)) ([181d8c6](https://github.com/scolladon/sfdx-git-delta/commit/181d8c6c17e28257e7697dbac056b0590f90c243))
+
+## [5.38.3](https://github.com/scolladon/sfdx-git-delta/compare/v5.38.2...v5.38.3) (2024-04-17)
+
+
+### Bug Fixes
+
+* type detection of `EmailServicesFunction` metadata type ([#831](https://github.com/scolladon/sfdx-git-delta/issues/831)) ([8ac5518](https://github.com/scolladon/sfdx-git-delta/commit/8ac5518a802781d24f6d89482050a7e4ad223b19))
+
+## [5.38.2](https://github.com/scolladon/sfdx-git-delta/compare/v5.38.1...v5.38.2) (2024-03-18)
+
+
+### Bug Fixes
+
+* absolute path handling ([#815](https://github.com/scolladon/sfdx-git-delta/issues/815)) ([a926a88](https://github.com/scolladon/sfdx-git-delta/commit/a926a881818f01d85f21246bac4e5f9b7b5062a2))
+
+## [5.38.1](https://github.com/scolladon/sfdx-git-delta/compare/v5.38.0...v5.38.1) (2024-03-18)
+
+
+### Bug Fixes
+
+* add `@salesforce/core` implicit dependency ([#812](https://github.com/scolladon/sfdx-git-delta/issues/812)) ([fc3e5c9](https://github.com/scolladon/sfdx-git-delta/commit/fc3e5c9d12c23b235778b2031c84076141e04883))
+* xml header consideration for inFile metadata type handler ([#811](https://github.com/scolladon/sfdx-git-delta/issues/811)) ([71b1217](https://github.com/scolladon/sfdx-git-delta/commit/71b1217dba9d18f71640bf0650a5f4dc4e39ffbe))
+
+## [5.38.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.37.0...v5.38.0) (2024-03-09)
+
+
+### Features
+
+* support `DataWaveResource` metadata ([#801](https://github.com/scolladon/sfdx-git-delta/issues/801)) ([ece38af](https://github.com/scolladon/sfdx-git-delta/commit/ece38af2655c672f05b691da950312e25f84958d))
+
+## [5.37.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.36.0...v5.37.0) (2024-02-24)
+
+
+### Features
+
+* support UserAccessPolicy metadata for v57+ ([#793](https://github.com/scolladon/sfdx-git-delta/issues/793)) ([4c46c9e](https://github.com/scolladon/sfdx-git-delta/commit/4c46c9e477a51c06eefcddbf48c796f9cef67101))
+
+## [5.36.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.35.1...v5.36.0) (2024-01-30)
+
+
+### Features
+
+* support `WebStoreTemplate` metadata ([#775](https://github.com/scolladon/sfdx-git-delta/issues/775)) ([8a38ddf](https://github.com/scolladon/sfdx-git-delta/commit/8a38ddf4ef5f1e4ae7f43606d95ab9b6f5e25d85))
+
+## [5.35.1](https://github.com/scolladon/sfdx-git-delta/compare/v5.35.0...v5.35.1) (2024-01-25)
+
+
+### Bug Fixes
+
+* os api availability issue ([#764](https://github.com/scolladon/sfdx-git-delta/issues/764)) ([e6d6e34](https://github.com/scolladon/sfdx-git-delta/commit/e6d6e346a4d794e8b22a7d04224cb9858af5ec23))
+* use constant for path separator ([#766](https://github.com/scolladon/sfdx-git-delta/issues/766)) ([e8cd848](https://github.com/scolladon/sfdx-git-delta/commit/e8cd84880a0c87fab0a9c63ab49793338771c39e))
+
+## [5.35.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.34.0...v5.35.0) (2024-01-23)
+
+
+### Features
+
+* migrate to `isomorphic-git` instead of `spawn` ([#740](https://github.com/scolladon/sfdx-git-delta/issues/740)) ([2f3e188](https://github.com/scolladon/sfdx-git-delta/commit/2f3e18893563ee39b51189f0d3eed152be98eec9))
+* resolve metadata type using file extension ([#750](https://github.com/scolladon/sfdx-git-delta/issues/750)) ([eb66cfc](https://github.com/scolladon/sfdx-git-delta/commit/eb66cfc8fc2438c656727d345932b07ab0b3000e))
+
 ## [5.34.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.33.0...v5.34.0) (2024-01-16)
 
 

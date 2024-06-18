@@ -1,5 +1,12 @@
 [
   {
+    "directoryName": "webstoretemplate",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "webstoretemplate",
+    "xmlName": "WebStoreTemplate"
+  },
+  {
     "directoryName": "actionPlanTemplates",
     "inFolder": false,
     "metaFile": false,
@@ -873,6 +880,7 @@
     "directoryName": "moderation",
     "inFolder": false,
     "metaFile": false,
+    "xmlName": "VirtualModeration",
     "content": [
       {
         "suffix": "keywords",
@@ -1109,6 +1117,7 @@
     "directoryName": "discovery",
     "inFolder": false,
     "metaFile": true,
+    "xmlName": "VirtualDiscovery",
     "content": [
       {
         "suffix": "model",
@@ -1124,6 +1133,7 @@
     "directoryName": "wave",
     "inFolder": false,
     "metaFile": true,
+    "xmlName": "VirtualWave",
     "content": [
       {
         "suffix": "wapp",
@@ -1169,6 +1179,7 @@
     "directoryName": "bots",
     "inFolder": false,
     "metaFile": true,
+    "xmlName": "VirtualBot",
     "content": [
       {
         "suffix": "bot",
@@ -1197,18 +1208,20 @@
     "xmlName": "Workflow"
   },
   {
-    "directoryName": "workflows.alerts",
+    "directoryName": "alerts",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "alert",
     "parentXmlName": "Workflow",
     "xmlName": "WorkflowAlert",
     "xmlTag": "alerts",
     "key": "fullName"
   },
   {
-    "directoryName": "workflows.fieldUpdates",
+    "directoryName": "fieldUpdates",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "fieldUpdate",
     "parentXmlName": "Workflow",
     "xmlName": "WorkflowFieldUpdate",
     "xmlTag": "fieldUpdates",
@@ -1226,72 +1239,80 @@
     "key": "fullName"
   },
   {
-    "directoryName": "workflows.outboundMessages",
+    "directoryName": "outboundMessages",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "outboundMessage",
     "parentXmlName": "Workflow",
     "xmlName": "WorkflowOutboundMessage",
     "xmlTag": "outboundMessages",
     "key": "fullName"
   },
   {
-    "directoryName": "workflows.rules",
+    "directoryName": "rules",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "rule",
     "parentXmlName": "Workflow",
     "xmlName": "WorkflowRule",
     "xmlTag": "rules",
     "key": "fullName"
   },
   {
-    "directoryName": "workflows.knowledgePublishes",
+    "directoryName": "knowledgePublishes",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "knowledgePublishe",
     "parentXmlName": "Workflow",
     "xmlName": "WorkflowKnowledgePublish",
     "xmlTag": "knowledgePublishes",
     "key": "fullName"
   },
   {
-    "directoryName": "workflows.tasks",
+    "directoryName": "tasks",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "task",
     "parentXmlName": "Workflow",
     "xmlName": "WorkflowTask",
     "xmlTag": "tasks",
     "key": "fullName"
   },
   {
-    "directoryName": "sharingRules.sharingCriteriaRules",
+    "directoryName": "sharingCriteriaRules",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "sharingCriteriaRule",
     "parentXmlName": "SharingRules",
     "xmlName": "SharingCriteriaRule",
     "xmlTag": "sharingCriteriaRules",
     "key": "fullName"
   },
   {
-    "directoryName": "sharingRules.sharingGuestRules",
+    "directoryName": "sharingGuestRules",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "sharingGuestRule",
     "parentXmlName": "SharingRules",
     "xmlName": "SharingGuestRule",
     "xmlTag": "sharingGuestRules",
     "key": "fullName"
   },
   {
-    "directoryName": "sharingRules.sharingOwnerRules",
+    "directoryName": "sharingOwnerRules",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "sharingOwnerRule",
     "parentXmlName": "SharingRules",
     "xmlName": "SharingOwnerRule",
     "xmlTag": "sharingOwnerRules",
     "key": "fullName"
   },
   {
-    "directoryName": "sharingRules.sharingTerritoryRules",
+    "directoryName": "sharingTerritoryRules",
     "inFolder": false,
     "metaFile": false,
+    "suffix": "sharingTerritoryRule",
     "parentXmlName": "SharingRules",
     "xmlName": "SharingTerritoryRule",
     "xmlTag": "sharingTerritoryRules",
@@ -1306,7 +1327,6 @@
     "xmlName": "AssignmentRules"
   },
   {
-    "directoryName": "assignmentRules.assignmentRule",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "AssignmentRules",
@@ -1323,7 +1343,6 @@
     "xmlName": "AutoResponseRules"
   },
   {
-    "directoryName": "autoResponseRules.autoResponseRule",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "AutoResponseRules",
@@ -1340,7 +1359,6 @@
     "xmlName": "EscalationRules"
   },
   {
-    "directoryName": "escalationRules.escalationRule",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "EscalationRules",
@@ -1357,7 +1375,6 @@
     "xmlName": "MatchingRules"
   },
   {
-    "directoryName": "matchingRules.matchingRule",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "MatchingRules",
@@ -1374,7 +1391,6 @@
     "pruneOnly": true
   },
   {
-    "directoryName": "globalValueSetTranslations.valueTranslation",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "GlobalValueSetTranslation",
@@ -1392,7 +1408,6 @@
     "pruneOnly": true
   },
   {
-    "directoryName": "standardValueSetTranslations.valueTranslation",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "StandardValueSetTranslation",
@@ -1410,7 +1425,6 @@
     "pruneOnly": true
   },
   {
-    "directoryName": "profiles.categoryGroupVisibilities",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1420,7 +1434,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.applicationVisibilities",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1430,7 +1443,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.classAccesses",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1440,7 +1452,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.customMetadataTypeAccesses",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1450,7 +1461,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.customPermissions",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1460,7 +1470,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.customSettingAccesses",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1470,7 +1479,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.externalDataSourceAccesses",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1480,7 +1488,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.fieldPermissions",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1490,7 +1497,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.flowAccesses",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1500,7 +1506,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.loginFlows",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1510,7 +1515,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.objectPermissions",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1520,7 +1524,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.pageAccesses",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1530,7 +1533,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.profileActionOverrides",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1540,7 +1542,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.recordTypeVisibilities",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1550,7 +1551,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.tabVisibilities",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1560,7 +1560,6 @@
     "excluded": true
   },
   {
-    "directoryName": "profiles.userPermissions",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Profile",
@@ -1580,7 +1579,6 @@
     "pruneOnly": true
   },
   {
-    "directoryName": "translation.bots",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1590,7 +1588,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.customApplications",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1600,7 +1597,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.customLabels",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1610,7 +1606,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.customPageWebLinks",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1620,7 +1615,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.customTabs",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1630,7 +1624,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.flowDefinitions",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1640,7 +1633,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.pipelineInspMetricConfigs",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1650,7 +1642,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.prompts",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1660,7 +1651,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.quickActions",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1670,7 +1660,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.reportTypes",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1680,7 +1669,6 @@
     "excluded": true
   },
   {
-    "directoryName": "translation.scontrols",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "Translations",
@@ -1698,17 +1686,17 @@
     "pruneOnly": true
   },
   {
-    "directoryName": "objectTranslations.fields",
+    "directoryName": "objectTranslations",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
-    "xmlName": "CustomFieldTranslation",
+    "suffix": "fieldTranslation",
+    "xmlName": "CustomObjectTranslation",
     "xmlTag": "fields",
     "key": "name",
     "excluded": true
   },
   {
-    "directoryName": "objectTranslations.fieldSets",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
@@ -1718,7 +1706,6 @@
     "excluded": true
   },
   {
-    "directoryName": "objectTranslations.layouts",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
@@ -1728,7 +1715,6 @@
     "excluded": true
   },
   {
-    "directoryName": "objectTranslations.namedFilters",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
@@ -1738,7 +1724,6 @@
     "excluded": true
   },
   {
-    "directoryName": "objectTranslations.quickActions",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
@@ -1748,7 +1733,6 @@
     "excluded": true
   },
   {
-    "directoryName": "objectTranslations.recordTypes",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
@@ -1758,7 +1742,6 @@
     "excluded": true
   },
   {
-    "directoryName": "objectTranslations.sharingReasons",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
@@ -1768,7 +1751,6 @@
     "excluded": true
   },
   {
-    "directoryName": "objectTranslations.validationRules",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
@@ -1778,7 +1760,6 @@
     "excluded": true
   },
   {
-    "directoryName": "objectTranslations.webLinks",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
@@ -1788,7 +1769,6 @@
     "excluded": true
   },
   {
-    "directoryName": "objectTranslations.workflowTasks",
     "inFolder": false,
     "metaFile": false,
     "parentXmlName": "CustomObjectTranslation",
