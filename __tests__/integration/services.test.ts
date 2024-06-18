@@ -1,20 +1,36 @@
 'use strict'
 import { expect, jest, describe, it } from '@jest/globals'
-import { getGlobalMetadata } from '../__utils__/globalTestHelper'
+
 import {
   ADDITION,
   DELETION,
   MODIFICATION,
 } from '../../src/constant/gitConstants'
-import { readPathFromGit } from '../../src/utils/fsHelper'
-import { Work } from '../../src/types/work'
-import TypeHandlerFactory from '../../src/service/typeHandlerFactory'
 import { MetadataRepository } from '../../src/metadata/MetadataRepository'
+import TypeHandlerFactory from '../../src/service/typeHandlerFactory'
+import type { Work } from '../../src/types/work'
+import { readPathFromGit } from '../../src/utils/fsHelper'
+import { getGlobalMetadata } from '../__utils__/globalTestHelper'
 
 jest.mock('../../src/utils/fsHelper')
 
 const mockedReadPathFromGit = jest.mocked(readPathFromGit)
 const testContext = [
+  [
+    'force-app/main/default/permissionsets/Admin/permissionSetFieldPermissions/Account.Test__c.permissionSetFieldPermission-meta.xml',
+    new Set(['Admin']),
+    'PermissionSet',
+  ],
+  [
+    'force-app/main/default/sharingRules/Account/sharingCriteriaRules/TestSharingCriteria.sharingCriteriaRule-meta.xml',
+    new Set(['Account.TestSharingCriteria']),
+    'SharingCriteriaRule',
+  ],
+  [
+    'force-app/main/default/workflows/Account/alerts/TestWFAlert.alert-meta.xml',
+    new Set(['Account.TestWFAlert']),
+    'WorkflowAlert',
+  ],
   [
     'force-app/main/default/bots/TestBot/TestBot.bot-meta.xml',
     new Set(['TestBot']),
@@ -425,7 +441,6 @@ const testContext = [
 
 let globalMetadata: MetadataRepository
 beforeAll(async () => {
-  // eslint-disable-next-line no-undef
   globalMetadata = await getGlobalMetadata()
 })
 let work: Work

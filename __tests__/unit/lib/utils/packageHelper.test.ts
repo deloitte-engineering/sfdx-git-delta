@@ -1,12 +1,11 @@
 'use strict'
 import { expect, describe, it } from '@jest/globals'
-import PackageBuilder from '../../../../src/utils/packageHelper'
-import {
-  cleanUpPackageMember,
+
+import type { Config } from '../../../../src/types/config'
+import type { Manifest } from '../../../../src/types/work'
+import PackageBuilder, {
   fillPackageWithParameter,
 } from '../../../../src/utils/packageHelper'
-import { Config } from '../../../../src/types/config'
-import { Manifest } from '../../../../src/types/work'
 
 const config: Config = {
   apiVersion: 46,
@@ -157,19 +156,6 @@ describe('fillPackageWithParameter', () => {
         // Assert
         expect(store.get(type).has(member)).toBeTruthy()
       })
-    })
-  })
-
-  describe('cleanUpPackageMember', () => {
-    it(`package member path delimiter with "/"`, () => {
-      // Arrange
-      const example = `Package\\Member`
-
-      // Act
-      const result = cleanUpPackageMember(example).split('/')
-
-      // Assert
-      expect(result.length).toBe(2)
     })
   })
 })
