@@ -28,7 +28,7 @@ export default class ResourceHandler extends StandardHandler {
     if (!this.config.generateDelta) return
 
     if (this.line !== this.metadataName && this._parentFolderIsNotTheType()) {
-      let dirToBeCopied = this.metadataName;
+      let dirToBeCopied = this.metadataName
 
       if (dirToBeCopied.endsWith('digitalExperiences/site')) {
         /*
@@ -37,7 +37,7 @@ export default class ResourceHandler extends StandardHandler {
         In this case, `this.metadataName` is equal to `${sourcePath}/digitalExperiences/site`, forcing a copy of 
         all sites in the directory even though some of them don't have changes.
         */
-        dirToBeCopied = `${this.metadataName}/${this._getRootElementAfterMetadataName()}`;
+        dirToBeCopied = `${this.metadataName}/${this._getRootElementAfterMetadataName()}`
       }
 
       await this._copy(dirToBeCopied)
@@ -93,13 +93,16 @@ export default class ResourceHandler extends StandardHandler {
   }
 
   protected _getRootElementAfterMetadataName() {
-    let rootElement = this.splittedLine.join('/').replace(`${this.metadataName}/`, '').trim();
+    let rootElement = this.splittedLine
+      .join('/')
+      .replace(`${this.metadataName}/`, '')
+      .trim()
 
     if (rootElement.includes('/')) {
-      rootElement = rootElement.split('/')[0].trim();
+      rootElement = rootElement.split('/')[0].trim()
     }
 
-    return rootElement;
+    return rootElement
   }
 
   protected override _getMetaTypeFilePath() {
