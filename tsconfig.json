@@ -1,6 +1,7 @@
 {
   "extends": "./node_modules/@salesforce/dev-config/tsconfig",
   "compilerOptions": {
+    "moduleResolution": "Node16",
     "declaration": true,
     "outDir": "./lib",
     "importHelpers": true,
