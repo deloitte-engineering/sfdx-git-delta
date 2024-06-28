@@ -45,6 +45,7 @@ type GitBaseConfig = {
   gitdir?: string
 }
 
+// IMPORTANT! If changes are made to this class, they have to be integrated into CustomGitAdapter
 export default class GitAdapter {
   private static instances: Map<Config, GitAdapter> = new Map()
   private static sharedCache = {}

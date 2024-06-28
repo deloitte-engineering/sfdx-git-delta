@@ -1,5 +1,5 @@
 'use strict'
-import GitAdapter from '../adapter/GitAdapter'
+import CustomGitAdapter from '../adapter/CustomGitAdapter'
 import { ADDITION, DELETION } from '../constant/gitConstants'
 import { MetadataRepository } from '../metadata/MetadataRepository'
 import type { Config } from '../types/config'
@@ -7,13 +7,13 @@ import type { Config } from '../types/config'
 import { buildIgnoreHelper } from './ignoreHelper'
 
 export default class RepoGitDiff {
-  protected readonly gitAdapter: GitAdapter
+  protected readonly gitAdapter: CustomGitAdapter
 
   constructor(
     protected readonly config: Config,
     protected readonly metadata: MetadataRepository
   ) {
-    this.gitAdapter = GitAdapter.getInstance(this.config)
+    this.gitAdapter = CustomGitAdapter.getInstance(this.config)
   }
 
   public async getLines() {

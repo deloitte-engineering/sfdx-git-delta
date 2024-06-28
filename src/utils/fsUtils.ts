@@ -1,7 +1,7 @@
 'use strict'
-import { isAbsolute, normalize, relative } from 'path'
+import { isAbsolute, join, normalize, relative } from 'path'
 
-import { readFile as fsReadFile, stat } from 'fs-extra'
+import { stat, readFile as fsReadFile, readdirSync } from 'fs-extra'
 
 import {
   PATH_SEP,
@@ -46,4 +46,19 @@ export const readFile = async (path: string) => {
     encoding: UTF8_ENCODING,
   })
   return file
+}
+
+export const readAllFilesInDirectory = async (dir: string) => {
+  const children = readdirSync(dir, { withFileTypes: true })
+
+  const files: string[] = []
+  for (const child of children) {
+    if (child.isDirectory()) {
+      files.push(...(await readAllFilesInDirectory(join(dir, child.name))))
+    } else {
+      files.push(join(dir, child.name))
+    }
+  }
+
+  return files
 }
