@@ -3,7 +3,7 @@ import { join } from 'path'
 
 import { copySync, lstatSync, outputFile } from 'fs-extra'
 
-import GitAdapter from '../adapter/GitAdapter'
+import CustomGitAdapter from '../adapter/CustomGitAdapter'
 import type { Config } from '../types/config'
 import type { FileGitRef } from '../types/git'
 
@@ -22,7 +22,7 @@ export const copyFiles = async (config: Config, src: string) => {
     return
   }
   try {
-    const gitAdapter = GitAdapter.getInstance(config)
+    const gitAdapter = CustomGitAdapter.getInstance(config)
     const files = await gitAdapter.getFilesFrom(treatPathSep(src))
     for (const file of files) {
       // Use Buffer to output the file content
@@ -59,7 +59,7 @@ const isDirectory = async (path: string) => {
 export const readPathFromGit = async (forRef: FileGitRef, config: Config) => {
   let utf8Data = ''
   try {
-    const gitAdapter = GitAdapter.getInstance(config)
+    const gitAdapter = CustomGitAdapter.getInstance(config)
     utf8Data = await gitAdapter.getStringContent(forRef)
   } catch (error) {
     /* empty */
@@ -68,7 +68,7 @@ export const readPathFromGit = async (forRef: FileGitRef, config: Config) => {
 }
 
 export const pathExists = async (path: string, config: Config) => {
-  const gitAdapter = GitAdapter.getInstance(config)
+  const gitAdapter = CustomGitAdapter.getInstance(config)
   try {
     return await gitAdapter.pathExists(path)
   } catch {
@@ -80,7 +80,7 @@ export const readDir = async (
   path: string,
   config: Config
 ): Promise<string[]> => {
-  const gitAdapter = GitAdapter.getInstance(config)
+  const gitAdapter = CustomGitAdapter.getInstance(config)
   return await gitAdapter.getFilesPath(path)
 }
 

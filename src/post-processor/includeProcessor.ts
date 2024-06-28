@@ -1,5 +1,5 @@
 'use strict'
-import GitAdapter from '../adapter/GitAdapter'
+import CustomGitAdapter from '../adapter/CustomGitAdapter'
 import { ADDITION, DELETION } from '../constant/gitConstants'
 import { MetadataRepository } from '../metadata/MetadataRepository'
 import DiffLineInterpreter from '../service/diffLineInterpreter'
@@ -11,12 +11,12 @@ import BaseProcessor from './baseProcessor'
 const TAB = '\t'
 
 export default class IncludeProcessor extends BaseProcessor {
-  protected readonly gitAdapter: GitAdapter
+  protected readonly gitAdapter: CustomGitAdapter
   protected from: string
   protected includeHelper!: IgnoreHelper
   constructor(work: Work, metadata: MetadataRepository) {
     super(work, metadata)
-    this.gitAdapter = GitAdapter.getInstance(this.config)
+    this.gitAdapter = CustomGitAdapter.getInstance(this.config)
     this.from = this.config.from
   }
 
