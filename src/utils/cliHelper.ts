@@ -2,7 +2,7 @@
 import { join } from 'path'
 import { format } from 'util'
 
-import GitAdapter from '../adapter/GitAdapter'
+import CustomGitAdapter from '../adapter/CustomGitAdapter'
 import messages from '../locales/en'
 import {
   getLatestSupportedVersion,
@@ -22,11 +22,11 @@ const SFDX_PROJECT_FILE_NAME = 'sfdx-project.json'
 
 export default class CLIHelper {
   protected readonly config: Config
-  protected readonly gitAdapter: GitAdapter
+  protected readonly gitAdapter: CustomGitAdapter
 
   constructor(protected readonly work: Work) {
     this.config = work.config
-    this.gitAdapter = GitAdapter.getInstance(work.config)
+    this.gitAdapter = CustomGitAdapter.getInstance(work.config)
   }
 
   protected async _validateGitSha() {
