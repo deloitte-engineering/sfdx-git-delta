@@ -106,6 +106,11 @@ export default class ResourceHandler extends StandardHandler {
   }
 
   protected override _getMetaTypeFilePath() {
+    // If `this.line` (the entire Git diff line) is a LWC JavaScript file, the builded meta file is wrong because there is no `suffix` definition
+    if (this.line.includes(`/lwc/`) && this.line.endsWith('.js')) {
+      return `${this.line}${METAFILE_SUFFIX}`
+    }
+
     return `${this.metadataName}.${this.metadataDef.suffix}${METAFILE_SUFFIX}`
   }
 
