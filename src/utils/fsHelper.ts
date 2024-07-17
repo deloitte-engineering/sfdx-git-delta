@@ -22,23 +22,22 @@ export const copyFiles = async (config: Config, src: string) => {
     return
   }
   try {
-    const gitAdapter = CustomGitAdapter.getInstance(config)
-    const files = await gitAdapter.getFilesFrom(treatPathSep(src))
-    for (const file of files) {
-      // Use Buffer to output the file content
-      // Let fs implementation detect the encoding ("utf8" or "binary")
-      const dst = join(config.output, file.path)
+    if (await isDirectory(treatPathSep(src))) {
+      // Copy all files from directory to dst
+      const dst = config.output + '/' + src
+      copySync(src, dst, { overwrite: false })
+    } else {
+      const gitAdapter = CustomGitAdapter.getInstance(config)
+      const files = await gitAdapter.getFilesFrom(treatPathSep(src))
+      for (const file of files) {
+        // Use Buffer to output the file content
+        // Let fs implementation detect the encoding ("utf8" or "binary")
+        const dst = join(config.output, file.path)
 
-      if (await isDirectory(treatPathSep(src))) {
-        // Copy all files from directory to dst
-        const sourceDir = dst.replace(config.output + '/', '')
-        copySync(sourceDir, dst, { overwrite: false })
-      } else {
         // Write bufferData in dst
         await outputFile(dst, file.content)
       }
     }
-
     return true
   } catch (e) {
     // console.log(`[copyFiles] Exception thrown: ${e}`)
