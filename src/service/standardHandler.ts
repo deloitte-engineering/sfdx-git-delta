@@ -7,6 +7,7 @@ import {
   DELETION,
   GIT_DIFF_TYPE_REGEX,
   MODIFICATION,
+  RENAME,
 } from '../constant/gitConstants'
 import { METAFILE_SUFFIX, META_REGEX } from '../constant/metadataConstants'
 import { MetadataRepository } from '../metadata/MetadataRepository'
@@ -37,6 +38,10 @@ export default class StandardHandler {
   ) {
     this.changeType = line.charAt(0) as string
     this.line = line.replace(GIT_DIFF_TYPE_REGEX, '')
+    if (this.changeType == RENAME && this.line.includes('\t')) {
+      // If changeType returned by Git is RENAME, line will follow this pattern: "R123 <path-before> <path-after>"
+      this.line = this.line.split('\t')[1].trim()
+    }
     this.diffs = work.diffs
     this.config = work.config
     this.warnings = work.warnings
@@ -60,6 +65,9 @@ export default class StandardHandler {
       try {
         switch (this.changeType) {
           case ADDITION:
+            await this.handleAddition()
+            break
+          case RENAME:
             await this.handleAddition()
             break
           case DELETION:
