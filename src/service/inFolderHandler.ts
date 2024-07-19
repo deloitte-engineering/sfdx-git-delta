@@ -21,13 +21,53 @@ export default class InFolderHandler extends StandardHandler {
   }
 
   protected async _copyFolderMetaFile() {
-    const [, folderPath, folderName] = this._parseLine()!
+    const [folderPathAndName, folderPath, folderName] = this._parseLine()!
 
-    const suffix = folderName.endsWith(INFOLDER_SUFFIX)
+    // Copy folder meta file
+    await this._copyFolderMetaFileSpecificPath(folderPath, folderName)
+
+    // Copy meta files for subfolders (if existing)
+    const subdirectories: string[] = this.line
+      .replace(`${folderPathAndName}/`, '')
+      .includes('/')
+      ? this.line
+          .replace(`${folderPathAndName}/`, '')
+          .trim()
+          .split('/')
+          .slice(0, -1)
+      : []
+
+    let subdirectoryFolderPath = folderPathAndName
+    for (const subdirectory of subdirectories) {
+      await this._copyFolderMetaFileSpecificPath(
+        subdirectoryFolderPath,
+        subdirectory.trim()
+      )
+      subdirectoryFolderPath = join(subdirectoryFolderPath, subdirectory)
+    }
+  }
+
+  protected async _copyFolderMetaFileSpecificPath(
+    folderPath: string,
+    folderName: string
+  ) {
+    // Copy ${component}.${componentType}-meta.xml (e.g.: `someDashboard.dashboard-meta.xml`)
+    let suffix = folderName.endsWith(INFOLDER_SUFFIX)
       ? ''
       : `.${this.metadataDef.suffix!.toLowerCase()}`
 
-    const folderFileName = `${folderName}${suffix}${METAFILE_SUFFIX}`
+    let folderFileName = `${folderName}${suffix}${METAFILE_SUFFIX}`
+
+    await this._copyWithMetaFile(join(folderPath, folderFileName))
+
+    // Copy ${component}.${componentType}Folder-meta.xml (e.g.: `someDashboard.dashboardFolder-meta.xml`)
+    suffix = folderName.endsWith(
+      `.${this.metadataDef.suffix!.toLowerCase()}${INFOLDER_SUFFIX}`
+    )
+      ? ''
+      : `.${this.metadataDef.suffix!.toLowerCase()}${INFOLDER_SUFFIX}`
+
+    folderFileName = `${folderName}${suffix}${METAFILE_SUFFIX}`
 
     await this._copyWithMetaFile(join(folderPath, folderFileName))
   }
