@@ -34,7 +34,7 @@ export default class InFolderHandler extends StandardHandler {
           .replace(`${folderPathAndName}/`, '')
           .trim()
           .split('/')
-          .splice(-1)
+          .slice(0, -1)
       : []
 
     let subdirectoryFolderPath = folderPathAndName
