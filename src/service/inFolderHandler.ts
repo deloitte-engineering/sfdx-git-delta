@@ -21,8 +21,36 @@ export default class InFolderHandler extends StandardHandler {
   }
 
   protected async _copyFolderMetaFile() {
-    const [, folderPath, folderName] = this._parseLine()!
+    const [folderPathAndName, folderPath, folderName] = this._parseLine()!
 
+    // Copy folder meta file
+    await this._copyFolderMetaFileSpecificPath(folderPath, folderName)
+
+    // Copy meta files for subfolders (if existing)
+    const subdirectories: string[] = this.line
+      .replace(`${folderPathAndName}/`, '')
+      .includes('/')
+      ? this.line
+          .replace(`${folderPathAndName}/`, '')
+          .trim()
+          .split('/')
+          .splice(-1)
+      : []
+
+    let subdirectoryFolderPath = folderPathAndName
+    for (const subdirectory of subdirectories) {
+      await this._copyFolderMetaFileSpecificPath(
+        subdirectoryFolderPath,
+        subdirectory.trim()
+      )
+      subdirectoryFolderPath = join(subdirectoryFolderPath, subdirectory)
+    }
+  }
+
+  protected async _copyFolderMetaFileSpecificPath(
+    folderPath: string,
+    folderName: string
+  ) {
     // Copy ${component}.${componentType}-meta.xml (e.g.: `someDashboard.dashboard-meta.xml`)
     let suffix = folderName.endsWith(INFOLDER_SUFFIX)
       ? ''
