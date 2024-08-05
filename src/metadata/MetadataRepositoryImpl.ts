@@ -73,8 +73,8 @@ export class MetadataRepositoryImpl implements MetadataRepository {
 
   public get(path: string): Metadata | undefined {
     const parts = path.split(PATH_SEP)
-    const metadata = this.searchByDirectory(parts)
-    return metadata ?? this.searchByExtension(parts)
+    const metadata = this.searchByExtension(parts)
+    return metadata ?? this.searchByDirectory(parts)
   }
 
   protected searchByExtension(parts: string[]): Metadata | undefined {
