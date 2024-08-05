@@ -21,13 +21,13 @@ import { MetadataRepository } from './MetadataRepository'
 
 export class MetadataRepositoryImpl implements MetadataRepository {
   protected readonly metadataPerExt: Map<string, Metadata>
-  protected readonly metadataPerDir: Map<string, Metadata>
+  protected readonly metadataPerDir: Map<string, Metadata[]>
   constructor(
     // eslint-disable-next-line no-unused-vars
     protected readonly metadatas: Metadata[]
   ) {
     this.metadataPerExt = new Map<string, Metadata>()
-    this.metadataPerDir = new Map<string, Metadata>()
+    this.metadataPerDir = new Map<string, Metadata[]>()
 
     this.metadatas.forEach(metadata => {
       this.addSuffix(metadata)
@@ -63,7 +63,10 @@ export class MetadataRepositoryImpl implements MetadataRepository {
 
   protected addFolder(metadata: Metadata) {
     if (metadata.directoryName) {
-      this.metadataPerDir.set(metadata.directoryName, metadata)
+      if (this.metadataPerDir.get(metadata.directoryName) === undefined) {
+        this.metadataPerDir.set(metadata.directoryName, [])
+      }
+      this.metadataPerDir.get(metadata.directoryName)?.push(metadata)
     }
   }
 
@@ -73,8 +76,29 @@ export class MetadataRepositoryImpl implements MetadataRepository {
 
   public get(path: string): Metadata | undefined {
     const parts = path.split(PATH_SEP)
-    const metadata = this.searchByDirectory(parts)
-    return metadata ?? this.searchByExtension(parts)
+    const metadataList: Metadata[] = this.searchByDirectory(parts)
+
+    if (metadataList.length == 1) {
+      // If only one metadata definition was found using directory name, return it
+      return metadataList.pop()
+    } else {
+      // If no metadata definition was found using directory name, or multiple candidates were found, return/compare with extension search
+      const metadataFoundUsingExtensionSearch: Metadata | undefined =
+        this.searchByExtension(parts)
+
+      if (metadataList.length == 0) {
+        return metadataFoundUsingExtensionSearch
+      }
+
+      if (
+        metadataFoundUsingExtensionSearch !== undefined &&
+        metadataList.includes(metadataFoundUsingExtensionSearch)
+      ) {
+        return metadataFoundUsingExtensionSearch
+      }
+    }
+
+    return undefined
   }
 
   protected searchByExtension(parts: string[]): Metadata | undefined {
@@ -88,18 +112,23 @@ export class MetadataRepositoryImpl implements MetadataRepository {
     return this.metadataPerExt.get(extension)
   }
 
-  protected searchByDirectory(parts: string[]): Metadata | undefined {
-    let metadata: Metadata | undefined
+  protected searchByDirectory(parts: string[]): Metadata[] {
+    const foundBySearch: Metadata[] = []
+    let metadataListByDir: Metadata[] | undefined
     for (const part of parts) {
-      metadata = this.metadataPerDir.get(part) ?? metadata
-      if (
-        metadata &&
-        !MetadataRepositoryImpl.TYPES_WITH_SUB_TYPES.has(metadata.xmlName!)
-      ) {
-        break
+      metadataListByDir = this.metadataPerDir.get(part) ?? metadataListByDir
+      if (metadataListByDir) {
+        for (const metadata of metadataListByDir) {
+          if (
+            metadata &&
+            !MetadataRepositoryImpl.TYPES_WITH_SUB_TYPES.has(metadata.xmlName!)
+          ) {
+            foundBySearch.push(metadata)
+          }
+        }
       }
     }
-    return metadata
+    return foundBySearch
   }
 
   public getFullyQualifiedName(path: string): string {
