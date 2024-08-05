@@ -69,15 +69,9 @@ export class MetadataRepositoryImpl implements MetadataRepository {
   }
 
   public get(path: string): Metadata | undefined {
-<<<<<<< HEAD
     const parts = path.split(PATH_SEP)
     const metadata = this.searchByExtension(parts)
     return metadata ?? this.searchByDirectory(parts)
-=======
-    const parts = path.split(sep)
-    const metadata = this.searchByDirectory(parts)
-    return metadata ?? this.searchByExtension(parts)
->>>>>>> ef546e4 (Add support for sites; Prioritize metadata extension in favor of directory name)
   }
 
   protected searchByExtension(parts: string[]): Metadata | undefined {
