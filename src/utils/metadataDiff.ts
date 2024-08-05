@@ -208,8 +208,17 @@ export default class MetadataDiff {
     const prunedContent = generatePartialJSON(this.attributes)(this.toContent)(
       this.add
     )
+
+    const xmlContent: string = convertJsonToXml(prunedContent)
+    const onlyNonEmptyLines: string[] = []
+    for (const line of xmlContent.split('\n')) {
+      if (line.trim().length > 0) {
+        onlyNonEmptyLines.push(line)
+      }
+    }
+
     return {
-      xmlContent: convertJsonToXml(prunedContent),
+      xmlContent: onlyNonEmptyLines.join('\n'),
       isEmpty: isEmpty(prunedContent),
     }
   }
