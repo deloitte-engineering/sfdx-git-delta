@@ -2234,5 +2234,19 @@
     "metaFile": false,
     "suffix": "sustainabilityUom",
     "xmlName": "SustainabilityUom"
+  },
+  {
+    "directoryName": "documentGenerationSettings",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "documentGenerationSetting",
+    "xmlName": "DocumentGenerationSetting"
+  },
+  {
+    "directoryName": "salesAgreementSettings",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "salesAgreementSetting",
+    "xmlName": "SalesAgreementSettings"
   }
 ]
