@@ -50,7 +50,16 @@ export const parseXmlFileToJson = async (
 // biome-ignore lint/suspicious/noExplicitAny: Any is expected here
 export const convertJsonToXml = (jsonContent: any) => {
   const xmlBuilder = new XMLBuilder(JSON_PARSER_OPTION)
-  return xmlBuilder.build(jsonContent)
+  const lines: string[] = xmlBuilder.build(jsonContent).split('\n')
+  const formattedLines: string[] = []
+
+  for (const line of lines) {
+    if (line.trim().length > 0) {
+      formattedLines.push(line);
+    }
+  }
+
+  return formattedLines.join('\n');
 }
 
 export const ATTRIBUTE_PREFIX = '@_'
