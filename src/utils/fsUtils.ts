@@ -4,9 +4,9 @@ import { isAbsolute, join, normalize, relative } from 'path'
 import { stat, readFile as fsReadFile, readdirSync } from 'fs-extra'
 
 import {
+  PATH_SEP,
   PATH_SEPARATOR_REGEX,
   UTF8_ENCODING,
-  PATH_SEP,
 } from '../constant/fsConstants'
 
 export const treatPathSep = (data: string) =>
@@ -19,6 +19,9 @@ export const isSubDir = (parent: string, dir: string) => {
   const rel = relative(parent, dir)
   return !!rel && !rel.startsWith('..') && !isAbsolute(rel)
 }
+
+export const isSamePath = (pathA: string, pathB: string) =>
+  !relative(pathA, pathB)
 
 export const dirExists = async (dir: string) => {
   try {

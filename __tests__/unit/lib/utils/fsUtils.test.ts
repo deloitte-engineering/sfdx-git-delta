@@ -1,11 +1,12 @@
 'use strict'
-import { expect, jest, describe, it } from '@jest/globals'
-import { Stats, stat, readFile as fsReadFile } from 'fs-extra'
+import { describe, expect, it, jest } from '@jest/globals'
+import { Stats, readFile as fsReadFile, stat } from 'fs-extra'
 
 import { PATH_SEP } from '../../../../src/constant/fsConstants'
 import {
   dirExists,
   fileExists,
+  isSamePath,
   isSubDir,
   readFile,
   sanitizePath,
@@ -258,5 +259,37 @@ describe('sanitizePath', () => {
 
     // Assert
     expect(result).toBe('')
+  })
+})
+
+describe('isSamePath', () => {
+  describe.each([
+    ['.', './'],
+    ['output/', 'output'],
+    ['./output/', 'output'],
+    ['./output/test/..', 'output'],
+  ])('when "%s" is equal to "%s"', (a, b) => {
+    it('should be detected as the same path', () => {
+      // Act
+      const result = isSamePath(a, b)
+
+      // Assert
+      expect(result).toBe(true)
+    })
+  })
+
+  describe.each([
+    ['.', 'test'],
+    ['output/', 'test'],
+    ['./output/', 'test'],
+    ['./output/test/..', 'test'],
+  ])('when "%s" is different to "%s"', (a, b) => {
+    it('should be detected as the different path', () => {
+      // Act
+      const result = isSamePath(a, b)
+
+      // Assert
+      expect(result).toBe(false)
+    })
   })
 })

@@ -4,6 +4,53 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.45.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.44.0...v5.45.0) (2024-09-20)
+
+
+### Features
+
+* add `SearchCustomization` metadata support ([#921](https://github.com/scolladon/sfdx-git-delta/issues/921)) ([f0ee037](https://github.com/scolladon/sfdx-git-delta/commit/f0ee037f5e682cff33d481797c693cd3e91fc6c9))
+
+## [5.44.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.43.0...v5.44.0) (2024-09-13)
+
+
+### Features
+
+* add `FeatureParameter` metadata support ([#915](https://github.com/scolladon/sfdx-git-delta/issues/915)) ([f3c9ca2](https://github.com/scolladon/sfdx-git-delta/commit/f3c9ca228767fa7788a804f5f02e2f402a421c73))
+
+## [5.43.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.42.1...v5.43.0) (2024-09-04)
+
+
+### Features
+
+* add `Winter '25` `(v62)` release preview support ([#909](https://github.com/scolladon/sfdx-git-delta/issues/909)) ([a642a27](https://github.com/scolladon/sfdx-git-delta/commit/a642a27b451fe8e07dbf26c91ed287fda4d87305))
+
+## [5.42.1](https://github.com/scolladon/sfdx-git-delta/compare/v5.42.0...v5.42.1) (2024-08-26)
+
+
+### Bug Fixes
+
+* suffix based translation file detection and output subDir ([#901](https://github.com/scolladon/sfdx-git-delta/issues/901)) ([4723352](https://github.com/scolladon/sfdx-git-delta/commit/4723352894e481fb09310464bd73022a7d9793f9))
+
+## [5.42.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.41.0...v5.42.0) (2024-08-05)
+
+
+### Features
+
+* add ConversationMessageDefinition metadata support ([#899](https://github.com/scolladon/sfdx-git-delta/issues/899)) ([50188cf](https://github.com/scolladon/sfdx-git-delta/commit/50188cfca81f808491ba56b0e4940d3285d266e9))
+
+## [5.41.0](https://github.com/scolladon/sfdx-git-delta/compare/v5.40.2...v5.41.0) (2024-08-02)
+
+
+### Features
+
+* warn when a flow is deleted ([#894](https://github.com/scolladon/sfdx-git-delta/issues/894)) ([0f186ce](https://github.com/scolladon/sfdx-git-delta/commit/0f186ce130e51e1c3197a0c9158d2b80dcff9f24))
+
+
+### Bug Fixes
+
+* issue copying resource, meta and folder for resource type ([#896](https://github.com/scolladon/sfdx-git-delta/issues/896)) ([10fd87a](https://github.com/scolladon/sfdx-git-delta/commit/10fd87a02eb3caf4b377abfcdefd7625f808dd61))
+
 ## [5.40.2](https://github.com/scolladon/sfdx-git-delta/compare/v5.40.1...v5.40.2) (2024-06-13)
 
 

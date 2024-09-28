@@ -1,32 +1,30 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use strict'
-import { parse, join } from 'path'
+import { join, parse } from 'path'
 
 import { pathExists } from 'fs-extra'
 
 import {
   FLOW_XML_NAME,
   META_REGEX,
-  METAFILE_SUFFIX,
   TRANSLATION_EXTENSION,
   TRANSLATION_TYPE,
 } from '../constant/metadataConstants'
 import { MetadataRepository } from '../metadata/MetadataRepository'
 import type { Work } from '../types/work'
-import { writeFile, readDir } from '../utils/fsHelper'
-import { isSubDir, readFile, treatPathSep } from '../utils/fsUtils'
+import { readDir, writeFile } from '../utils/fsHelper'
+import { isSamePath, isSubDir, readFile, treatPathSep } from '../utils/fsUtils'
 import {
   asArray,
+  convertJsonToXml,
   parseXmlFileToJson,
   xml2Json,
-  convertJsonToXml,
 } from '../utils/fxpHelper'
-import { buildIgnoreHelper } from '../utils/ignoreHelper'
+import { IgnoreHelper, buildIgnoreHelper } from '../utils/ignoreHelper'
 import { fillPackageWithParameter } from '../utils/packageHelper'
 
 import BaseProcessor from './baseProcessor'
 
-const EXTENSION = `.${TRANSLATION_EXTENSION}${METAFILE_SUFFIX}`
+const EXTENSION = `.${TRANSLATION_EXTENSION}`
 
 const getTranslationName = (translationPath: string) =>
   parse(translationPath.replace(META_REGEX, '')).name
@@ -40,7 +38,10 @@ const getDefaultTranslation = () => ({
 })
 
 export default class FlowTranslationProcessor extends BaseProcessor {
+  // biome-ignore lint/suspicious/noExplicitAny: Any is expected here
   protected readonly translations: Map<string, any>
+  protected ignoreHelper: IgnoreHelper | undefined
+  protected isOutputEqualsToRepo: boolean | undefined
 
   constructor(work: Work, metadata: MetadataRepository) {
     super(work, metadata)
@@ -58,19 +59,30 @@ export default class FlowTranslationProcessor extends BaseProcessor {
     this.translations.clear()
 
     const allFiles = await readDir(this.config.source, this.work.config)
-    const ignoreHelper = await buildIgnoreHelper(this.config)
     const translationPaths = allFiles.filter((file: string) =>
-      file.endsWith(EXTENSION)
+      file.replace(META_REGEX, '').endsWith(EXTENSION)
     )
 
     for (const translationPath of translationPaths) {
-      if (
-        !ignoreHelper.globalIgnore.ignores(translationPath) &&
-        !isSubDir(this.config.output, translationPath)
-      ) {
+      if (await this._canParse(translationPath)) {
         await this._parseTranslationFile(translationPath)
       }
     }
+  }
+
+  protected async _canParse(translationPath: string) {
+    if (!this.ignoreHelper) {
+      this.ignoreHelper = await buildIgnoreHelper(this.config)
+      this.isOutputEqualsToRepo = isSamePath(
+        this.config.output,
+        this.config.repo
+      )
+    }
+    return (
+      !this.ignoreHelper.globalIgnore.ignores(translationPath) &&
+      (this.isOutputEqualsToRepo ||
+        !isSubDir(this.config.output, translationPath))
+    )
   }
 
   protected async _handleFlowTranslation() {
@@ -94,16 +106,20 @@ export default class FlowTranslationProcessor extends BaseProcessor {
   }
 
   protected _scrapTranslationFile(
+    // biome-ignore lint/suspicious/noExplicitAny: Any is expected here
     jsonTranslation: any,
+    // biome-ignore lint/suspicious/noExplicitAny: Any is expected here
     actualFlowDefinition: any
   ) {
     const flowDefinitions = asArray(
       jsonTranslation.Translations?.flowDefinitions
     )
     const fullNames = new Set(
+      // biome-ignore lint/suspicious/noExplicitAny: Any is expected here
       flowDefinitions.map((flowDef: any) => flowDef?.fullName)
     )
     const strippedActualFlowDefinition = actualFlowDefinition.filter(
+      // biome-ignore lint/suspicious/noExplicitAny: Any is expected here
       (flowDef: any) => !fullNames.has(flowDef?.fullName)
     )
 
@@ -133,6 +149,7 @@ export default class FlowTranslationProcessor extends BaseProcessor {
     flowDefinition,
   }: {
     translationPath: string
+    // biome-ignore lint/suspicious/noExplicitAny: Any is expected here
     flowDefinition: any
   }) {
     const packagedElements = this.work.diffs.package.get(FLOW_XML_NAME)

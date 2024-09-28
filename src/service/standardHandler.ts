@@ -1,15 +1,15 @@
 'use strict'
-import { join, parse, ParsedPath } from 'path'
+import { ParsedPath, join, parse } from 'path'
 
 import { DOT, PATH_SEP } from '../constant/fsConstants'
 import {
   ADDITION,
   DELETION,
-  MODIFICATION,
   GIT_DIFF_TYPE_REGEX,
+  MODIFICATION,
   RENAME,
 } from '../constant/gitConstants'
-import { META_REGEX, METAFILE_SUFFIX } from '../constant/metadataConstants'
+import { METAFILE_SUFFIX, META_REGEX } from '../constant/metadataConstants'
 import { MetadataRepository } from '../metadata/MetadataRepository'
 import type { Config } from '../types/config'
 import type { Metadata } from '../types/metadata'
@@ -32,10 +32,8 @@ export default class StandardHandler {
 
   constructor(
     protected readonly line: string,
-    // eslint-disable-next-line no-unused-vars
     protected readonly metadataDef: Metadata,
     protected readonly work: Work,
-    // eslint-disable-next-line no-unused-vars
     protected readonly metadata: MetadataRepository
   ) {
     this.changeType = line.charAt(0) as string
@@ -130,7 +128,10 @@ export default class StandardHandler {
   protected async _copyWithMetaFile(src: string) {
     if (this._delegateFileCopy()) {
       await this._copy(src)
-      if (this._shouldCopyMetaFile(src)) {
+      if (
+        this.metadataDef.metaFile === true &&
+        !`${src}`.endsWith(METAFILE_SUFFIX)
+      ) {
         await this._copy(this._getMetaTypeFilePath(src))
       }
     }
@@ -155,6 +156,14 @@ export default class StandardHandler {
   protected _shouldCopyMetaFile(path: string): boolean {
     return (
       this.metadataDef.metaFile === true && !`${path}`.endsWith(METAFILE_SUFFIX)
+    )
+  }
+  
+  protected _getMetaTypeFilePathWithOriginalExtension(path: string) {
+    const parsedPath = parse(path)
+    return join(
+      parsedPath.dir,
+      `${parsedPath.name}${parsedPath.ext}${METAFILE_SUFFIX}`
     )
   }
 

@@ -8,6 +8,7 @@ import CustomFieldHandler from './customFieldHandler'
 import CustomLabel from './customLabelHandler'
 import CustomObject from './customObjectHandler'
 import Decomposed from './decomposedHandler'
+import FlowHandler from './flowHandler'
 import InBundle from './inBundleHandler'
 import InFile from './inFileHandler'
 import InFolder from './inFolderHandler'
@@ -35,6 +36,7 @@ const handlerMap = {
   EscalationRules: InFile,
   ExperienceBundle: InResource,
   FieldSet: Decomposed,
+  Flow: FlowHandler,
   GlobalValueSetTranslation: InFile,
   Index: Decomposed,
   LightningComponentBundle: Lwc,
@@ -75,9 +77,7 @@ const handlerMap = {
 
 export default class TypeHandlerFactory {
   constructor(
-    // eslint-disable-next-line no-unused-vars
     protected readonly work: Work,
-    // eslint-disable-next-line no-unused-vars
     protected readonly metadata: MetadataRepository
   ) {}
 

@@ -1,5 +1,5 @@
 'use strict'
-import { expect, jest, describe, it } from '@jest/globals'
+import { describe, expect, it, jest } from '@jest/globals'
 
 import {
   ADDITION,
@@ -436,6 +436,21 @@ const testContext = [
     'force-app/main/default/wave/Test/WaveXmdTest.xmd',
     new Set(['WaveXmdTest']),
     'WaveXmd',
+  ],
+  [
+    'force-app/main/default/featureParameters/FeatureParameterIntegerTest.featureParameterInteger',
+    new Set(['FeatureParameterIntegerTest']),
+    'FeatureParameterInteger',
+  ],
+  [
+    'force-app/main/default/featureParameters/FeatureParameterBooleanTest.featureParameterBoolean',
+    new Set(['FeatureParameterBooleanTest']),
+    'FeatureParameterBoolean',
+  ],
+  [
+    'force-app/main/default/featureParameters/FeatureParameterDateTest.featureParameterDate',
+    new Set(['FeatureParameterDateTest']),
+    'FeatureParameterDate',
   ],
 ]
 
