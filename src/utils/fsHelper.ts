@@ -11,7 +11,7 @@ import { lstatSync } from 'fs'
 import { FileGitRef } from '../types/git'
 
 const copiedFiles = new Set()
-const writtenFiles = new Set()
+const writtenFiles: Map<string, string> = new Map();  // Instead of blindly checking only if the file was already overwritten, also check if the new content is different from the previous overwriting's content.
 
 export const copyFiles = async (config: Config, src: string) => {
   if (copiedFiles.has(src) || writtenFiles.has(src)) return true
@@ -88,10 +88,10 @@ export const writeFile = async (
   content: string,
   config: Config
 ) => {
-  if (writtenFiles.has(path)) {
+  if (writtenFiles.has(path) && writtenFiles.get(path) == content) {
     return
   }
-  writtenFiles.add(path)
+  writtenFiles.set(path, content)
 
   const ignoreHelper = await buildIgnoreHelper(config)
   if (ignoreHelper.globalIgnore.ignores(path)) {
