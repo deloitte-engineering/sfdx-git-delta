@@ -42,13 +42,6 @@
     "xmlName": "WebStoreTemplate"
   },
   {
-    "directoryName": "messagingChannels",
-    "inFolder": false,
-    "metaFile": false,
-    "suffix": "messagingChannel",
-    "xmlName": "MessagingChannel"
-  },
-  {
     "directoryName": "recordAlertCategories",
     "inFolder": false,
     "metaFile": false,
