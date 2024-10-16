@@ -21,6 +21,13 @@
     "xmlName": "ExternalClientApplication"
   },
   {
+    "directoryName": "extlClntAppOauthSettings",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "ecaOauth",
+    "xmlName": "ExtlClntAppOauthSettings"
+  },
+  {
     "directoryName": "extlClntAppGlobalOauthSets",
     "inFolder": false,
     "metaFile": false,
