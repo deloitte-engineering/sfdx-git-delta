@@ -1,5 +1,40 @@
 [
   {
+    "directoryName": "decisionMatrixVersion",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "decisionMatrixVersion",
+    "xmlName": "DecisionMatrixDefinitionVersion"
+  },
+  {
+    "directoryName": "expressionSetVersion",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "expressionSetVersion",
+    "xmlName": "ExpressionSetDefinitionVersion"
+  },
+  {
+    "directoryName": "externalClientApps",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "eca",
+    "xmlName": "ExternalClientApplication"
+  },
+  {
+    "directoryName": "extlClntAppGlobalOauthSets",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "ecaGlblOauth",
+    "xmlName": "ExtlClntAppGlobalOauthSettings"
+  },
+  {
+    "directoryName": "extlClntAppOauthPolicies",
+    "inFolder": false,
+    "metaFile": false,
+    "suffix": "ecaOauthPlcy",
+    "xmlName": "ExtlClntAppOauthConfigurablePolicies"
+  },
+  {
     "directoryName": "featureParameters",
     "inFolder": false,
     "metaFile": false,
